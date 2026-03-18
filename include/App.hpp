@@ -2,6 +2,11 @@
 #define APP_HPP
 
 #include "pch.hpp" // IWYU pragma: export
+#include "BackgroundImage.hpp"
+#include "Util/Renderer.hpp"
+#include "Player.hpp"
+#include "Map.hpp"
+#include  <vector>
 
 class App {
 public:
@@ -24,6 +29,13 @@ private:
 
 private:
     State m_CurrentState = State::START;
+    Util::Renderer m_Renderer;
+    std::shared_ptr<BackgroundImage> m_Background;
+    std::shared_ptr<Player> m_Player;
+    // std::vector<std::shared_ptr<NPC>> m_NPCs;
+    // std::vector<std::shared_ptr<Character>> m_Enemies;
+
+    std::shared_ptr<Map> m_Map;
 };
 
 #endif

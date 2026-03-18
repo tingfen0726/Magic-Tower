@@ -35,6 +35,17 @@ add_executable(${PROJECT_NAME}
     ${SRC_DIR}/main.cpp
     ${SRC_FILES}
     ${HEADER_FILES}
+        include/BackgroundImage.hpp
+        include/Character.hpp
+        include/Player.hpp
+        src/Player.cpp
+        include/Constants.hpp
+        src/Constants.cpp
+        include/Map.hpp
+        src/Map.cpp
+        include/Block/Wall.hpp
+        src/Block/Wall.cpp
+        src/Block/Door.cpp
 )
 
 if(MSVC)
