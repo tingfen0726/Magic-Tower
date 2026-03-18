@@ -1,24 +1,64 @@
-# PTSD Template
+# Abstract
 
-This is a [PTSD](https://github.com/ntut-open-source-club/practical-tools-for-simple-design) framework template for students taking OOPL2024s.
+遊戲名稱：魔塔
 
-## Quick Start
+組員：
 
-1. Use this template to create a new repository
-   ![github screenshot](https://github.com/ntut-rick/ptsd-template/assets/126899559/ef62242f-03ed-481d-b858-12b730c09beb)
+- 113590043 張婷棻
 
-2. Clone your repository
+# Game Introduction
 
-   ```bash
-   git clone YOUR_GIT_URL --recursive
-   ```
+《魔塔》是一款經典的固定數值策略 RPG。玩家將扮演一名勇者，深入一座 25 層的魔塔營救被困的公主。這款遊戲的特點在於「策略計算」大於「隨機機率」，所有的怪物數值、資源（紅藍寶石、藥水、鑰匙）都是固定的。玩家必須謹慎規劃路線，計算每一次戰鬥的損耗，並合理分配資源與金錢來提升攻擊力 (ATK) 與防禦力 (DEF)，否則將會面臨卡關的絕境。
 
-3. Build your project
+# Development timeline
 
-  > [!WARNING]
-  > Please build your project in `Debug` because our `Release` path is broken D:
-   
-   ```sh
-   cmake -DCMAKE_BUILD_TYPE=Debug -B build # -G Ninja
-   ```
-   better read [PTSD README](https://github.com/ntut-open-source-club/practical-tools-for-simple-design)
+- Week 02：製作 Proposal 與環境建置
+  - [ ] 確認遊戲開發框架與技術架構
+  - [ ] 製作與提交專案 Proposal
+- Week 03：蒐集素材
+  - [ ] 蒐集遊戲基礎素材
+  - [ ] 處理遊戲封面的素材與設計
+- Week 04：基礎系統與地圖
+  - [ ] 建立遊戲視窗、基本迴圈、動畫更新與角色移動控制
+  - [ ] 建立 2D 陣列與繪製地圖牆壁、地板，實作碰撞偵測
+- Week 05：角色屬性與物件互動
+  - [ ] 建立角色屬性資料（HP, ATK, DEF, 金幣, 鑰匙）與 UI 顯示
+  - [ ] 實作開門機制與道具撿拾（寶石增加屬性，藥水恢復 HP）
+- Week 06：戰鬥系統核心
+  - [ ] 建立怪物屬性資料結構
+  - [ ] 實作回合制自動戰鬥演算法與傷害計算公式
+- Week 07：NPC、商店與樓層切換
+  - [ ] 實作 NPC 對話框機制與商店系統（花費金幣購買能力值）
+  - [ ] 實作樓層傳送機制（上下樓梯切換）
+- Week 08：初期關卡設計與核心機制整合
+  - [ ] 整合前幾週功能，提前設計與配置第 1 至 5 層的正式地圖、怪物與資源
+  - [ ] 確保能在前 5 層關卡中順暢完成打怪、開門、升級與跨樓層的完整流程
+- Week 09：期中 Demo
+  - [ ] 展示遊戲 Prototype 與第 1 至 5 層實際遊玩畫面
+  - [ ] 報告開發細節（說明 C++ 程式架構、SDL2 渲染與動畫機制、碰撞及戰鬥演算法）
+- Week 10：正式關卡設計（一）與存檔
+  - [ ] 設計與配置第 6 至 10 層地圖
+  - [ ] 實作存檔與讀檔系統
+- Week 11：正式關卡設計（二）與圖鑑
+  - [ ] 設計與配置第 11 至 15 層地圖
+  - [ ] 實作「怪物圖鑑」功能（預覽怪物數值與預估傷害）
+- Week 12：正式關卡設計（三）與特殊機關
+  - [ ] 設計與配置第 16 至 20 層地圖
+  - [ ] 實作中後期高階怪物與特殊機關（暗門或特定觸發事件）
+- Week 13：表關 BOSS 與隱藏層前置邏輯
+  - [ ] 實作表關（第 20 層）BOSS 戰鬥與通關判定
+  - [ ] 實作進入「隱藏層」的判定邏輯與條件觸發
+- Week 14：隱藏關卡實作
+  - [ ] 設計與配置第 21 至 25 層地圖
+  - [ ] 實作最終真 BOSS 戰鬥與真結局觸發
+  - [ ] 美化遊戲介面與加入背景音樂
+- Week 15：全面測試（一）
+  - [ ] 進行 1-20 層完整通關測試與 Bug 修復
+  - [ ] 微調怪物能力值與資源配置確保無死局
+- Week 16：全面測試（二）
+  - [ ] 進行 21-25 層（隱藏層）完整通關測試
+  - [ ] 確保遊戲後期數值平衡、隱藏層解鎖順暢度與真結局運作正常
+- Week 17：提交
+  - [ ] 拍攝影片
+  - [ ] 製作遊戲簡報
+  - [ ] 驗收並提交
