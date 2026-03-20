@@ -17,13 +17,12 @@ namespace Config {
 
         inline constexpr int WALL_END   = 3;
 
-        inline constexpr int Stairs = 4;
 
         inline constexpr int DOOR_BEGIN = 5;
 
         inline constexpr int DOOR_YELLOW = 5;
-        inline constexpr int DOOR_RED = 6;
-        inline constexpr int DOOR_BLUE = 7;
+        inline constexpr int DOOR_BLUE = 6;
+        inline constexpr int DOOR_RED = 7;
         inline constexpr int DOOR_GREEN = 8;
         inline constexpr int DOOR_IRON = 9;
 
@@ -38,7 +37,7 @@ namespace Config {
         inline constexpr int STAIRS_UP   = 30;
         inline constexpr int STAIRS_DOWN = 31;
 
-        inline constexpr int STAIRS_END   = 39;
+        inline constexpr int STAIRS_END   = 31;
 
         // 怪物範圍：
         inline constexpr int ENEMY_BEGIN = 100;

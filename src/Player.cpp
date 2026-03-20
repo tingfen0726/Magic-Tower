@@ -87,6 +87,18 @@ void Player::HandleMovement(const std::shared_ptr<Map>& map) {
             }
         }
     }
+    if (targetID >= Config::ID::STAIRS_BEGIN && targetID <= Config::ID::STAIRS_END) {
+        if (targetID == Config::ID::STAIRS_UP) {
+            m_IsMoving = false;
+            m_FloorChangeRequest = 1;
+            return;
+        }
+        if (targetID == Config::ID::STAIRS_DOWN) {
+            m_IsMoving = false;
+            m_FloorChangeRequest = -1;
+            return;
+        }
+    }
 
     // int targetID = map[nextY][nextX];
     // if (targetID >= 100) { /* 撞到怪物 */ return; }
@@ -121,3 +133,21 @@ void Player::SetImageFrame(int index) {
         temp->SetImage(RESOURCE_DIR "/Image/Player/player_"+std::to_string(m_Direction)+std::to_string(index+1)+".BMP");
     }
 }
+
+void Player::SetPosition(int x, int y) {
+    m_CurrentGridX = x;
+    m_CurrentGridY = y;
+    m_Direction = 1;
+    SetImageFrame(0);
+
+    m_IsMoving = false;
+    m_MoveCooldown = 15;
+
+    float step = 56.7f;
+    float startX = -141.5f;
+    float startY = 283.6f;
+
+    m_Transform.translation.x = startX + (x * step);
+    m_Transform.translation.y = startY - (y * step);
+}
+

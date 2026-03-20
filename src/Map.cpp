@@ -6,6 +6,9 @@
 #include "config.hpp"
 #include "Block/Wall.hpp"
 #include "Block/Door.hpp"
+#include "Block/Stair.hpp"
+#include <iostream>
+#include <iomanip>
 
 
 Map::Map(){}
@@ -110,6 +113,22 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                         x, y, Config::ID::DOOR_IRON
                     ));
                     break;
+                case Config::ID::STAIRS_UP:
+                    m_Blocks.push_back(std::make_shared<Stair>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Stair/upstair.bmp"
+                         },
+                         x, y, Config::ID::STAIRS_UP
+                     ));
+                    break;
+                case Config::ID::STAIRS_DOWN:
+                    m_Blocks.push_back(std::make_shared<Stair>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Stair/downstair.bmp"
+                         },
+                         x, y, Config::ID::STAIRS_DOWN
+                     ));
+                    break;
                 default:
                     continue;
             }
@@ -124,10 +143,47 @@ void Map::SetVisible(bool visible) {
 }
 
 void Map::Update() {
+    std::vector<std::pair<int, int>> blocksToRemove;
     for (auto block : m_Blocks) {
         block->UpdateAnimation();
+
+        auto door = std::dynamic_pointer_cast<Door>(block);
+        if (door) {
+            if (door->IsFullyOpen()) {
+                auto pos = door->GetPosition();
+                blocksToRemove.push_back({pos[0], pos[1]});
+            }
+        }
+    }
+    for (const auto& pos : blocksToRemove) {
+        RemoveBlock(pos.first, pos.second);
     }
 }
+
+void Map::RemoveBlock(int x, int y) {
+    if (y >= 0 && y < m_LevelData.size() && x >= 0 && x < m_LevelData[y].size()) {
+        if (m_LevelData[y][x] == 0) { return; }
+        m_LevelData[y][x] = 0;
+    }
+    m_Blocks.erase(std::remove_if(m_Blocks.begin(), m_Blocks.end(),
+        [x, y](const std::shared_ptr<Block>& block) {
+            auto pos = block->GetPosition();
+            return pos[0] == x && pos[1] == y;
+        }), m_Blocks.end());
+
+    for (const auto& row : m_LevelData) {
+        for (int cell : row) {
+            if (cell == 0) {
+                std::cout << std::setw(3) << "." << " ";
+            } else {
+                std::cout << std::setw(3) << cell << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "-----------------------------------" << std::endl;
+}
+
 
 void Block::SetImageFrame(int index) {
     auto temp = std::dynamic_pointer_cast<Util::Image>(m_Drawable);

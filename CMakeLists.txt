@@ -46,6 +46,10 @@ add_executable(${PROJECT_NAME}
         include/Block/Wall.hpp
         src/Block/Wall.cpp
         src/Block/Door.cpp
+        include/Block/Stair.hpp
+        src/Block/Stair.cpp
+        include/FloorData.hpp
+        src/FloorData.cpp
 )
 
 if(MSVC)

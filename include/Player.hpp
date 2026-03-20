@@ -30,7 +30,9 @@ public:
     Player();
 
     void Update(const std::shared_ptr<Map>& map) override;
-
+    void SetPosition(int x, int y);
+    int GetFloorChangeRequest() const { return m_FloorChangeRequest; }
+    void ClearFloorChangeRequest() { m_FloorChangeRequest = 0; }
 private:
     void HandleMovement(const std::shared_ptr<Map>& map);
     void UpdateAnimation();
@@ -43,6 +45,7 @@ private:
     int m_CurrentGridY = 0; //陣列座標y
     int m_MoveCooldown = 0; //移動冷卻
     int m_Direction = 0; //1正面 2背面 3左 4右
+    int m_FloorChangeRequest = 0;
     PlayerStats m_Stats;
     Inventory m_Inventory;
 

@@ -44,8 +44,8 @@ public:
     void Update();
 
     std::vector<std::shared_ptr<Block>> GetBlocks() const { return m_Blocks; }
-
     const std::vector<std::vector<int>>& GetLevelData() const { return m_LevelData; }
+    void RemoveBlock(int x, int y);
 
 private:
     std::vector<std::vector<int>> m_LevelData;
