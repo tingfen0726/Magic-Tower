@@ -17,7 +17,7 @@ struct PlayerStats {
 };
 
 struct Inventory {
-    int yellowKey = 1;
+    int yellowKey = 10;
     int blueKey = 1;
     int redKey = 1;
     bool hasholyCross = false;  // 神聖十字架
