@@ -7,6 +7,7 @@
 #include "Map.hpp"
 #include <string>
 
+
 struct PlayerStats {
     int level = 1;  // 等級
     int hp = 1000;  // 生命
@@ -17,12 +18,15 @@ struct PlayerStats {
 };
 
 struct Inventory {
-    int yellowKey = 10;
+    int yellowKey = 1;
     int blueKey = 1;
     int redKey = 1;
-    bool hasholyCross = false;  // 神聖十字架
-    bool haslightEmblem = false;// 聖光徽
-    bool haswindCompass = false;// 風之羅盤
+    bool hasholyCross = false;      // 神聖十字架
+    bool hasredveri = false;        //炎之靈杖
+    bool hasblueveri = false;       //冰之靈杖
+    bool hasgreenveri = false;      //心之靈杖
+    bool hasgodknifesign = false;   // 聖光徽
+    bool haswindCompass = false;    // 風之羅盤
 };
 
 class Player : public Character {

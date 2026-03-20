@@ -45,6 +45,33 @@ namespace Config {
 
         // 道具範圍：
         inline constexpr int ITEM_BEGIN  = 200;
+        inline constexpr int YELLOW_KEY = 200;
+        inline constexpr int BLUE_KEY = 201;
+        inline constexpr int RED_KEY = 202;
+        inline constexpr int MAGIC_KEY = 203;
+        inline constexpr int RED_POTION = 204;
+        inline constexpr int BLUE_POTION = 205;
+        inline constexpr int HOLY_WATER = 206;
+        inline constexpr int RUBY = 207;
+        inline constexpr int SAPPHIRE = 208;
+        inline constexpr int SWORD_A = 209;
+        inline constexpr int SWORD_B = 210;
+        inline constexpr int SWORD_C = 211;
+        inline constexpr int SWORD_D = 212;
+        inline constexpr int SHIELD_A = 213;
+        inline constexpr int SHIELD_B = 214;
+        inline constexpr int SHIELD_C = 215;
+        inline constexpr int SHIELD_D = 216;
+        inline constexpr int SHIELD_E = 217;
+        inline constexpr int COIN = 218;
+        inline constexpr int JUMP_WING_SMALL = 219;
+        inline constexpr int JUMP_WING_BIG = 220;
+        inline constexpr int HOLY_CROSS = 221;
+        inline constexpr int RED_VERI = 222;
+        inline constexpr int BLUE_VERI = 223;
+        inline constexpr int GREEN_VERI = 224;
+        inline constexpr int GOD_KNIFE_SIGN = 225;
+        inline constexpr int WIND_COMPASS = 226;
         inline constexpr int ITEM_END    = 299;
 
         // 門的範圍：

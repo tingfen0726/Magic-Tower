@@ -4,6 +4,10 @@
 #include "Util/GameObject.hpp"
 
 void App::Update() {
+    if (m_Player->GetFloorChangeRequest()) {
+        ChangeFloor(m_Player->GetFloorChangeRequest());
+        m_Player->ClearFloorChangeRequest();
+    }
     if (Util::Input::IsKeyUp(Util::Keycode::SPACE) && m_CurrentState == State::UPDATE) {
         m_Background->StartGame();
         m_Player->SetVisible(true);
@@ -11,10 +15,7 @@ void App::Update() {
     }
     m_Player->Update(m_Map);
     m_Map->Update();
-    if (m_Player->GetFloorChangeRequest()) {
-        ChangeFloor(m_Player->GetFloorChangeRequest());
-        m_Player->ClearFloorChangeRequest();
-    }
+
 
     m_Renderer.Update();
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) ||

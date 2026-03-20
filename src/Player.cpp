@@ -2,12 +2,18 @@
 #include "Util/Time.hpp"
 #include "Constants.hpp"
 #include "Block/Door.hpp"
+#include "Block/Props.hpp"
+
+
+//const float m_Step = 56.7f;
+// const float m_StartX = -141.5f;
+// const float m_StartY = 283.6f;
 
 Player::Player() : Character(RESOURCE_DIR "/Image/Player/player_11.BMP", 100.0f) {
     m_Direction = 1;
     m_CurrentGridX = 5;
     m_CurrentGridY = 10;
-    m_Transform.translation = {141.5f, -283.6f};
+    m_Transform.translation = {m_StartX + (m_CurrentGridX * m_Step), m_StartY - (m_CurrentGridY * m_Step)};
     m_Transform.scale = {0.74f, 0.74f};
 }
 
@@ -97,6 +103,26 @@ void Player::HandleMovement(const std::shared_ptr<Map>& map) {
             m_IsMoving = false;
             m_FloorChangeRequest = -1;
             return;
+        }
+    }
+    if (targetID >= Config::ID::ITEM_BEGIN && targetID <= Config::ID::ITEM_END) {
+        for (auto block : blocks) {
+            if (nextX == block->GetPosition()[0] && nextY == block->GetPosition()[1]) {
+                auto propsPtr = std::dynamic_pointer_cast<Props>(block);
+                if (propsPtr && !propsPtr->GetPickUp()) {
+                    propsPtr->PickUp();
+                    switch (propsPtr->GetID()) {
+                        case Config::ID::YELLOW_KEY: m_Inventory.yellowKey++; break;
+                        case Config::ID::BLUE_KEY:   m_Inventory.blueKey++; break;
+                        case Config::ID::RED_KEY:   m_Inventory.redKey++; break;
+                        case Config::ID::MAGIC_KEY:
+                            m_Inventory.yellowKey++;
+                            m_Inventory.blueKey++;
+                            m_Inventory.redKey++;
+                            break;
+                    }
+                }
+            }
         }
     }
 

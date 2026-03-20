@@ -50,6 +50,8 @@ add_executable(${PROJECT_NAME}
         src/Block/Stair.cpp
         include/FloorData.hpp
         src/FloorData.cpp
+        include/Block/Props.hpp
+        src/Block/Props.cpp
 )
 
 if(MSVC)
