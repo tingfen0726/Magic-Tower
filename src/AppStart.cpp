@@ -37,6 +37,7 @@ void App::Start() {
             stateFontX,
             stateFontY - (i * spacing)
         );
+        textUI->SetVisible(false);
         m_PlayerStatUI.push_back(textUI);
         m_Renderer.AddChild(textUI);
     }
@@ -49,6 +50,7 @@ void App::Start() {
             keyFontX,
             keyFontY - (i * spacing_key)
         );
+        textUI->SetVisible(false);
         m_PlayerKeyUI.push_back(textUI);
         m_Renderer.AddChild(textUI);
     }
@@ -57,15 +59,5 @@ void App::Start() {
 
     m_CurrentState = State::UPDATE;
 }
-
-/*
-
-
-
-
-
-
-
- */
 
 

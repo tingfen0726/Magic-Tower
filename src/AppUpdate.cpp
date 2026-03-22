@@ -11,6 +11,8 @@ void App::Update() {
         m_Background->StartGame();
         m_Player->SetVisible(true);
         m_Map->SetVisible(true);
+        for (auto ui : m_PlayerStatUI) { ui->SetVisible(true);}
+        for (auto ui : m_PlayerKeyUI) { ui->SetVisible(true);}
     }
     m_Player->Update(m_Map);
     m_Map->Update();
@@ -25,6 +27,7 @@ void App::Update() {
     m_PlayerKeyUI[0]->UpdateValue("Yellow Key: ", playerkey.yellowKey);
     m_PlayerKeyUI[1]->UpdateValue("Blue Key: ", playerkey.blueKey);
     m_PlayerKeyUI[2]->UpdateValue("Red Key: ", playerkey.redKey);
+
 
 
     m_Renderer.Update();
