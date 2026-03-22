@@ -1,6 +1,5 @@
 #include "App.hpp"
 #include "Util/Input.hpp"
-#include "Util/Logger.hpp"
 #include "Util/GameObject.hpp"
 
 void App::Update() {
@@ -15,6 +14,17 @@ void App::Update() {
     }
     m_Player->Update(m_Map);
     m_Map->Update();
+    auto playerstate = m_Player->GetPlayerStats();
+    m_PlayerStatUI[0]->UpdateValue("Level: ", playerstate.level);
+    m_PlayerStatUI[1]->UpdateValue("HP: ", playerstate.hp);
+    m_PlayerStatUI[2]->UpdateValue("ATK: ", playerstate.atk);
+    m_PlayerStatUI[3]->UpdateValue("DEF: ", playerstate.def);
+    m_PlayerStatUI[4]->UpdateValue("GOLD: ", playerstate.gold);
+    m_PlayerStatUI[5]->UpdateValue("EXP: ", playerstate.exp);
+    auto playerkey = m_Player->GetInventory();
+    m_PlayerKeyUI[0]->UpdateValue("Yellow Key: ", playerkey.yellowKey);
+    m_PlayerKeyUI[1]->UpdateValue("Blue Key: ", playerkey.blueKey);
+    m_PlayerKeyUI[2]->UpdateValue("Red Key: ", playerkey.redKey);
 
 
     m_Renderer.Update();

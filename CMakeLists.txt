@@ -52,6 +52,11 @@ add_executable(${PROJECT_NAME}
         src/FloorData.cpp
         include/Block/Props.hpp
         src/Block/Props.cpp
+        include/UIText.hpp
+        include/UIText/PlayerStatUI.hpp
+        src/UIText/PlayerStatUI.cpp
+        include/UIText/PlayerKeyUI.hpp
+        src/UIText/PlayerKeyUI.cpp
 )
 
 if(MSVC)

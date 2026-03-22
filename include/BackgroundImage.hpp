@@ -9,8 +9,8 @@
 class BackgroundImage : public Util::GameObject {
 public:
     BackgroundImage() : GameObject(
-            std::make_unique<Util::Image>(RESOURCE_DIR "/Image/Scene/end.BMP"), -10) {
-        std::cout << "Loading Background from: " << RESOURCE_DIR "/Image/Scene/end.BMP" << std::endl;
+            std::make_unique<Util::Image>(RESOURCE_DIR "/Image/Scene/scene0.bmp"), -10) {
+        std::cout << "Loading Background from: " << RESOURCE_DIR "/Image/Scene/scene0.bmp"<< std::endl;
     }
 
     void StartGame() {

@@ -8,7 +8,8 @@
 #include "Map.hpp"
 #include "FloorData.hpp"
 #include  <vector>
-
+#include "UIText/PlayerStatUI.hpp"
+#include "UIText/PlayerKeyUI.hpp"
 class App {
 public:
     enum class State {
@@ -35,6 +36,8 @@ private:
     Util::Renderer m_Renderer;
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Player> m_Player;
+    std::vector<std::shared_ptr<PlayerStatUI>> m_PlayerStatUI;
+    std::vector<std::shared_ptr<PlayerKeyUI>> m_PlayerKeyUI;
     int m_CurrentFloor = 0;
     // std::vector<std::shared_ptr<NPC>> m_NPCs;
     // std::vector<std::shared_ptr<Enemies>> m_Enemies;

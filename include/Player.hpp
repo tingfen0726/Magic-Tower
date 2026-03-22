@@ -36,6 +36,8 @@ public:
     void Update(const std::shared_ptr<Map>& map) override;
     void SetPosition(int x, int y);
     int GetFloorChangeRequest() const { return m_FloorChangeRequest; }
+    PlayerStats GetPlayerStats() const {return m_Stats;}
+    Inventory GetInventory() const {return m_Inventory;}
     void ClearFloorChangeRequest() { m_FloorChangeRequest = 0; }
 private:
     void HandleMovement(const std::shared_ptr<Map>& map);
