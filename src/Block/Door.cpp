@@ -1,6 +1,6 @@
 #include "Block/Door.hpp"
 #include "config.hpp"
-#include "Constants.hpp"
+#include "GameConstants.hpp"
 
 
 Door::Door(const std::vector<std::string> &imagePath, int x, int y, int id): Block(imagePath, x, y, id) {

@@ -39,8 +39,7 @@ add_executable(${PROJECT_NAME}
         include/Character.hpp
         include/Player.hpp
         src/Player.cpp
-        include/Constants.hpp
-        src/Constants.cpp
+        include/GameConstants.hpp
         include/Map.hpp
         src/Map.cpp
         include/Block/Wall.hpp
@@ -53,10 +52,9 @@ add_executable(${PROJECT_NAME}
         include/Block/Props.hpp
         src/Block/Props.cpp
         include/UIText.hpp
-        include/UIText/PlayerStatUI.hpp
-        src/UIText/PlayerStatUI.cpp
-        include/UIText/PlayerKeyUI.hpp
-        src/UIText/PlayerKeyUI.cpp
+        include/PlayerConstants.hpp
+        include/UIText/Toast.hpp
+        src/UIText/Toast.cpp
 )
 
 if(MSVC)

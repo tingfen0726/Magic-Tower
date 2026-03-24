@@ -3,18 +3,17 @@
 
 #include "Util/GameObject.hpp"
 #include "Util/Image.hpp"
+#include "GameConstants.hpp"
+#include "PlayerConstants.hpp"
 #include <vector>
 #include <string>
 
-const float m_Step = 56.7f;
-const float m_StartX = -141.5f;
-const float m_StartY = 283.6f;
 
 class Block : public Util::GameObject {
 public:
     Block(const std::vector<std::string>& imagePath, int x, int y, int id) {
         SetDrawable(std::make_shared<Util::Image>(imagePath[0]));
-        m_Transform.translation = {m_StartX + (x * m_Step), m_StartY - (y * m_Step)};
+        m_Transform.translation = {Config::MAP_OFFSET_X + (x * Config::TILE_SIZE), Config::MAP_OFFSET_Y - (y * Config::TILE_SIZE)};
         m_Transform.scale = {0.74f, 0.74f};
         m_imagePath = imagePath;
         posX = x;
@@ -37,7 +36,6 @@ protected:
 class Map {
 public:
     Map();
-    // 讀取二維陣列，並把對應的牆壁實體化
     void LoadLevel(const std::vector<std::vector<int>>& levelData);
 
     void SetVisible(bool visible);
@@ -49,7 +47,7 @@ public:
 
 private:
     std::vector<std::vector<int>> m_LevelData;
-    std::vector<std::shared_ptr<Block>> m_Blocks; // 裝著畫面上所有牆壁的陣列
+    std::vector<std::shared_ptr<Block>> m_Blocks;
 
 };
 #endif //REPLACE_WITH_YOUR_PROJECT_NAME_MAP_HPP

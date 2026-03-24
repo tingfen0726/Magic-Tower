@@ -10,7 +10,7 @@ public:
     : GameObject(std::make_unique<Util::Image>(path), zIndex) {}
 
     virtual ~Character() = default;
-    virtual void Update(const std::shared_ptr<Map>& map) = 0;
+    virtual void Update() = 0;
 
 protected:
     float m_Speed = 5.0f;

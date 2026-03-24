@@ -1,12 +1,11 @@
 #include "App.hpp"
 #include "Util/Logger.hpp"
-float stateFontX = -280.0f; // 往右移一點，避開中文字
-float stateFontY = 210.0f;  // 往下移一點，對齊「等級」的那一行
-float spacing = 42.0f;      // 稍微拉大間距，讓它跟著中文字的行距走
+float stateFontX = -280.0f;
+float stateFontY = 210.0f;
+float spacing = 42.0f;
 
 float keyFontX = -280.0f;
 float keyFontY = -116.0f;
-float spacing_key = 56.7f;
 
 void App::Start() {
     LOG_TRACE("Start");
@@ -29,8 +28,7 @@ void App::Start() {
     }
     m_Map->SetVisible(false);
     for (int i = 0; i < 6; i++) {
-        auto textUI = std::make_shared<PlayerStatUI>(
-            RESOURCE_DIR "/Font/Cubic_11_1.010_R.ttf",
+        auto textUI = std::make_shared<UIText>(
             36,
             "0",
             Util::Color{255,255,255,255},
@@ -38,22 +36,36 @@ void App::Start() {
             stateFontY - (i * spacing)
         );
         textUI->SetVisible(false);
-        m_PlayerStatUI.push_back(textUI);
+        m_PlayerUI.push_back(textUI);
         m_Renderer.AddChild(textUI);
     }
     for (int i = 0; i < 3; i++) {
-        auto textUI = std::make_shared<PlayerKeyUI>(
-            RESOURCE_DIR "/Font/Cubic_11_1.010_R.ttf",
+        auto textUI = std::make_shared<UIText>(
             36,
             "0",
             Util::Color{255,255,255,255},
             keyFontX,
-            keyFontY - (i * spacing_key)
+            keyFontY - (i * Config::TILE_SIZE)
         );
         textUI->SetVisible(false);
-        m_PlayerKeyUI.push_back(textUI);
+        m_PlayerUI.push_back(textUI);
         m_Renderer.AddChild(textUI);
     }
+    for (int i = 0; i < 6; i++) {   //測試資料，需刪
+        auto textUI = std::make_shared<UIText>(
+            20,
+            "0",
+            Util::Color{0,0,0,255},
+            (i - 2) * Config::TILE_SIZE * 2,
+            -335.0f
+        );
+        m_TryTextUI.push_back(textUI);
+        m_Renderer.AddChild(textUI);
+    }
+    m_Toast = std::make_shared<Toast>("找我嗎?");
+    m_Renderer.AddChild(m_Toast);
+
+
 
 
 

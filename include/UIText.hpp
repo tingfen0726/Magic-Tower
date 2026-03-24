@@ -12,13 +12,26 @@
 
 class UIText : public Util::GameObject {
 public:
-    UIText(const std::string& fontPath, int fontSize, const std::string& text, const Util::Color& color, int x, int y) {
-        m_Drawable = std::make_shared<Util::Text>(fontPath, fontSize, text, color);
-        SetZIndex(100);
+    UIText(int fontSize, const std::string& text, const Util::Color& color, int x, int y) {
+        m_TextComponent = std::make_shared<Util::Text>(RESOURCE_DIR "/Font/Cubic_11_1.010_R.ttf", fontSize, text, color);
+        m_Drawable = m_TextComponent;
+        SetZIndex(80);
         m_Transform.translation = {x, y};
     }
-    virtual void UpdateValue(const std::string& prefix, int value) = 0;
+    virtual void UpdateValue(int value) {
+        if (m_TextComponent) m_TextComponent->SetText(std::to_string(value));
+    };
+
+    virtual void UpdateText(const std::string& text) {
+        if (m_TextComponent) m_TextComponent->SetText(text);
+    }
+
+    virtual void UpdateAll(const std::string& prefix, int value) {
+        if (m_TextComponent) m_TextComponent->SetText(prefix + std::to_string(value));
+    }
     void SetPosition(float x, float y) { m_Transform.translation = {x, y};}
+private:
+    std::shared_ptr<Util::Text> m_TextComponent;
 };
 
 #endif //REPLACE_WITH_YOUR_PROJECT_NAME_UITEXT_HPP

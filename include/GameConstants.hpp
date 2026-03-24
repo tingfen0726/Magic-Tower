@@ -28,9 +28,6 @@ namespace Config {
 
         inline constexpr int DOOR_END   = 9;
 
-
-
-
         //樓梯範圍：
         inline constexpr int STAIRS_BEGIN = 30;
 

@@ -2,7 +2,6 @@
 // Created by fenfenfen on 2026/3/16.
 //
 #include "Map.hpp"
-#include "Constants.hpp"
 #include "config.hpp"
 #include "Block/Wall.hpp"
 #include "Block/Door.hpp"
@@ -365,7 +364,7 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                              RESOURCE_DIR "/Image/Item/god_knife_sign.bmp",
                              RESOURCE_DIR "/Image/Item/road.bmp"
                          },
-                         x, y, Config::ID::GREEN_VERI
+                         x, y, Config::ID::GOD_KNIFE_SIGN
                      ));
                     break;
                 case Config::ID::WIND_COMPASS:

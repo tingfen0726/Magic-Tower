@@ -3,9 +3,6 @@
 
 #include "Character.hpp"
 #include "Util/Input.hpp"
-#include <vector>
-#include "Map.hpp"
-#include <string>
 
 
 struct PlayerStats {
@@ -33,14 +30,16 @@ class Player : public Character {
 public:
     Player();
 
-    void Update(const std::shared_ptr<Map>& map) override;
+    void Update() override;
     void SetPosition(int x, int y);
-    int GetFloorChangeRequest() const { return m_FloorChangeRequest; }
-    PlayerStats GetPlayerStats() const {return m_Stats;}
-    Inventory GetInventory() const {return m_Inventory;}
-    void ClearFloorChangeRequest() { m_FloorChangeRequest = 0; }
+    PlayerStats& GetPlayerStats() {return m_Stats;}
+    Inventory& GetInventory() {return m_Inventory;}
+    int GetCurrentGridX() const { return m_CurrentGridX; }
+    int GetCurrentGridY() const { return m_CurrentGridY; }
+    void GetNextGrid(int& outX, int& outY, int& outDir);
+    void MoveToGrid(int nextX, int nextY, int dir);
+
 private:
-    void HandleMovement(const std::shared_ptr<Map>& map);
     void UpdateAnimation();
     void SetImageFrame(int index);
 
@@ -51,7 +50,6 @@ private:
     int m_CurrentGridY = 0; //陣列座標y
     int m_MoveCooldown = 0; //移動冷卻
     int m_Direction = 0; //1正面 2背面 3左 4右
-    int m_FloorChangeRequest = 0;
     PlayerStats m_Stats;
     Inventory m_Inventory;
 

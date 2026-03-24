@@ -6,10 +6,12 @@
 #include "Util/Renderer.hpp"
 #include "Player.hpp"
 #include "Map.hpp"
+#include "UIText.hpp"
 #include "FloorData.hpp"
+#include "UIText/Toast.hpp"
+#include "Block/Props.hpp"
+#include "Block/Door.hpp"
 #include  <vector>
-#include "UIText/PlayerStatUI.hpp"
-#include "UIText/PlayerKeyUI.hpp"
 class App {
 public:
     enum class State {
@@ -29,6 +31,7 @@ public:
 
 private:
     void ValidTask();
+    void ProcessPlayerMovement();
 
 private:
     State m_CurrentState = State::START;
@@ -36,8 +39,9 @@ private:
     Util::Renderer m_Renderer;
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Player> m_Player;
-    std::vector<std::shared_ptr<PlayerStatUI>> m_PlayerStatUI;
-    std::vector<std::shared_ptr<PlayerKeyUI>> m_PlayerKeyUI;
+    std::vector<std::shared_ptr<UIText>> m_PlayerUI;
+    std::vector<std::shared_ptr<UIText>> m_TryTextUI; //測試資料，需刪
+    std::shared_ptr<Toast> m_Toast;
     int m_CurrentFloor = 0;
     // std::vector<std::shared_ptr<NPC>> m_NPCs;
     // std::vector<std::shared_ptr<Enemies>> m_Enemies;
