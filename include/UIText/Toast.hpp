@@ -9,6 +9,7 @@ class Toast : public Util::GameObject {
 public:
     Toast(const std::string& text);
     void ShowToast(const std::string& prefix);
+    void SetColor(const Util::Color& color) {m_text->SetColor(color);};
     void Update();
 private:
     std::shared_ptr<UIText> m_text;

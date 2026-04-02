@@ -5,11 +5,6 @@
 #include "Block/Door.hpp"
 #include "Block/Props.hpp"
 
-
-//const float TILE_SIZE = 56.7f;
-// const float MAP_OFFSET_X = -141.5f;
-// const float MAP_OFFSET_Y = 283.6f;
-
 Player::Player() : Character(RESOURCE_DIR "/Image/Player/player_11.BMP", 50.0f) {
     m_Direction = 1;
     m_CurrentGridX = 5;
@@ -37,10 +32,15 @@ void Player::GetNextGrid(int &outX, int &outY, int &outDir) {
     else { m_IsMoving = false;}
 
 }
+void Player::StepInPlace(int dir) {
+    m_Direction = dir;
+    m_IsMoving = true;
+    m_MoveCooldown = 8;
+}
 void Player::MoveToGrid(int nextX, int nextY, int dir) {
     m_Direction = dir;
     m_IsMoving = true;
-    m_MoveCooldown = 12;
+    m_MoveCooldown = 8;
 
     float step = Config::TILE_SIZE;
     float deltaX = (nextX - m_CurrentGridX) * step;
@@ -88,3 +88,29 @@ void Player::SetPosition(int x, int y) {
     m_Transform.translation.y = Config::MAP_OFFSET_Y - (y * Config::TILE_SIZE);
 }
 
+bool Player::Engage(EnemyStats enemyStats) { //
+    int Dnorm = std::max(0, m_Stats.atk - enemyStats.def);      //玩攻怪
+    if (Dnorm <= 0) {
+        m_Stats.hp = 0;
+        return false;
+    }
+    float critRate = std::min(1.0f, m_Stats.level * 0.005f);    //暴擊
+    float Davg = Dnorm * (1.0f + critRate);                          //總攻
+    int Tavg = static_cast<int>(std::ceil(enemyStats.hp / Davg));  //回合
+    int Dm = std::max(0, enemyStats.atk - m_Stats.def);         //怪攻玩
+    int totalLoss = (Tavg - 1) * Dm;                                 //總扣血
+
+    if (enemyStats.loss > 0 && enemyStats.loss < 1) { m_Stats.hp -= enemyStats.loss * m_Stats.hp;}
+    else if (enemyStats.loss >= 1) {m_Stats.hp -= enemyStats.loss;}
+
+    if (m_Stats.hp > totalLoss) {
+        m_Stats.hp -= totalLoss;
+        m_Stats.gold += enemyStats.gold;
+        m_Stats.exp += enemyStats.exp;
+        return true;
+    }
+    else {
+        m_Stats.hp = 0;
+        return false;
+    }
+}

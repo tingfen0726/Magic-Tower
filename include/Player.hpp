@@ -2,22 +2,22 @@
 #define REPLACE_WITH_YOUR_PROJECT_NAME_PLAYER_HPP
 
 #include "Character.hpp"
+#include "Block/Enemy.hpp"
 #include "Util/Input.hpp"
-
 
 struct PlayerStats {
     int level = 1;  // 等級
     int hp = 1000;  // 生命
-    int atk = 10;   // 攻擊
+    int atk = 1000;   // 攻擊
     int def = 10;   // 防禦
     int gold = 0;   // 金幣
     int exp = 0;    // 經驗值
 };
 
 struct Inventory {
-    int yellowKey = 1;
-    int blueKey = 1;
-    int redKey = 1;
+    int yellowKey = 10;
+    int blueKey = 10;
+    int redKey = 10;
     bool hasholyCross = false;      // 神聖十字架
     bool hasredveri = false;        //炎之靈杖
     bool hasblueveri = false;       //冰之靈杖
@@ -38,7 +38,9 @@ public:
     int GetCurrentGridY() const { return m_CurrentGridY; }
     void GetNextGrid(int& outX, int& outY, int& outDir);
     void MoveToGrid(int nextX, int nextY, int dir);
-
+    void StepInPlace(int dir);
+    bool Engage(EnemyStats enemyStats);
+    void StopMove() {m_IsMoving = false; m_CurrentFrame = 0;};
 private:
     void UpdateAnimation();
     void SetImageFrame(int index);

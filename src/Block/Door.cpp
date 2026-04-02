@@ -19,7 +19,7 @@ void Door::UpdateAnimation() {
 
     unsigned int currentTime = SDL_GetTicks();
 
-    if (currentTime - m_LastFrameTime > 300)  {
+    if (currentTime - m_LastFrameTime > 50)  {
         m_CurrentFrame++;
         if (m_CurrentFrame >= m_imagePath.size()) {
             return;

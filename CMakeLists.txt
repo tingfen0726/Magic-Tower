@@ -55,6 +55,15 @@ add_executable(${PROJECT_NAME}
         include/PlayerConstants.hpp
         include/UIText/Toast.hpp
         src/UIText/Toast.cpp
+        include/Block/Enemy.hpp
+        src/Block/Enemy.cpp
+        include/EnemyDatabase.hpp
+        include/UIText/BattlePanel.hpp
+        src/UIText/BattlePanel.cpp
+        include/Block/Shop.hpp
+        src/Block/Shop.cpp
+        include/UIText/ShopPanel.hpp
+        src/UIText/ShopPanel.cpp
 )
 
 if(MSVC)

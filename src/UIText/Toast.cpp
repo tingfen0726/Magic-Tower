@@ -13,16 +13,16 @@ void Toast::ShowToast(const std::string &prefix) {
     m_text->UpdateText(prefix);
     SetVisible(true);
     m_text->SetVisible(true);
-    m_timer = 20;
+    m_timer = 15;
 }
 
 void Toast::Update() {
     if (m_timer > 0) {
-        
         m_timer--;
     }
     if (m_timer == 0) {
         SetVisible(false);
         m_text->SetVisible(false);
+        m_text->SetColor(Util::Color{255,255,255,255});
     }
 }

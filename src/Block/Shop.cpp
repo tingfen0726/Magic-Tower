@@ -1,13 +1,10 @@
-//
-// Created by fenfenfen on 2026/3/17.
-//
-#include "Block/Wall.hpp"
-#include "config.hpp"
+#include "Block/Shop.hpp"
 
-Wall::Wall(const std::vector<std::string> &imagePath, int x, int y, int id): Block(imagePath, x, y, id) {
+Shop::Shop(const std::vector<std::string>& imagePath, int x, int y, int id) : Block(imagePath, x, y, id) {
+
 }
 
-void Wall::UpdateAnimation() {
+void Shop::UpdateAnimation() {
     unsigned int currentTime = SDL_GetTicks();
 
     if (currentTime - m_LastFrameTime > 150) {
@@ -16,4 +13,3 @@ void Wall::UpdateAnimation() {
         m_LastFrameTime = currentTime;
     }
 }
-

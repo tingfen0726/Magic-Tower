@@ -26,9 +26,13 @@ public:
         if (m_TextComponent) m_TextComponent->SetText(text);
     }
 
-    virtual void UpdateAll(const std::string& prefix, int value) {
+    virtual void UpdateTextValue(const std::string& prefix, int value) {
         if (m_TextComponent) m_TextComponent->SetText(prefix + std::to_string(value));
     }
+    virtual void UpdateValueText(const std::string& prefix, int value) {
+        if (m_TextComponent) m_TextComponent->SetText(std::to_string(value) + prefix);
+    }
+    void SetColor(const Util::Color& color) { m_TextComponent->SetColor(color); }
     void SetPosition(float x, float y) { m_Transform.translation = {x, y};}
 private:
     std::shared_ptr<Util::Text> m_TextComponent;

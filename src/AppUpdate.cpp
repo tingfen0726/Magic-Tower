@@ -7,14 +7,23 @@ void App::Update() {
         m_Background->StartGame();
         m_Player->SetVisible(true);
         m_Map->SetVisible(true);
+        m_floorUI->SetVisible(true);
         for (auto ui : m_PlayerUI) { ui->SetVisible(true);}
-    }
-    if (m_CurrentState == State::UPDATE) {
-        ProcessPlayerMovement();
     }
     m_Player->Update();
     m_Map->Update();
     m_Toast->Update();
+    m_BattlePanel->Update();
+    m_ShopPanel->Update();
+    ProcessBattleResult();
+    if (!m_ShopPanel->GetVisible()) {
+        ProcessPlayerMovement();
+    }
+    else {
+        m_Player->StopMove();
+    }
+    ProcessShopLogic();
+
     auto playerstate = m_Player->GetPlayerStats();
     m_PlayerUI[PlayerUI::LEVEL]->UpdateValue(playerstate.level);
     m_PlayerUI[PlayerUI::HP]->UpdateValue(playerstate.hp);
@@ -55,6 +64,7 @@ void App::ProcessPlayerMovement() {
         if (nextY >= 0 && nextY < 11 && nextX >= 0 && nextX < 11) {
             int targetID = levelData[nextY][nextX];
             if (targetID >= Config::ID::WALL_BEGIN && targetID <= Config::ID::WALL_END) {
+                m_Player->StepInPlace(nextDir);
                 return;
             }
             if (targetID >= Config::ID::DOOR_BEGIN && targetID <= Config::ID::DOOR_END) {
@@ -70,13 +80,16 @@ void App::ProcessPlayerMovement() {
                                         case Config::ID::DOOR_BLUE:   player_inventory.blueKey--; break;
                                         case Config::ID::DOOR_RED:    player_inventory.redKey--; break;
                                     }
+                                    m_Player->StepInPlace(nextDir);
                                     return;
                                 }
                                 else{
+                                    m_Player->StepInPlace(nextDir);
                                     return;
                                 }
                             }
                             else {
+                                m_Player->StepInPlace(nextDir);
                                 return;
                             }
                         }
@@ -202,8 +215,58 @@ void App::ProcessPlayerMovement() {
                     }
                 }
             }
+            if (targetID >= Config::ID::ENEMY_BEGIN && targetID <= Config::ID::ENEMY_END) {
+                for (auto block : blocks) {
+                    if (nextX == block->GetPosition()[0] && nextY == block->GetPosition()[1]) {
+                        auto enemyPtr = std::dynamic_pointer_cast<Enemy>(block);
+                        if (enemyPtr) {
+                            if (m_CurrentEnemy == nullptr) {
+                                m_CurrentEnemy = enemyPtr;
+                                m_BattlePanel->ShowBattlePanel(m_Player->GetPlayerStats(), enemyPtr->GetEnemyStats(), enemyPtr->GetImagePath());
+                            }
+                            m_Player->StepInPlace(nextDir);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (targetID >= Config::ID::SHOP_BEGIN && targetID <= Config::ID::SHOP_END) {
+                for (auto block : blocks) {
+                    if (nextX == block->GetPosition()[0] && nextY == block->GetPosition()[1]) {
+                        auto shopPtr = std::dynamic_pointer_cast<Shop>(block);
+                        if (shopPtr) {
+                            m_ShopPanel->ShowShopPanel(&player_stats, &player_inventory, targetID);
+                            m_Player->StepInPlace(nextDir);
+                            return;
+                        }
+                    }
+                }
+            }
             m_Player->MoveToGrid(nextX, nextY, nextDir);
         }
+    }
+}
+
+void App::ProcessBattleResult() {
+    if (m_BattlePanel->IsAnimationFinished() && m_CurrentEnemy != nullptr) {
+        bool isWin = m_Player->Engage(m_CurrentEnemy->GetEnemyStats());
+
+        if (isWin) m_CurrentEnemy->SetIsdie(true);
+        else {
+            // m_CurrentState = State::END;
+            LOG_INFO("You're a bit dead."); // 你有點死了
+        }
+        m_BattlePanel->ResetFinished();
+        m_CurrentEnemy = nullptr;
+    }
+}
+
+void App::ProcessShopLogic() {
+    m_ShopPanel->ChangeOptions();
+    if (m_ShopPanel->GetTradeFail()) {
+        m_Toast->SetColor(Util::Color{255,0,0,255});
+        m_Toast->ShowToast("資源不足，交易失敗！");
+        m_ShopPanel->ResetTradeFail();
     }
 }
 
@@ -215,6 +278,7 @@ void App::ChangeFloor(int floorDelta) {
     }
     m_CurrentFloor += floorDelta;
     m_Map->LoadLevel(m_FloorData[m_CurrentFloor].grid);
+    m_floorUI->UpdateValueText(" 樓", m_FloorData[m_CurrentFloor].floorLevel);
     for (auto block : m_Map->GetBlocks()) {
         m_Renderer.AddChild(block);
     }

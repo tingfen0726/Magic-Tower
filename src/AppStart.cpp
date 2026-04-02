@@ -1,5 +1,5 @@
 #include "App.hpp"
-#include "Util/Logger.hpp"
+
 float stateFontX = -280.0f;
 float stateFontY = 210.0f;
 float spacing = 42.0f;
@@ -51,6 +51,10 @@ void App::Start() {
         m_PlayerUI.push_back(textUI);
         m_Renderer.AddChild(textUI);
     }
+    m_floorUI = std::make_shared<UIText>( 36, "0 樓", Util::Color{255,255,255,255}, 155, 335);
+    m_floorUI->SetVisible(false);
+    m_Renderer.AddChild(m_floorUI);
+
     for (int i = 0; i < 6; i++) {   //測試資料，需刪
         auto textUI = std::make_shared<UIText>(
             20,
@@ -64,10 +68,10 @@ void App::Start() {
     }
     m_Toast = std::make_shared<Toast>("找我嗎?");
     m_Renderer.AddChild(m_Toast);
-
-
-
-
+    m_BattlePanel = std::make_shared<BattlePanel>();
+    m_Renderer.AddChild(m_BattlePanel);
+    m_ShopPanel = std::make_shared<ShopPanel>();
+    m_Renderer.AddChild(m_ShopPanel);
 
     m_CurrentState = State::UPDATE;
 }

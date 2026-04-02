@@ -9,8 +9,13 @@
 #include "UIText.hpp"
 #include "FloorData.hpp"
 #include "UIText/Toast.hpp"
+#include "UIText/BattlePanel.hpp"
+#include "UIText/ShopPanel.hpp"
 #include "Block/Props.hpp"
 #include "Block/Door.hpp"
+#include "Block/Enemy.hpp"
+#include "Block/Shop.hpp"
+#include "Util/Logger.hpp"
 #include  <vector>
 class App {
 public:
@@ -32,6 +37,8 @@ public:
 private:
     void ValidTask();
     void ProcessPlayerMovement();
+    void ProcessBattleResult();
+    void ProcessShopLogic();
 
 private:
     State m_CurrentState = State::START;
@@ -40,11 +47,14 @@ private:
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Player> m_Player;
     std::vector<std::shared_ptr<UIText>> m_PlayerUI;
+    std::shared_ptr<UIText> m_floorUI;
     std::vector<std::shared_ptr<UIText>> m_TryTextUI; //測試資料，需刪
     std::shared_ptr<Toast> m_Toast;
+    std::shared_ptr<BattlePanel> m_BattlePanel;
+    std::shared_ptr<ShopPanel> m_ShopPanel;
     int m_CurrentFloor = 0;
+    std::shared_ptr<Enemy> m_CurrentEnemy = nullptr;
     // std::vector<std::shared_ptr<NPC>> m_NPCs;
-    // std::vector<std::shared_ptr<Enemies>> m_Enemies;
 
     std::shared_ptr<Map> m_Map;
 };
