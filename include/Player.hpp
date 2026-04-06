@@ -8,20 +8,21 @@
 struct PlayerStats {
     int level = 1;  // 等級
     int hp = 1000;  // 生命
-    int atk = 1000;   // 攻擊
+    int atk = 10;   // 攻擊
     int def = 10;   // 防禦
     int gold = 0;   // 金幣
     int exp = 0;    // 經驗值
 };
 
 struct Inventory {
-    int yellowKey = 10;
-    int blueKey = 10;
-    int redKey = 10;
+    int yellowKey = 0;
+    int blueKey = 0;
+    int redKey = 0;
     bool hasholyCross = false;      // 神聖十字架
     bool hasredveri = false;        //炎之靈杖
     bool hasblueveri = false;       //冰之靈杖
     bool hasgreenveri = false;      //心之靈杖
+    bool hasgemhoe = false;
     bool hasgodknifesign = false;   // 聖光徽
     bool haswindCompass = false;    // 風之羅盤
 };

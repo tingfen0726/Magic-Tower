@@ -64,6 +64,11 @@ add_executable(${PROJECT_NAME}
         src/Block/Shop.cpp
         include/UIText/ShopPanel.hpp
         src/UIText/ShopPanel.cpp
+        include/UIText/NPCDialog.hpp
+        src/UIText/NPCDialog.cpp
+        include/Block/NPC.hpp
+        src/Block/NPC.cpp
+        include/Block/SpecificNPCs.hpp
 )
 
 if(MSVC)

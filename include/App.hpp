@@ -11,9 +11,11 @@
 #include "UIText/Toast.hpp"
 #include "UIText/BattlePanel.hpp"
 #include "UIText/ShopPanel.hpp"
+#include "UIText/NPCDialog.hpp"
 #include "Block/Props.hpp"
 #include "Block/Door.hpp"
 #include "Block/Enemy.hpp"
+#include "Block/NPC.hpp"
 #include "Block/Shop.hpp"
 #include "Util/Logger.hpp"
 #include  <vector>
@@ -33,12 +35,14 @@ public:
 
     void End(); // NOLINT(readability-convert-member-functions-to-static)
     void ChangeFloor(int floorDelta);
-
+    void ChangeRemoteBlock(int targetFloor, int x, int y, int newID);
 private:
     void ValidTask();
     void ProcessPlayerMovement();
     void ProcessBattleResult();
     void ProcessShopLogic();
+    void ProcessItemPickup(std::shared_ptr<Props> propsPtr);
+    void ProcessNPCLogic();
 
 private:
     State m_CurrentState = State::START;
@@ -52,8 +56,10 @@ private:
     std::shared_ptr<Toast> m_Toast;
     std::shared_ptr<BattlePanel> m_BattlePanel;
     std::shared_ptr<ShopPanel> m_ShopPanel;
+    std::shared_ptr<NPCDialog> m_NPCDialog;
     int m_CurrentFloor = 0;
     std::shared_ptr<Enemy> m_CurrentEnemy = nullptr;
+    std::shared_ptr<NPC> m_CurrentNPC = nullptr;
     // std::vector<std::shared_ptr<NPC>> m_NPCs;
 
     std::shared_ptr<Map> m_Map;

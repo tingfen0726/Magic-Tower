@@ -7,16 +7,15 @@ Props::Props(const std::vector<std::string> &imagePath, int x, int y, int id) : 
 }
 
 void Props::UpdateAnimation() {
-    if (m_IsPickUp == false) {
-        return;
-    }
     unsigned int currentTime = SDL_GetTicks();
 
-    if (currentTime - m_LastFrameTime > 300)  {
-        m_CurrentFrame++;
-        if (m_CurrentFrame >= m_imagePath.size()) {
-            return;
-        }
+    if (m_IsPickUp) {
+        m_CurrentFrame = m_imagePath.size() - 1;
+        SetImageFrame(m_CurrentFrame);
+        return;
+    }
+    if (currentTime - m_LastFrameTime > 150) {
+        m_CurrentFrame = (m_CurrentFrame + 1) % (m_imagePath.size() - 1);
         SetImageFrame(m_CurrentFrame);
         m_LastFrameTime = currentTime;
     }

@@ -9,16 +9,17 @@
 // Created by fenfenfen on 2026/3/19.
 //
 
-#include <fstream>
-#include <iostream>
 #include <vector>
 #include <string>
+#include "Map.hpp"
 
 struct FloorData {
     int floorLevel;
     std::vector<std::vector<int>> grid;
+    std::vector<std::shared_ptr<NPC>> savedNPCs;
     int upStairsX, upStairsY;
     int downStairsX, downStairsY;
+    bool isVisited = false;
 };
 FloorData LoadFloorFromFile(const std::string& filepath);
 

@@ -9,6 +9,7 @@
 #include "Block/Props.hpp"
 #include "Block/Enemy.hpp"
 #include "Block/Shop.hpp"
+#include "Block/SpecificNPCs.hpp"
 #include <iostream>
 #include <iomanip>
 
@@ -326,7 +327,10 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                 case Config::ID::JUMP_WING_BIG:
                     m_Blocks.push_back(std::make_shared<Props>(
                          std::vector<std::string>{
-                             RESOURCE_DIR "/Image/Item/jump_wing.bmp",
+                             RESOURCE_DIR "/Image/Item/jump_wing_1.bmp",
+                             RESOURCE_DIR "/Image/Item/jump_wing_2.bmp",
+                             RESOURCE_DIR "/Image/Item/jump_wing_3.bmp",
+                             RESOURCE_DIR "/Image/Item/jump_wing_4.bmp",
                              RESOURCE_DIR "/Image/Item/road.bmp"
                          },
                          x, y, Config::ID::JUMP_WING_BIG
@@ -367,6 +371,15 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                          x, y, Config::ID::GREEN_VERI
                      ));
                     break;
+                case Config::ID::GEM_HOE:
+                    m_Blocks.push_back(std::make_shared<Props>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Item/gem_hoe.bmp",
+                             RESOURCE_DIR "/Image/Item/road.bmp"
+                         },
+                         x, y, Config::ID::GEM_HOE
+                     ));
+                    break;
                 case Config::ID::GOD_KNIFE_SIGN:
                     m_Blocks.push_back(std::make_shared<Props>(
                          std::vector<std::string>{
@@ -385,6 +398,7 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                          x, y, Config::ID::WIND_COMPASS
                      ));
                     break;
+                // 怪物
                 case Config::ID::GREEN_SLIME:
                     m_Blocks.push_back(std::make_shared<Enemy>(
                          std::vector<std::string>{
@@ -885,8 +899,70 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                          x, y, Config::ID::SHOP_ELDER_6
                      ));
                     break;
+                case Config::ID::FAIRY_0:
+                    m_Blocks.push_back(std::make_shared<FairyNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/fairy.bmp",
+                             RESOURCE_DIR "/Image/NPC/fairy2.bmp",
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::FAIRY_0
+                     ));
+                    break;
+                case Config::ID::THIEF_4:
+                    m_Blocks.push_back(std::make_shared<ThiefNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/thief.bmp",
+                             RESOURCE_DIR "/Image/NPC/thief2.bmp",
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::THIEF_4
+                     ));
+                    break;
+                case Config::ID::ELDER_2:
+                    m_Blocks.push_back(std::make_shared<DonorNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/elder.bmp",
+                             RESOURCE_DIR "/Image/NPC/elder2.bmp",
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::ELDER_2
+                     ));
+                    break;
+                case Config::ID::SHOPKEEPER_2:
+                    m_Blocks.push_back(std::make_shared<DonorNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/shopkeeper.bmp",
+                             RESOURCE_DIR "/Image/NPC/shopkeeper2.bmp",
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::SHOPKEEPER_2
+                     ));
+                    break;
+                case Config::ID::SYSTEM_NPC:
+                    m_Blocks.push_back(std::make_shared<systemNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/system.bmp",
+                         },
+                         x, y, Config::ID::SYSTEM_NPC
+                     ));
+                    break;
                 default:
                     continue;
+            }
+        }
+    }
+}
+
+void Map::RestoreNPCs(const std::vector<std::shared_ptr<NPC>>& savedNPCs) {
+    for (size_t i = 0; i < m_Blocks.size(); i++) {
+        if (auto freshNpc = std::dynamic_pointer_cast<NPC>(m_Blocks[i])) {
+            for (auto oldNpc : savedNPCs) {
+                if (freshNpc->GetID() == oldNpc->GetID() &&
+                    freshNpc->GetPosition() == oldNpc->GetPosition()) {
+                    m_Blocks[i] = oldNpc;
+                    break;
+                    }
             }
         }
     }
@@ -925,6 +1001,17 @@ void Map::Update() {
                 blocksToRemove.push_back({pos[0], pos[1]});
             }
         }
+        auto npc = std::dynamic_pointer_cast<NPC>(block);
+        if (npc) {
+            auto stages = npc->GetDialogues();
+            if (!stages.empty()) {
+                bool isLastTextFinished = (npc->GetCurrentStage() == stages.size() - 1) && stages.back().isCompleted;
+                if (isLastTextFinished && !npc->GetIsPersistent()) {
+                    auto pos = npc->GetPosition();
+                    blocksToRemove.push_back({pos[0], pos[1]});
+                }
+            }
+        }
 
     }
     for (const auto& pos : blocksToRemove) {
@@ -956,6 +1043,14 @@ void Map::RemoveBlock(int x, int y) {
         std::cout << std::endl;
     }
     std::cout << "-----------------------------------" << std::endl;
+}
+
+void Map::MoveNPC(std::shared_ptr<NPC> npcPtr, int nextX, int nextY) {
+    int oldX = npcPtr->GetPosition()[0];
+    int oldY = npcPtr->GetPosition()[1];
+    m_LevelData[oldY][oldX] = 0;
+    m_LevelData[nextY][nextX] = npcPtr->GetID();
+    npcPtr->SetPosition(nextX, nextY);
 }
 
 

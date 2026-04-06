@@ -55,7 +55,7 @@ void App::Start() {
     m_floorUI->SetVisible(false);
     m_Renderer.AddChild(m_floorUI);
 
-    for (int i = 0; i < 6; i++) {   //測試資料，需刪
+    for (int i = 0; i < 7; i++) {   //測試資料，需刪
         auto textUI = std::make_shared<UIText>(
             20,
             "0",
@@ -72,6 +72,8 @@ void App::Start() {
     m_Renderer.AddChild(m_BattlePanel);
     m_ShopPanel = std::make_shared<ShopPanel>();
     m_Renderer.AddChild(m_ShopPanel);
+    m_NPCDialog = std::make_shared<NPCDialog>();
+    m_Renderer.AddChild(m_NPCDialog);
 
     m_CurrentState = State::UPDATE;
 }

@@ -7,7 +7,7 @@
 #include "PlayerConstants.hpp"
 #include <vector>
 #include <string>
-
+class NPC;
 
 class Block : public Util::GameObject {
 public:
@@ -19,11 +19,19 @@ public:
         posX = x;
         posY = y;
         m_ID = id;
+        SetZIndex(20);
     }
     virtual ~Block() = default;
     void SetImageFrame(int index);
     virtual void UpdateAnimation() {}
     std::vector<int> GetPosition() { return {posX, posY}; }
+    void SetPosition(int x, int y) {
+        posX = x; posY = y;
+        m_Transform.translation = {
+            Config::MAP_OFFSET_X + (posX * Config::TILE_SIZE),
+            Config::MAP_OFFSET_Y - (posY * Config::TILE_SIZE)
+        };
+    }
     int GetID() { return m_ID; }
 protected:
     int m_ID;
@@ -37,13 +45,16 @@ class Map {
 public:
     Map();
     void LoadLevel(const std::vector<std::vector<int>>& levelData);
+    void RestoreNPCs(const std::vector<std::shared_ptr<NPC>>& savedNPCs);
 
     void SetVisible(bool visible);
     void Update();
 
     std::vector<std::shared_ptr<Block>> GetBlocks() const { return m_Blocks; }
+    void AddBlock(std::shared_ptr<Block> block){m_Blocks.push_back(block);};
     const std::vector<std::vector<int>>& GetLevelData() const { return m_LevelData; }
     void RemoveBlock(int x, int y);
+    void MoveNPC(std::shared_ptr<NPC> npcPtr, int nextX, int nextY);
 
 private:
     std::vector<std::vector<int>> m_LevelData;

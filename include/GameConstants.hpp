@@ -111,12 +111,22 @@ namespace Config {
         inline constexpr int RED_VERI = 223;
         inline constexpr int BLUE_VERI = 224;
         inline constexpr int GREEN_VERI = 225;
-        inline constexpr int GOD_KNIFE_SIGN = 226;
-        inline constexpr int WIND_COMPASS = 227;
+        inline constexpr int GEM_HOE = 226;
+        inline constexpr int GOD_KNIFE_SIGN = 227;
+        inline constexpr int WIND_COMPASS = 228;
         inline constexpr int ITEM_END    = 299;
 
         // NPC範圍：
         inline constexpr int NPC_BEGIN   = 400;
+        inline constexpr int FAIRY_0 = 400;
+        inline constexpr int THIEF_4 = 401;
+        inline constexpr int PRINCESS = 402;
+        inline constexpr int SHOPKEEPER_2 = 403;
+        inline constexpr int ELDER_2 = 404;
+        inline constexpr int SHOPKEEPER_15 = 405;
+        inline constexpr int ELDER_15 = 406;
+        inline constexpr int ELDER_16 = 407;
+        inline constexpr int SYSTEM_NPC = 499;
         inline constexpr int NPC_END     = 499;
 
         //Shop範圍:
