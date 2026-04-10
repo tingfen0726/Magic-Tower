@@ -37,7 +37,7 @@ void NPCDialog::NextDialogue() {
         m_MoveCooldown--;
         return;
     }
-    if (Util::Input::IsKeyDown(Util::Keycode::SPACE)){
+    if (Util::Input::IsKeyPressed(Util::Keycode::SPACE)){
         m_progress += 1;
         m_MoveCooldown = 8;
         if (m_progress >= static_cast<int>(m_dialogues.size())){

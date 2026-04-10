@@ -8,6 +8,7 @@ void App::Update() {
         m_Player->SetVisible(true);
         m_Map->SetVisible(true);
         m_floorUI->SetVisible(true);
+        m_PlayerIcon->SetVisible(true);
         for (auto ui : m_PlayerUI) { ui->SetVisible(true);}
     }
     m_Player->Update();
@@ -16,8 +17,9 @@ void App::Update() {
     m_BattlePanel->Update();
     // m_ShopPanel->Update();
     m_NPCDialog->Update();
+    m_FloorChangePanel->Update();
     ProcessBattleResult();
-    if (!m_ShopPanel->GetVisible() && !m_NPCDialog->GetIsDialogue()) {
+    if (!m_ShopPanel->GetVisible() && !m_NPCDialog->GetIsDialogue() && !m_BattlePanel->GetIsActive() && !m_FloorChangePanel->GetVisible()) {
         ProcessPlayerMovement();
     }
     else {
@@ -25,15 +27,20 @@ void App::Update() {
     }
     ProcessShopLogic();
     ProcessNPCLogic();
-
+    ProcessFloorChange();
     auto& playerstate = m_Player->GetPlayerStats();
+    auto& playerkey = m_Player->GetInventory();
+    if (Util::Input::IsKeyDown(Util::Keycode::F)) {
+        m_FloorChangePanel->ShowFloorChangePanel(playerkey.haswindCompass);
+    }
+
     m_PlayerUI[PlayerUI::LEVEL]->UpdateValue(playerstate.level);
     m_PlayerUI[PlayerUI::HP]->UpdateValue(playerstate.hp);
     m_PlayerUI[PlayerUI::ATK]->UpdateValue(playerstate.atk);
     m_PlayerUI[PlayerUI::DEF]->UpdateValue(playerstate.def);
     m_PlayerUI[PlayerUI::GOLD]->UpdateValue(playerstate.gold);
     m_PlayerUI[PlayerUI::EXP]->UpdateValue(playerstate.exp);
-    auto& playerkey = m_Player->GetInventory();
+
     m_PlayerUI[PlayerUI::YELLOW]->UpdateValue(playerkey.yellowKey);
     m_PlayerUI[PlayerUI::BLUE]->UpdateValue(playerkey.blueKey);
     m_PlayerUI[PlayerUI::RED]->UpdateValue(playerkey.redKey);
@@ -152,10 +159,19 @@ void App::ProcessPlayerMovement() {
                     if (nextX == block->GetPosition()[0] && nextY == block->GetPosition()[1]) {
                         auto NPCPtr = std::dynamic_pointer_cast<NPC>(block);
                         if (NPCPtr) {
+                            if (NPCPtr->GetID() == Config::ID::FAIRY_0 && player_inventory.hasblueveri) {
+                                NPCPtr->SetCurrentStage(2);
+                            }
                             if (NPCPtr->GetID() == Config::ID::THIEF_4) {
                                 if ((NPCPtr->GetCurrentStage() == 1) && player_inventory.hasgemhoe) {
                                     NPCPtr->SetCurrentStage(2);
                                     }
+                            }
+                            if (NPCPtr->GetID() == Config::ID::SHOPKEEPER_15 && player_stats.exp >= 500) {
+                                NPCPtr->SetCurrentStage(1);
+                            }
+                            if (NPCPtr->GetID() == Config::ID::ELDER_15 && player_stats.gold >= 500) {
+                                NPCPtr->SetCurrentStage(1);
                             }
 
                             std::vector<DialogueStage> dialogueStage = NPCPtr->GetDialogues();
@@ -175,16 +191,26 @@ void App::ProcessPlayerMovement() {
 }
 
 void App::ProcessBattleResult() {
-    if (m_BattlePanel->IsAnimationFinished() && m_CurrentEnemy != nullptr) {
+    if (m_BattlePanel->GetIsFinished() && m_CurrentEnemy != nullptr) {
         bool isWin = m_Player->Engage(m_CurrentEnemy->GetEnemyStats());
 
         if (isWin) m_CurrentEnemy->SetIsdie(true);
         else {
-            // m_CurrentState = State::END;
+            m_CurrentState = State::END;
             LOG_INFO("You're a bit dead."); // 你有點死了
         }
         m_BattlePanel->ResetFinished();
         m_CurrentEnemy = nullptr;
+    }
+}
+
+void App::ProcessFloorChange() {
+    int ptr = m_FloorChangePanel->ChangeOptions();
+    if (ptr >= 0) {
+        if (!JumpToFloor(ptr)) {
+            m_Toast->SetColor(Util::Color{180, 0, 0, 255});
+            m_Toast->ShowToast("該樓層尚未開啟!");
+        }
     }
 }
 
@@ -246,6 +272,27 @@ void App::ProcessNPCLogic() {
                 m_CurrentNPC->IsCompleted();
             }
         }
+        else if (m_CurrentNPC->GetID() == Config::ID::ELDER_15) {
+            if (stage == 1) {
+                player_stats.gold -= 500;
+                player_stats.atk += 120;
+                m_Toast->ShowToast("獲得 聖光劍 攻擊力 +120");
+                m_CurrentNPC->IsCompleted();
+            }
+        }
+        else if (m_CurrentNPC->GetID() == Config::ID::SHOPKEEPER_15) {
+            if (stage == 1) {
+                player_stats.exp -= 500;
+                player_stats.def += 120;
+                m_Toast->ShowToast("獲得 星光盾 防護力 +120");
+                m_CurrentNPC->IsCompleted();
+            }
+        }
+        else if (m_CurrentNPC->GetID() == Config::ID::ELDER_16) {
+            player_inventory.hasblueveri = true;
+            m_Toast->ShowToast("獲得 神秘寶物!");
+            m_CurrentNPC->IsCompleted();
+        }
         else if (m_CurrentNPC->GetID() == Config::ID::SYSTEM_NPC) {
             m_CurrentNPC->IsCompleted();
             if (stage == 1) {
@@ -264,6 +311,9 @@ void App::ProcessNPCLogic() {
                 player_inventory.hasholyCross = true;
                 player_inventory.hasredveri = true;
                 player_inventory.haswindCompass = true;
+                for (int i = 0; i < m_FloorData.size(); i++) {
+                    m_FloorData[i].isVisited = true;
+                }
             }
             m_CurrentNPC->AddCurrentStage();
         }
@@ -389,7 +439,7 @@ void App::ProcessItemPickup(std::shared_ptr<Props> propsPtr) {
 void App::ProcessShopLogic() {
     m_ShopPanel->ChangeOptions();
     if (m_ShopPanel->GetTradeFail()) {
-        m_Toast->SetColor(Util::Color{255,0,0,255});
+        m_Toast->SetColor(Util::Color{180, 0, 0, 255});
         m_Toast->ShowToast("資源不足，交易失敗！");
         m_ShopPanel->ResetTradeFail();
     }
@@ -416,7 +466,12 @@ void App::ChangeFloor(int floorDelta) {
     if (!m_FloorData[m_CurrentFloor].savedNPCs.empty()) {
         m_Map->RestoreNPCs(m_FloorData[m_CurrentFloor].savedNPCs);
     }
-    m_floorUI->UpdateValueText(" 樓", m_FloorData[m_CurrentFloor].floorLevel);
+    if (m_FloorData[m_CurrentFloor].floorLevel == 0) {
+        m_floorUI->UpdateText("序 章");
+    }
+    else {
+        m_floorUI->UpdateValueText(" 樓", m_FloorData[m_CurrentFloor].floorLevel);
+    }
     for (auto block : m_Map->GetBlocks()) {
         m_Renderer.AddChild(block);
     }
@@ -426,6 +481,35 @@ void App::ChangeFloor(int floorDelta) {
     else {
         m_Player->SetPosition(m_FloorData[m_CurrentFloor].downStairsX, m_FloorData[m_CurrentFloor].downStairsY);
     }
+}
+
+bool App::JumpToFloor(int targetFloor) {
+    if (!m_FloorData[targetFloor].isVisited) return false;
+    m_FloorData[m_CurrentFloor].grid = m_Map->GetLevelData();
+    m_FloorData[m_CurrentFloor].isVisited = true;
+    m_FloorData[m_CurrentFloor].savedNPCs.clear();
+    for (auto block : m_Map->GetBlocks()) {
+        if (auto npc = std::dynamic_pointer_cast<NPC>(block)) {
+            m_FloorData[m_CurrentFloor].savedNPCs.push_back(npc);
+        }
+    }
+    for (auto block : m_Map->GetBlocks()) {
+        m_Renderer.RemoveChild(block);
+    }
+    m_CurrentFloor = targetFloor;
+
+    m_Map->LoadLevel(m_FloorData[m_CurrentFloor].grid);
+    if (!m_FloorData[m_CurrentFloor].savedNPCs.empty()) {
+        m_Map->RestoreNPCs(m_FloorData[m_CurrentFloor].savedNPCs);
+    }
+    else {
+        m_floorUI->UpdateValueText(" 樓", m_FloorData[m_CurrentFloor].floorLevel);
+    }
+    for (auto block : m_Map->GetBlocks()) {
+        m_Renderer.AddChild(block);
+    }
+    m_Player->SetPosition(m_FloorData[m_CurrentFloor].upStairsX, m_FloorData[m_CurrentFloor].upStairsY);
+    return true;
 }
 
 void App::ChangeRemoteBlock(int targetFloor, int x, int y, int newID) {

@@ -69,6 +69,8 @@ add_executable(${PROJECT_NAME}
         include/Block/NPC.hpp
         src/Block/NPC.cpp
         include/Block/SpecificNPCs.hpp
+        include/UIText/FloorChangePanel.hpp
+        src/UIText/FloorChangePanel.cpp
 )
 
 if(MSVC)

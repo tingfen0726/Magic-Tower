@@ -939,6 +939,38 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                          x, y, Config::ID::SHOPKEEPER_2
                      ));
                     break;
+                case Config::ID::SHOPKEEPER_15:
+                    m_Blocks.push_back(std::make_shared<TraderNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/shopkeeper.bmp",
+                             RESOURCE_DIR "/Image/NPC/shopkeeper2.bmp",
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::SHOPKEEPER_15
+                     ));
+                    break;
+                case Config::ID::ELDER_15:
+                    m_Blocks.push_back(std::make_shared<TraderNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/elder.bmp",
+                             RESOURCE_DIR "/Image/NPC/elder2.bmp",
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::ELDER_15
+                     ));
+                    break;
+                case Config::ID::ELDER_16:
+                    m_Blocks.push_back(std::make_shared<ElderNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/elder.bmp",
+                             RESOURCE_DIR "/Image/NPC/elder2.bmp",
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::ELDER_16
+                     ));
+                    break;
+
+
                 case Config::ID::SYSTEM_NPC:
                     m_Blocks.push_back(std::make_shared<systemNPC>(
                          std::vector<std::string>{

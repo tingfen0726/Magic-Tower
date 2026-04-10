@@ -44,7 +44,10 @@ public:
                     }, false},
                     {{
                         {Speaker::FAIRY, "　勇敢的去吧！勇士！"}
-                    }, false}
+                    }, false},
+                    {{
+                        {Speaker::FAIRY, "　看來你獲得了冰之靈杖!"}
+                    }, false},
                 };
                 break;
         }
@@ -151,6 +154,94 @@ public:
     };
 };
 
+class TraderNPC : public NPC {
+public:
+    TraderNPC(const std::vector<std::string> &imagePath, int x, int y, int id) : NPC(imagePath, x, y, id) {
+        std::vector<DialogueStage> DialogueStages = {};
+        switch (id) {
+            case Config::ID::SHOPKEEPER_15:
+                DialogueStages = {
+                {{
+                    {Speaker::SHOPKEEPER, "　你有500經驗嗎?"},
+                    {Speaker::PLAYER, "　沒有捏"},
+                    {Speaker::SHOPKEEPER, "　看來你沒有掰掰"}
+                }, false},
+                {{
+                    {Speaker::SHOPKEEPER, "　你有500經驗嗎?"},
+                    {Speaker::PLAYER, "　有啊"},
+                    {Speaker::SHOPKEEPER, "　那我跟你交換"},
+                 }, false}
+                };
+                break;
+            case Config::ID::ELDER_15:
+                DialogueStages = {
+                {{
+                    {Speaker::ELDER, "　你有500金幣嗎?"},
+                    {Speaker::PLAYER, "　沒有捏"},
+                    {Speaker::ELDER, "　看來你沒有掰掰"}
+                }, false},
+                {{
+                    {Speaker::ELDER, "　你有500金幣嗎?"},
+                    {Speaker::PLAYER, "　有啊"},
+                    {Speaker::ELDER, "　那我跟你交換"},
+                 }, false}
+                };
+                break;
+        }
+        SetDialogues(DialogueStages);
+        SetIsPersistent(false);
+    }
+    void UpdateAnimation() override{
+        unsigned int currentTime = SDL_GetTicks();
+        auto Dialogues = GetDialogues();
+        if (Dialogues[1].isCompleted) {
+            m_CurrentFrame = m_imagePath.size() - 1;
+            SetImageFrame(m_CurrentFrame);
+            return;
+        }
+        if (currentTime - m_LastFrameTime > 150) {
+            m_CurrentFrame = (m_CurrentFrame + 1) % (m_imagePath.size() - 1);
+            SetImageFrame(m_CurrentFrame);
+            m_LastFrameTime = currentTime;
+        }
+    };
+};
+class ElderNPC : public NPC {
+public:
+    ElderNPC(const std::vector<std::string> &imagePath, int x, int y, int id) : NPC(imagePath, x, y, id) {
+        std::vector<DialogueStage> DialogueStages = {};
+        switch (id) {
+            case Config::ID::ELDER_16:
+                DialogueStages = {
+                {{
+                    {Speaker::ELDER, "　年輕人，你終於來了!"},
+                    {Speaker::PLAYER, "　您怎麼了?"},
+                    {Speaker::ELDER, "　我已經快封印不住它了，\n請你將這個東西交給彩蝶"},
+                    {Speaker::ELDER, "仙子，她會告訴你這是什麼\n東西，有什麼用的!"},
+                    {Speaker::ELDER, "　快去吧，再遲就來不及了!"}
+                }, false}
+                };
+                break;
+        }
+        SetDialogues(DialogueStages);
+        SetIsPersistent(false);
+    }
+    void UpdateAnimation() override{
+        unsigned int currentTime = SDL_GetTicks();
+        auto Dialogues = GetDialogues();
+        if (Dialogues[0].isCompleted) {
+            m_CurrentFrame = m_imagePath.size() - 1;
+            SetImageFrame(m_CurrentFrame);
+            return;
+        }
+        if (currentTime - m_LastFrameTime > 150) {
+            m_CurrentFrame = (m_CurrentFrame + 1) % (m_imagePath.size() - 1);
+            SetImageFrame(m_CurrentFrame);
+            m_LastFrameTime = currentTime;
+        }
+    };
+};
+
 class systemNPC : public NPC {
 public:
     systemNPC(const std::vector<std::string> &imagePath, int x, int y, int id) : NPC(imagePath, x, y, id) {
@@ -178,6 +269,8 @@ public:
         SetIsPersistent(true);
     }
 };
+
+
 
 
 

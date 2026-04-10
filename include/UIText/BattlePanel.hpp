@@ -10,7 +10,8 @@ class BattlePanel : public Util::GameObject {
 public:
     BattlePanel();
     void ShowBattlePanel(PlayerStats playerStats, EnemyStats enemyStats, std::string imagePath);
-    bool IsAnimationFinished() const { return m_IsFinished; }
+    bool GetIsFinished() const { return m_IsFinished; }
+    bool GetIsActive() const { return m_IsActive; }
     void ResetFinished() { m_IsFinished = false; }
     void Update();
 private:

@@ -18,7 +18,7 @@ void App::Start() {
     m_Player->SetVisible(false);
 
     m_Map = std::make_shared<Map>();
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 21; i++) {
         std::string mapPath = std::string(RESOURCE_DIR) + "/Map/level" + std::to_string(i) + ".txt";
         m_FloorData.push_back(LoadFloorFromFile(mapPath));
     }
@@ -27,6 +27,12 @@ void App::Start() {
         m_Renderer.AddChild(block);
     }
     m_Map->SetVisible(false);
+    m_PlayerIcon = std::make_shared<Util::GameObject>();
+    m_PlayerIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Player/player_11.bmp"));
+    // m_PlayerIcon->m_Transform.scale = {0.75, 0.75};
+    m_PlayerIcon->m_Transform.translation = {-345.0f, 270.0f};
+    m_PlayerIcon->SetVisible(false);
+    m_Renderer.AddChild(m_PlayerIcon);
     for (int i = 0; i < 6; i++) {
         auto textUI = std::make_shared<UIText>(
             36,
@@ -51,7 +57,7 @@ void App::Start() {
         m_PlayerUI.push_back(textUI);
         m_Renderer.AddChild(textUI);
     }
-    m_floorUI = std::make_shared<UIText>( 36, "0 樓", Util::Color{255,255,255,255}, 155, 335);
+    m_floorUI = std::make_shared<UIText>( 36, "序 章", Util::Color{255,255,255,255}, 155, 335);
     m_floorUI->SetVisible(false);
     m_Renderer.AddChild(m_floorUI);
 
@@ -74,6 +80,8 @@ void App::Start() {
     m_Renderer.AddChild(m_ShopPanel);
     m_NPCDialog = std::make_shared<NPCDialog>();
     m_Renderer.AddChild(m_NPCDialog);
+    m_FloorChangePanel = std::make_shared<FloorChangePanel>();
+    m_Renderer.AddChild(m_FloorChangePanel);
 
     m_CurrentState = State::UPDATE;
 }
