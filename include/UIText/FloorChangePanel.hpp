@@ -9,11 +9,11 @@ class FloorChangePanel : public Util::GameObject {
 public:
     FloorChangePanel();
     void ShowFloorChangePanel(bool Bool);
+    void CloseFloorChangePanel();
     bool GetVisible() {return m_Visible;};
     int ChangeOptions();
     void Update();
 private:
-    void CloseFloorChangePanel();
     void ExecuteOption();
     void ResetShopPanel();
     bool m_Visible;

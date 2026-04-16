@@ -18,6 +18,7 @@ void App::Update() {
     // m_ShopPanel->Update();
     m_NPCDialog->Update();
     m_FloorChangePanel->Update();
+    m_EnemyInfoPanel->Update();
     ProcessBattleResult();
     if (!m_ShopPanel->GetVisible() && !m_NPCDialog->GetIsDialogue() && !m_BattlePanel->GetIsActive() && !m_FloorChangePanel->GetVisible()) {
         ProcessPlayerMovement();
@@ -31,7 +32,20 @@ void App::Update() {
     auto& playerstate = m_Player->GetPlayerStats();
     auto& playerkey = m_Player->GetInventory();
     if (Util::Input::IsKeyDown(Util::Keycode::F)) {
-        m_FloorChangePanel->ShowFloorChangePanel(playerkey.haswindCompass);
+        if (!m_FloorChangePanel->GetVisible()) {
+            m_FloorChangePanel->ShowFloorChangePanel(playerkey.haswindCompass);
+        }
+        else {
+            m_FloorChangePanel->CloseFloorChangePanel();
+        }
+    }
+    if (Util::Input::IsKeyDown(Util::Keycode::E)) {
+        if (!m_EnemyInfoPanel->GetVisible() && playerkey.hasgodknifesign) {
+            m_EnemyInfoPanel->ShowEnemyInfoPanel(playerstate, GetEnmey());
+        }
+        else {
+            m_EnemyInfoPanel->CloseEnemyInfoPanel();
+        }
     }
 
     m_PlayerUI[PlayerUI::LEVEL]->UpdateValue(playerstate.level);
@@ -59,6 +73,24 @@ void App::Update() {
         Util::Input::IfExit()) {
         m_CurrentState = State::END;
     }
+}
+
+std::vector<std::shared_ptr<Enemy>> App::GetEnmey() {
+    auto blocks = m_Map->GetBlocks();
+    std::vector<std::shared_ptr<Enemy>> enemies;
+    std::vector<int> seenIDs;
+    for (auto block : blocks) {
+        auto enemyPtr = std::dynamic_pointer_cast<Enemy>(block);
+        if (enemyPtr) {
+            if (enemyPtr->GetIsdie()) continue;
+            int currentID = enemyPtr->GetID();
+            if (std::find(seenIDs.begin(), seenIDs.end(), currentID) == seenIDs.end()) {
+                seenIDs.push_back(currentID);
+                enemies.push_back(enemyPtr);
+            }
+        }
+    }
+    return enemies;
 }
 
 void App::ProcessPlayerMovement() {
@@ -134,7 +166,7 @@ void App::ProcessPlayerMovement() {
                         if (enemyPtr) {
                             if (m_CurrentEnemy == nullptr) {
                                 m_CurrentEnemy = enemyPtr;
-                                m_BattlePanel->ShowBattlePanel(m_Player->GetPlayerStats(), enemyPtr->GetEnemyStats(), enemyPtr->GetImagePath());
+                                m_BattlePanel->ShowBattlePanel(m_Player->GetPlayerStats(), enemyPtr->GetEnemyStats(), enemyPtr->GetImagePath()[0]);
                             }
                             m_Player->StepInPlace(nextDir);
                             return;

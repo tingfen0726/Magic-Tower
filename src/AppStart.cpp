@@ -82,6 +82,8 @@ void App::Start() {
     m_Renderer.AddChild(m_NPCDialog);
     m_FloorChangePanel = std::make_shared<FloorChangePanel>();
     m_Renderer.AddChild(m_FloorChangePanel);
+    m_EnemyInfoPanel = std::make_shared<EnemyInfoPanel>();
+    m_Renderer.AddChild(m_EnemyInfoPanel);
 
     m_CurrentState = State::UPDATE;
 }

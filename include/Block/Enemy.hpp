@@ -18,7 +18,7 @@ public:
     int GetAllHpLoss();
     bool GetIsdie() {return m_Isdie;}
     void SetIsdie(bool isdie) {m_Isdie = isdie;}
-    std::string GetImagePath() {return m_imagePath[0];}
+    std::vector<std::string> GetImagePath() {return {m_imagePath[0], m_imagePath[1]};}
 private:
     EnemyStats m_Stats;
     bool m_Isdie = false;

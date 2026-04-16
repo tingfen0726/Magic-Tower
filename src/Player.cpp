@@ -13,6 +13,28 @@ Player::Player() : Character(RESOURCE_DIR "/Image/Player/player_11.BMP", 50.0f) 
     m_Transform.scale = {0.74f, 0.74f};
 }
 
+int PlayerStats::CalculateDamage(EnemyStats enemyStats) const {
+    int Dnorm = std::max(0, atk - enemyStats.def);
+    if (Dnorm <= 0) {
+        return 999999;
+    }
+    float critRate = std::min(1.0f, level * 0.005f);       // 暴擊率
+    float Davg = Dnorm * (1.0f + critRate);                             // 總攻
+    int Tavg = static_cast<int>(std::ceil(enemyStats.hp / Davg));     // 回合數
+
+    int Dm = std::max(0, enemyStats.atk - def);            // 怪打玩家基礎傷害
+    int totalLoss = (Tavg - 1) * Dm;                                    // 戰鬥總扣血
+    int specialLoss = 0;
+    if (enemyStats.loss > 0 && enemyStats.loss < 1) {
+        specialLoss = static_cast<int>(enemyStats.loss * hp);   // 百分比扣血
+    }
+    else if (enemyStats.loss >= 1) {
+        specialLoss = static_cast<int>(enemyStats.loss);                // 固定值扣血
+    }
+
+    return totalLoss + specialLoss;
+}
+
 void Player::Update() {
     UpdateAnimation();
 }
@@ -88,29 +110,16 @@ void Player::SetPosition(int x, int y) {
     m_Transform.translation.y = Config::MAP_OFFSET_Y - (y * Config::TILE_SIZE);
 }
 
-bool Player::Engage(EnemyStats enemyStats) { //
-    int Dnorm = std::max(0, m_Stats.atk - enemyStats.def);      //玩攻怪
-    if (Dnorm <= 0) {
-        m_Stats.hp = 0;
+bool Player::Engage(EnemyStats enemyStats) {
+    int predictedDamage = m_Stats.CalculateDamage(enemyStats);
+    if (predictedDamage >= m_Stats.hp) {
+        m_Stats.hp = 0; // 戰死
         return false;
     }
-    float critRate = std::min(1.0f, m_Stats.level * 0.005f);    //暴擊
-    float Davg = Dnorm * (1.0f + critRate);                          //總攻
-    int Tavg = static_cast<int>(std::ceil(enemyStats.hp / Davg));  //回合
-    int Dm = std::max(0, enemyStats.atk - m_Stats.def);         //怪攻玩
-    int totalLoss = (Tavg - 1) * Dm;                                 //總扣血
 
-    if (enemyStats.loss > 0 && enemyStats.loss < 1) { m_Stats.hp -= enemyStats.loss * m_Stats.hp;}
-    else if (enemyStats.loss >= 1) {m_Stats.hp -= enemyStats.loss;}
+    m_Stats.hp -= predictedDamage;
+    m_Stats.gold += enemyStats.gold;
+    m_Stats.exp += enemyStats.exp;
 
-    if (m_Stats.hp > totalLoss) {
-        m_Stats.hp -= totalLoss;
-        m_Stats.gold += enemyStats.gold;
-        m_Stats.exp += enemyStats.exp;
-        return true;
-    }
-    else {
-        m_Stats.hp = 0;
-        return false;
-    }
+    return true;
 }

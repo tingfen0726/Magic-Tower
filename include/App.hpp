@@ -13,6 +13,7 @@
 #include "UIText/ShopPanel.hpp"
 #include "UIText/NPCDialog.hpp"
 #include "UIText/FloorChangePanel.hpp"
+#include "UIText/EnemyInfoPanel.hpp"
 #include "Block/Props.hpp"
 #include "Block/Door.hpp"
 #include "Block/Enemy.hpp"
@@ -39,13 +40,15 @@ public:
     bool JumpToFloor(int targetFloor);
     void ChangeRemoteBlock(int targetFloor, int x, int y, int newID);
 private:
-    void ValidTask();
+    // void ValidTask();
+    std::vector<std::shared_ptr<Enemy>> GetEnmey();
     void ProcessPlayerMovement();
     void ProcessBattleResult();
     void ProcessShopLogic();
     void ProcessItemPickup(std::shared_ptr<Props> propsPtr);
     void ProcessNPCLogic();
     void ProcessFloorChange();
+
 
 private:
     State m_CurrentState = State::START;
@@ -62,6 +65,7 @@ private:
     std::shared_ptr<ShopPanel> m_ShopPanel;
     std::shared_ptr<NPCDialog> m_NPCDialog;
     std::shared_ptr<FloorChangePanel> m_FloorChangePanel;
+    std::shared_ptr<EnemyInfoPanel> m_EnemyInfoPanel;
     int m_CurrentFloor = 0;
     std::shared_ptr<Enemy> m_CurrentEnemy = nullptr;
     std::shared_ptr<NPC> m_CurrentNPC = nullptr;

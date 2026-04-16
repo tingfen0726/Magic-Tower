@@ -12,6 +12,7 @@ struct PlayerStats {
     int def = 10;   // 防禦
     int gold = 0;   // 金幣
     int exp = 0;    // 經驗值
+    int CalculateDamage(EnemyStats enemyStats) const;
 };
 
 struct Inventory {
