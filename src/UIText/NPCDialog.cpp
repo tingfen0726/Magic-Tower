@@ -63,6 +63,10 @@ void NPCDialog::StareDialog(std::vector<DialogueLine> Dialogues) {
     UpdateDialogue();
 }
 
+// void NPCDialog::ShowNPCDialog(int speaker, std::vector<DialogueLine> Dialogues) {
+//
+// }
+
 void NPCDialog::UpdateDialogue() {
     if (m_dialogues.empty() || m_progress >= m_dialogues.size()) {
         return;
@@ -97,6 +101,11 @@ void NPCDialog::UpdateDialogue() {
             m_SpeakerIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/NPC/thief.bmp"));
             m_SpeakerName->UpdateText("小偷");
             m_SpeakerName->m_Transform.translation = {87, 38};
+            break;
+        case Speaker::VAMPIRE:
+            m_SpeakerIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/NPC/vampire_npc.bmp"));
+            m_SpeakerName->UpdateText("冥靈魔王");
+            m_SpeakerName->m_Transform.translation = {107, 38};
             break;
         case Speaker::SYSTEM:
             m_SpeakerIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/NPC/system.bmp"));

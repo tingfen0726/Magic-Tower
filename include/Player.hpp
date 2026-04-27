@@ -5,7 +5,7 @@
 #include "Block/Enemy.hpp"
 #include "Util/Input.hpp"
 
-struct PlayerStats {
+struct  PlayerStats {
     int level = 1;  // 等級
     int hp = 1000;  // 生命
     int atk = 10;   // 攻擊
@@ -15,7 +15,7 @@ struct PlayerStats {
     int CalculateDamage(EnemyStats enemyStats) const;
 };
 
-struct Inventory {
+struct PlayerInventory {
     int yellowKey = 0;
     int blueKey = 0;
     int redKey = 0;
@@ -35,7 +35,7 @@ public:
     void Update() override;
     void SetPosition(int x, int y);
     PlayerStats& GetPlayerStats() {return m_Stats;}
-    Inventory& GetInventory() {return m_Inventory;}
+    PlayerInventory& GetInventory() {return m_Inventory;}
     int GetCurrentGridX() const { return m_CurrentGridX; }
     int GetCurrentGridY() const { return m_CurrentGridY; }
     void GetNextGrid(int& outX, int& outY, int& outDir);
@@ -55,10 +55,7 @@ private:
     int m_MoveCooldown = 0; //移動冷卻
     int m_Direction = 0; //1正面 2背面 3左 4右
     PlayerStats m_Stats;
-    Inventory m_Inventory;
-
-
-
+    PlayerInventory m_Inventory;
 };
 
 #endif //REPLACE_WITH_YOUR_PROJECT_NAME_PLAYER_HPP

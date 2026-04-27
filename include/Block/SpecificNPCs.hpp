@@ -48,19 +48,29 @@ public:
                     {{
                         {Speaker::FAIRY, "　看來你獲得了冰之靈杖!"}
                     }, false},
+                    {{
+                        {Speaker::PLAYER, "　仙子，我已經將那個十\n字架找到了。"},
+                        {Speaker::FAIRY, "　你做得很好，\n　那麼，現在我就開始授予"},
+                        {Speaker::FAIRY, "你更強的力量!\n　咪拉哆咪嘩......"},
+                        {Speaker::FAIRY, "　好了，我已經將你現在的\n能力提升了!"},
+                        {Speaker::FAIRY, "　記住：如果你沒有足夠的\n實力的話，不要去第二十一"},
+                        {Speaker::FAIRY, "層! 在那一層裡，你所有寶\n物的法力都會失去作用!"},
+                        {Speaker::FAIRY, "　快走吧，殺死魔王後，來\n第二十二層上找我!"}
+                    }, false}
                 };
                 break;
         }
         SetDialogues(DialogueStages);
-        SetIsPersistent(true);
+        SetIsPersistent(false);
     }
     void UpdateAnimation() override{
         unsigned int currentTime = SDL_GetTicks();
-        // if (GetResolved()) {
-        //     m_CurrentFrame = m_imagePath.size() - 1;
-        //     SetImageFrame(m_CurrentFrame);
-        //     return;
-        // }
+        auto Dialogues = GetDialogues();
+        if (Dialogues[3].isCompleted) {
+            m_CurrentFrame = m_imagePath.size() - 1;
+            SetImageFrame(m_CurrentFrame);
+            return;
+        }
         if (currentTime - m_LastFrameTime > 150) {
             m_CurrentFrame = (m_CurrentFrame + 1) % (m_imagePath.size() - 1);
             SetImageFrame(m_CurrentFrame);
@@ -87,24 +97,23 @@ public:
                     }, false},
                     {{
                         {Speaker::PLAYER, "　給你!我找到了"},
-                        {Speaker::THIEF, "　唉呀!你找到了!"}
-                    }, false},
-                    {{
-                        {Speaker::THIEF, "　......"}
+                        {Speaker::THIEF, "　唉呀!你找到了!"},
+                        {Speaker::THIEF, "　我幫你敲掉了18層的牆，\n去看看吧!"}
                     }, false}
                 };
                 break;
         }
         SetDialogues(DialogueStages);
-        SetIsPersistent(true);
+        SetIsPersistent(false);
     }
     void UpdateAnimation() override{
         unsigned int currentTime = SDL_GetTicks();
-        // if (GetResolved()) {
-        //     m_CurrentFrame = m_imagePath.size() - 1;
-        //     SetImageFrame(m_CurrentFrame);
-        //     return;
-        // }
+        auto Dialogues = GetDialogues();
+        if (Dialogues[2].isCompleted) {
+            m_CurrentFrame = m_imagePath.size() - 1;
+            SetImageFrame(m_CurrentFrame);
+            return;
+        }
         if (currentTime - m_LastFrameTime > 150) {
             m_CurrentFrame = (m_CurrentFrame + 1) % (m_imagePath.size() - 1);
             SetImageFrame(m_CurrentFrame);
@@ -240,6 +249,50 @@ public:
             m_LastFrameTime = currentTime;
         }
     };
+};
+
+class princessNPC : public NPC {
+public:
+    princessNPC(const std::vector<std::string> &imagePath, int x, int y, int id) : NPC(imagePath, x, y, id) {
+        std::vector<DialogueStage> DialogueStages = {};
+        switch (id) {
+            case Config::ID::PRINCESS:
+                DialogueStages = {
+                {{
+                    {Speaker::PLAYER, "　公主我來救你了!"},
+                    {Speaker::PRINCESS, "　我要看到魔王被打倒"},
+                    {Speaker::PLAYER, "　......"},
+                }, false},
+                {{
+                    {Speaker::PRINCESS, "　加油!!"}
+                }, false}
+                };
+                break;
+        }
+        SetDialogues(DialogueStages);
+        SetIsPersistent(true);
+    }
+};
+class vampireNPC : public NPC {
+public:
+    vampireNPC(const std::vector<std::string> &imagePath, int x, int y, int id) : NPC(imagePath, x, y, id) {
+        std::vector<DialogueStage> DialogueStages = {};
+        switch (id) {
+            case Config::ID::VAMPIRE_19:
+                DialogueStages = {
+                {{
+                    {Speaker::PLAYER, "　大魔頭，你的死期\n到了!"},
+                    {Speaker::VAMPIRE, "哈哈哈......\n你也真是有意思，別以為"},
+                    {Speaker::VAMPIRE, "蝶仙那傢伙給了你力量你\n就可以打敗我，想打敗我"},
+                    {Speaker::VAMPIRE, "你還早著呢!"},
+                    {Speaker::PLAYER, "　廢話少說，去死吧!"}
+                }, false}
+                };
+                break;
+        }
+        SetDialogues(DialogueStages);
+        SetIsPersistent(false);
+    }
 };
 
 class systemNPC : public NPC {

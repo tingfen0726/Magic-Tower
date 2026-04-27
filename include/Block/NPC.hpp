@@ -9,6 +9,7 @@ enum class Speaker {
     ELDER,
     SHOPKEEPER,
     THIEF,
+    VAMPIRE,
     SYSTEM
 };
 struct DialogueLine {

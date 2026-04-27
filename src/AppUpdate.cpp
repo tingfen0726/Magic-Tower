@@ -20,7 +20,7 @@ void App::Update() {
     m_FloorChangePanel->Update();
     m_EnemyInfoPanel->Update();
     ProcessBattleResult();
-    if (!m_ShopPanel->GetVisible() && !m_NPCDialog->GetIsDialogue() && !m_BattlePanel->GetIsActive() && !m_FloorChangePanel->GetVisible()) {
+    if (!IsPlayerLockedByUI()) {
         ProcessPlayerMovement();
     }
     else {
@@ -93,6 +93,14 @@ std::vector<std::shared_ptr<Enemy>> App::GetEnmey() {
     return enemies;
 }
 
+bool App::IsPlayerLockedByUI() {
+    return m_ShopPanel->GetVisible() ||
+            m_NPCDialog->GetIsDialogue() ||
+            m_BattlePanel->GetIsActive() ||
+            m_FloorChangePanel->GetVisible() ||
+            m_EnemyInfoPanel->GetVisible();
+}
+
 void App::ProcessPlayerMovement() {
     int nextX, nextY, nextDir;
     m_Player->GetNextGrid(nextX, nextY, nextDir);
@@ -125,6 +133,7 @@ void App::ProcessPlayerMovement() {
                                     m_Player->StepInPlace(nextDir);
                                     return;
                                 }
+
                                 else{
                                     m_Player->StepInPlace(nextDir);
                                     return;
@@ -191,8 +200,13 @@ void App::ProcessPlayerMovement() {
                     if (nextX == block->GetPosition()[0] && nextY == block->GetPosition()[1]) {
                         auto NPCPtr = std::dynamic_pointer_cast<NPC>(block);
                         if (NPCPtr) {
-                            if (NPCPtr->GetID() == Config::ID::FAIRY_0 && player_inventory.hasblueveri) {
-                                NPCPtr->SetCurrentStage(2);
+                            if (NPCPtr->GetID() == Config::ID::FAIRY_0) {
+                                if ((NPCPtr->GetCurrentStage() == 2) && player_inventory.hasholyCross) {
+                                    NPCPtr->SetCurrentStage(3);
+                                }
+                                if ((NPCPtr->GetCurrentStage() == 1) && player_inventory.hasblueveri) {
+                                    NPCPtr->SetCurrentStage(2);
+                                }
                             }
                             if (NPCPtr->GetID() == Config::ID::THIEF_4) {
                                 if ((NPCPtr->GetCurrentStage() == 1) && player_inventory.hasgemhoe) {
@@ -228,8 +242,30 @@ void App::ProcessBattleResult() {
 
         if (isWin) m_CurrentEnemy->SetIsdie(true);
         else {
-            m_CurrentState = State::END;
             LOG_INFO("You're a bit dead."); // 你有點死了
+            m_CurrentState = State::END;
+        }
+        if (m_CurrentEnemy->GetID() == Config::ID::VAMPIRE_1 && m_CurrentFloor == 19) {
+            std::vector<DialogueStage> DialogueStages = {};
+            DialogueStages = {
+                {{
+                    {Speaker::VAMPIRE, "　看不出來你還有兩下子，\n有本事的話來21樓。"},
+                    {Speaker::VAMPIRE, "　在那裡，你就可以見識\n到我真正的實力了!"}
+                }, false}
+            };
+            m_NPCDialog->StareDialog(DialogueStages[0].dialogues);
+        }
+        else if (m_CurrentEnemy->GetID() == Config::ID::VAMPIRE_2 && m_CurrentFloor == 21) {
+            std::vector<DialogueStage> DialogueStages = {};
+            DialogueStages = {
+                {{
+                    {Speaker::VAMPIRE, "　啊......\n怎麼可能，我怎麼可能"},
+                    {Speaker::VAMPIRE, "會被你打被呢!\n　不，不要這樣............"}
+                }, false}
+            };
+            m_NPCDialog->StareDialog(DialogueStages[0].dialogues);
+            ChangeRemoteBlock(21, 5, 1, Config::ID::STAIRS_UP);
+            LOG_INFO("Where's my staircase?");
         }
         m_BattlePanel->ResetFinished();
         m_CurrentEnemy = nullptr;
@@ -260,34 +296,34 @@ void App::ProcessNPCLogic() {
                 int currentY = m_CurrentNPC->GetPosition()[1];
                 // 移仙子，鋪地
                 m_Map->MoveNPC(m_CurrentNPC, currentX - 1, currentY);
-                std::vector<std::string> floorImg = {RESOURCE_DIR "/Image/Road/road.bmp"};
-                auto newFloor = std::make_shared<Block>(floorImg, currentX, currentY, 0);
-                newFloor->SetZIndex(20);
-                m_Map->AddBlock(newFloor);
-                m_Renderer.AddChild(newFloor);
+                ChangeRemoteBlock(0, currentX, currentY, Config::ID::EMPTY);
 
                 player_inventory.yellowKey++;
                 player_inventory.blueKey++;
                 player_inventory.redKey++;
+                m_CurrentNPC->AddCurrentStage();
+            }
+            else if (stage == 3) {
+                player_stats.atk *= 4.0f / 3.0f;
+                player_stats.def *= 4.0f / 3.0f;
+                player_stats.hp  *= 4.0f / 3.0f;
+                ChangeRemoteBlock(20, 5, 7, Config::ID::STAIRS_UP);
             }
             m_CurrentNPC->IsCompleted();
-            m_CurrentNPC->AddCurrentStage();
         }
         else if (m_CurrentNPC->GetID() == Config::ID::THIEF_4) {
             m_CurrentNPC->IsCompleted();
             if (stage == 0) {
                 m_CurrentNPC->SetCurrentStage(1);
-                ChangeRemoteBlock(2, 6, 1, Config::ID::EMPTY);
+                ChangeRemoteBlock(2, 1, 6, Config::ID::EMPTY);
             }
             else if (stage == 1) {
             }
             else if (stage == 2) {
                 player_inventory.hasgemhoe = false;
-                // 敲18層牆
-                m_CurrentNPC->AddCurrentStage();
-            }
-            else {
-                m_CurrentNPC->AddCurrentStage();
+                ChangeRemoteBlock(18, 5, 8, Config::ID::EMPTY);
+                ChangeRemoteBlock(18, 5, 9, Config::ID::EMPTY);
+                m_CurrentNPC->IsCompleted();
             }
         }
         else if (m_CurrentNPC->GetID() == Config::ID::ELDER_2) {
@@ -324,6 +360,18 @@ void App::ProcessNPCLogic() {
             player_inventory.hasblueveri = true;
             m_Toast->ShowToast("獲得 神秘寶物!");
             m_CurrentNPC->IsCompleted();
+        }
+        else if (m_CurrentNPC->GetID() == Config::ID::PRINCESS) {
+            if (stage == 0) {
+                m_CurrentNPC->IsCompleted();
+                m_CurrentNPC->AddCurrentStage();
+                ChangeRemoteBlock(18, 10, 10, Config::ID::STAIRS_UP); //有問題
+            }
+        }
+        else if (m_CurrentNPC->GetID() == Config::ID::VAMPIRE_19) {
+            if (stage == 0) {
+                m_CurrentNPC->IsCompleted();
+            }
         }
         else if (m_CurrentNPC->GetID() == Config::ID::SYSTEM_NPC) {
             m_CurrentNPC->IsCompleted();
@@ -534,9 +582,7 @@ bool App::JumpToFloor(int targetFloor) {
     if (!m_FloorData[m_CurrentFloor].savedNPCs.empty()) {
         m_Map->RestoreNPCs(m_FloorData[m_CurrentFloor].savedNPCs);
     }
-    else {
-        m_floorUI->UpdateValueText(" 樓", m_FloorData[m_CurrentFloor].floorLevel);
-    }
+    m_floorUI->UpdateValueText(" 樓", m_FloorData[m_CurrentFloor].floorLevel);
     for (auto block : m_Map->GetBlocks()) {
         m_Renderer.AddChild(block);
     }
@@ -545,5 +591,42 @@ bool App::JumpToFloor(int targetFloor) {
 }
 
 void App::ChangeRemoteBlock(int targetFloor, int x, int y, int newID) {
-    m_FloorData[targetFloor].grid[x][y] = newID;
+    if (targetFloor == m_CurrentFloor) {
+        m_Map->UpdateGridID(x, y, newID);
+        std::vector<std::string> floorImg = {};
+        switch (newID) {
+            case Config::ID::EMPTY:
+                floorImg = {RESOURCE_DIR "/Image/Road/road.bmp"};
+                break;
+            case Config::ID::STAIRS_UP:
+                floorImg = {RESOURCE_DIR "/Image/Stair/upstair.bmp"};
+                LOG_INFO("image??");
+        }
+        auto newFloor = std::make_shared<Block>(floorImg, x, y, newID);
+        newFloor->SetZIndex(25);
+        m_Map->AddBlock(newFloor);
+        m_Renderer.AddChild(newFloor);
+    }
+    else {
+        m_FloorData[targetFloor].grid[y][x] = newID;
+    }
+}
+
+void App::EnemyReinforcements(int stage) {
+    int maxlevel = (stage == 1)? 16 : 21;
+    for (int i = 0; i < maxlevel; i++) {
+        auto map = m_FloorData[i].grid;
+        for (int j = 0; j < map.size(); j++) {
+            for (int k = 0; k < map[j].size(); k++) {
+                if (stage == 1) {
+                    if (map[j][k] == Config::ID::SOUL_SKELETON_1) {
+                        ChangeRemoteBlock(i, k, j, Config::ID::SOUL_SKELETON_2);
+                    }
+                    if (map[j][k] == Config::ID::DARK_KNIGHT_1) {
+                        ChangeRemoteBlock(i, k, j, Config::ID::DARK_KNIGHT_2);
+                    }
+                }
+            }
+        }
+    }
 }

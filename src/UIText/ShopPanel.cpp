@@ -87,7 +87,7 @@ void ShopPanel::ExecuteOption() {
     *(currentItem.rewardType) += currentItem.rewardValue;
 }
 
-void ShopPanel::ShowShopPanel(PlayerStats* playerStats, Inventory* playerInventory, int shopID) {
+void ShopPanel::ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerInventory, int shopID) {
     this->p_stats = playerStats;
     this->p_inventory = playerInventory;
     ResetShopPanel();

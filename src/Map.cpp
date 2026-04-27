@@ -124,8 +124,7 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                 case Config::ID::STAIRS_UP:
                     m_Blocks.push_back(std::make_shared<Stair>(
                          std::vector<std::string>{
-                             RESOURCE_DIR "/Image/Stair/upstair.bmp",
-                             RESOURCE_DIR "/Image/Item/road.bmp"
+                             RESOURCE_DIR "/Image/Stair/upstair.bmp"
                          },
                          x, y, Config::ID::STAIRS_UP
                      ));
@@ -133,8 +132,7 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                 case Config::ID::STAIRS_DOWN:
                     m_Blocks.push_back(std::make_shared<Stair>(
                          std::vector<std::string>{
-                             RESOURCE_DIR "/Image/Stair/downstair.bmp",
-                             RESOURCE_DIR "/Image/Item/road.bmp"
+                             RESOURCE_DIR "/Image/Stair/downstair.bmp"
                          },
                          x, y, Config::ID::STAIRS_DOWN
                      ));
@@ -969,7 +967,23 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                          x, y, Config::ID::ELDER_16
                      ));
                     break;
-
+                case Config::ID::PRINCESS:
+                    m_Blocks.push_back(std::make_shared<princessNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/princess.bmp",
+                             RESOURCE_DIR "/Image/NPC/princess2.bmp"
+                         },
+                         x, y, Config::ID::PRINCESS
+                     ));
+                    break;
+                case Config::ID::VAMPIRE_19:
+                    m_Blocks.push_back(std::make_shared<vampireNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::VAMPIRE_19
+                     ));
+                    break;
 
                 case Config::ID::SYSTEM_NPC:
                     m_Blocks.push_back(std::make_shared<systemNPC>(
@@ -1007,7 +1021,7 @@ void Map::SetVisible(bool visible) {
 }
 
 void Map::Update() {
-    std::vector<std::pair<int, int>> blocksToRemove;
+    std::vector<std::shared_ptr<Block>> blocksToRemove;
     for (auto block : m_Blocks) {
         block->UpdateAnimation();
 
@@ -1015,7 +1029,7 @@ void Map::Update() {
         if (door) {
             if (door->IsFullyOpen()) {
                 auto pos = door->GetPosition();
-                blocksToRemove.push_back({pos[0], pos[1]});
+                blocksToRemove.push_back(block);
             }
         }
 
@@ -1023,14 +1037,14 @@ void Map::Update() {
         if (props) {
             if (props->GetPickUp()) {
                 auto pos = props->GetPosition();
-                blocksToRemove.push_back({pos[0], pos[1]});
+                blocksToRemove.push_back(block);
             }
         }
         auto enemy = std::dynamic_pointer_cast<Enemy>(block);
         if (enemy) {
             if (enemy->GetIsdie()) {
                 auto pos = enemy->GetPosition();
-                blocksToRemove.push_back({pos[0], pos[1]});
+                blocksToRemove.push_back(block);
             }
         }
         auto npc = std::dynamic_pointer_cast<NPC>(block);
@@ -1040,21 +1054,26 @@ void Map::Update() {
                 bool isLastTextFinished = (npc->GetCurrentStage() == stages.size() - 1) && stages.back().isCompleted;
                 if (isLastTextFinished && !npc->GetIsPersistent()) {
                     auto pos = npc->GetPosition();
-                    blocksToRemove.push_back({pos[0], pos[1]});
+                    blocksToRemove.push_back(block);
                 }
             }
         }
 
     }
-    for (const auto& pos : blocksToRemove) {
-        RemoveBlock(pos.first, pos.second);
+    for (auto block : blocksToRemove) {
+        RemoveBlock(block);
     }
 }
 
-void Map::RemoveBlock(int x, int y) {
+void Map::RemoveBlock(std::shared_ptr<Block> blocksToRemove) {
+    auto pos = blocksToRemove->GetPosition();
+    int x = pos[0];
+    int y = pos[1];
     if (y >= 0 && y < m_LevelData.size() && x >= 0 && x < m_LevelData[y].size()) {
         if (m_LevelData[y][x] == 0) { return; }
-        m_LevelData[y][x] = 0;
+        if (m_LevelData[y][x] == blocksToRemove->GetID()) {
+            m_LevelData[y][x] = 0;
+        }
     }
     for (auto& block : m_Blocks) {
         auto pos = block->GetPosition();
@@ -1074,7 +1093,7 @@ void Map::RemoveBlock(int x, int y) {
         }
         std::cout << std::endl;
     }
-    std::cout << "-----------------------------------" << std::endl;
+    std::cout << "-------------------------------------------" << std::endl;
 }
 
 void Map::MoveNPC(std::shared_ptr<NPC> npcPtr, int nextX, int nextY) {
@@ -1093,3 +1112,8 @@ void Block::SetImageFrame(int index) {
     }
 }
 
+void Map::UpdateGridID(int x, int y, int newID) {
+    if (y >= 0 && y < m_LevelData.size() && x >= 0 && x < m_LevelData[0].size()) {
+        m_LevelData[y][x] = newID;
+    }
+}

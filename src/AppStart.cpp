@@ -18,7 +18,7 @@ void App::Start() {
     m_Player->SetVisible(false);
 
     m_Map = std::make_shared<Map>();
-    for (int i = 0; i < 21; i++) {
+    for (int i = 0; i < 22; i++) {
         std::string mapPath = std::string(RESOURCE_DIR) + "/Map/level" + std::to_string(i) + ".txt";
         m_FloorData.push_back(LoadFloorFromFile(mapPath));
     }

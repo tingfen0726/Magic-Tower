@@ -42,13 +42,14 @@ public:
 private:
     // void ValidTask();
     std::vector<std::shared_ptr<Enemy>> GetEnmey();
+    bool IsPlayerLockedByUI();                  //移動鎖定
     void ProcessPlayerMovement();
     void ProcessBattleResult();
     void ProcessShopLogic();
     void ProcessItemPickup(std::shared_ptr<Props> propsPtr);
     void ProcessNPCLogic();
     void ProcessFloorChange();
-
+    void EnemyReinforcements(int stage);        //怪物增強
 
 private:
     State m_CurrentState = State::START;
@@ -66,7 +67,7 @@ private:
     std::shared_ptr<NPCDialog> m_NPCDialog;
     std::shared_ptr<FloorChangePanel> m_FloorChangePanel;
     std::shared_ptr<EnemyInfoPanel> m_EnemyInfoPanel;
-    int m_CurrentFloor = 0;
+    int m_CurrentFloor = 0;                             //目前樓層
     std::shared_ptr<Enemy> m_CurrentEnemy = nullptr;
     std::shared_ptr<NPC> m_CurrentNPC = nullptr;
     // std::vector<std::shared_ptr<NPC>> m_NPCs;

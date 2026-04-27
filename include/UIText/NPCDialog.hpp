@@ -10,6 +10,7 @@ class NPCDialog : public Util::GameObject {
 public:
     NPCDialog();
     void StareDialog(std::vector<DialogueLine> Dialogues);
+    // void ShowNPCDialog(int speaker, std::vector<DialogueLine> Dialogues);
     bool GetIsDialogue() {return m_IsDialogue;};
     void NextDialogue();
     void Update();

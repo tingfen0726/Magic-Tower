@@ -49,12 +49,14 @@ public:
 
     void SetVisible(bool visible);
     void Update();
+    void UpdateGridID(int x, int y, int newID);
 
     std::vector<std::shared_ptr<Block>> GetBlocks() const { return m_Blocks; }
     void AddBlock(std::shared_ptr<Block> block){m_Blocks.push_back(block);};
     const std::vector<std::vector<int>>& GetLevelData() const { return m_LevelData; }
-    void RemoveBlock(int x, int y);
+    void RemoveBlock(std::shared_ptr<Block> blocksToRemove);
     void MoveNPC(std::shared_ptr<NPC> npcPtr, int nextX, int nextY);
+
 
 private:
     std::vector<std::vector<int>> m_LevelData;

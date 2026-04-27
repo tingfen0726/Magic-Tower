@@ -17,7 +17,7 @@ public:
     ShopPanel();
     void ChangeOptions();
     void Update();
-    void ShowShopPanel(PlayerStats* playerStats, Inventory* playerInventory, int shopID);
+    void ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerInventory, int shopID);
     bool GetVisible() {return m_Visible;};
     bool GetTradeFail() {return m_tradeFail;};
     void ResetTradeFail() {m_tradeFail = false;};
@@ -33,7 +33,7 @@ private:
     std::shared_ptr<Util::GameObject> m_arrow;
     std::vector<ShopOption> m_ShopItems;
     PlayerStats* p_stats = nullptr;
-    Inventory* p_inventory = nullptr;
+    PlayerInventory* p_inventory = nullptr;
     int m_ptr = 0;
     int m_MoveCooldown = 0;
     bool m_Visible;

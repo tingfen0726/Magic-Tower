@@ -126,6 +126,7 @@ namespace Config {
         inline constexpr int SHOPKEEPER_15 = 405;
         inline constexpr int ELDER_15 = 406;
         inline constexpr int ELDER_16 = 407;
+        inline constexpr int VAMPIRE_19 = 408;
         inline constexpr int SYSTEM_NPC = 499;
         inline constexpr int NPC_END     = 499;
 
