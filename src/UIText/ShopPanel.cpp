@@ -77,19 +77,19 @@ void ShopPanel::ExecuteOption() {
         CloseShopPanel();
         return;
     }
-    if (p_stats == nullptr || p_inventory == nullptr) return;
-    ShopOption currentItem = m_ShopItems[m_ptr];
-    if (*(currentItem.costType) < currentItem.costValue) {
-        m_tradeFail = true;
-        return;
+    if (OnConfirmPurchase) {
+        bool success = OnConfirmPurchase(m_currentShopID, m_ptr);
+
+        if (!success) {
+            m_tradeFail = true;
+        } else {
+            m_tradeFail = false;
+        }
     }
-    *(currentItem.costType) -= currentItem.costValue;
-    *(currentItem.rewardType) += currentItem.rewardValue;
 }
 
-void ShopPanel::ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerInventory, int shopID) {
-    this->p_stats = playerStats;
-    this->p_inventory = playerInventory;
+void ShopPanel::ShowShopPanel(int shopID) {
+    m_currentShopID = shopID;
     ResetShopPanel();
     m_MoveCooldown = 8;
     m_Visible = true;
@@ -107,11 +107,6 @@ void ShopPanel::ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerI
             m_optionText[i]->UpdateText(options[i]);
         }
         m_ShopIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Shop/shop_1_2.BMP"));
-        m_ShopItems = {
-            {&(p_stats->gold), 25, &(p_stats->hp), 800},
-            {&(p_stats->gold), 25, &(p_stats->atk), 4},
-            {&(p_stats->gold), 25, &(p_stats->def), 4}
-        };
         return;
     }
     if (shopID == Config::ID::SHOP_EXP_2) {
@@ -121,11 +116,6 @@ void ShopPanel::ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerI
             m_optionText[i]->UpdateText(options[i]);
         }
         m_ShopIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Shop/elder.BMP"));
-        m_ShopItems = {
-            {&(p_stats->exp), 100, &(p_stats->level), 1},
-            {&(p_stats->exp), 30, &(p_stats->atk), 5},
-            {&(p_stats->exp), 30, &(p_stats->def), 5}
-        };
         return;
     }
     if (shopID == Config::ID::SHOP_KEY_3) {
@@ -135,11 +125,6 @@ void ShopPanel::ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerI
             m_optionText[i]->UpdateText(options[i]);
         }
         m_ShopIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Shop/shopkeeper.BMP"));
-        m_ShopItems = {
-            {&(p_stats->gold), 10, &(p_inventory->yellowKey), 1},
-            {&(p_stats->gold), 50, &(p_inventory->blueKey), 1},
-            {&(p_stats->gold), 100, &(p_inventory->redKey), 1}
-        };
         return;
     }
     if (shopID >= Config::ID::SHOP_EVEMY_40 && shopID <= Config::ID::SHOP_EVEMY_42) {
@@ -149,11 +134,6 @@ void ShopPanel::ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerI
             m_optionText[i]->UpdateText(options[i]);
         }
         m_ShopIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Shop/shop_1_2.BMP"));
-        m_ShopItems = {
-            {&(p_stats->gold), 100, &(p_stats->hp), 4000},
-            {&(p_stats->gold), 100, &(p_stats->atk), 20},
-            {&(p_stats->gold), 100, &(p_stats->def), 20}
-        };
         return;
     }
     if (shopID == Config::ID::SHOP_KEY_5) {
@@ -163,11 +143,6 @@ void ShopPanel::ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerI
             m_optionText[i]->UpdateText(options[i]);
         }
         m_ShopIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Shop/shopkeeper.BMP"));
-        m_ShopItems = {
-            {&(p_inventory->yellowKey), 1, &(p_stats->gold), 7},
-            {&(p_inventory->blueKey), 1, &(p_stats->gold), 35},
-            {&(p_inventory->redKey), 1, &(p_stats->gold), 70}
-        };
         return;
     }
     if (shopID == Config::ID::SHOP_ELDER_6) {
@@ -177,11 +152,6 @@ void ShopPanel::ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerI
             m_optionText[i]->UpdateText(options[i]);
         }
         m_ShopIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Shop/elder.BMP"));
-        m_ShopItems = {
-            {&(p_stats->exp), 270, &(p_stats->level), 3},
-            {&(p_stats->exp), 95, &(p_stats->atk), 17},
-            {&(p_stats->exp), 95, &(p_stats->def), 17}
-        };
         return;
     }
 }
@@ -204,7 +174,6 @@ void ShopPanel::ResetShopPanel() {
         m_optionText[i]->SetColor(Util::Color{255, 255, 255, 255});
     }
     m_optionText[0]->SetColor(Util::Color{255, 215, 0, 255});
-    m_ShopItems.clear();
 }
 
 void ShopPanel::Update() {

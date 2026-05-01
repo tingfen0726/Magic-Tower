@@ -3,6 +3,7 @@
 
 #include "Character.hpp"
 #include "Block/Enemy.hpp"
+#include "PlayerConstants.hpp"
 #include "Util/Input.hpp"
 
 struct  PlayerStats {
@@ -23,8 +24,8 @@ struct PlayerInventory {
     bool hasredveri = false;        //炎之靈杖
     bool hasblueveri = false;       //冰之靈杖
     bool hasgreenveri = false;      //心之靈杖
-    bool hasgemhoe = false;
-    bool hasgodknifesign = false;   // 聖光徽
+    bool hasgemhoe = false;         //紅寶石榔頭
+    bool hasgodknifesign = true;   // 聖光徽
     bool haswindCompass = false;    // 風之羅盤
 };
 
@@ -33,16 +34,24 @@ public:
     Player();
 
     void Update() override;
-    void SetPosition(int x, int y);
-    PlayerStats& GetPlayerStats() {return m_Stats;}
-    PlayerInventory& GetInventory() {return m_Inventory;}
-    int GetCurrentGridX() const { return m_CurrentGridX; }
-    int GetCurrentGridY() const { return m_CurrentGridY; }
-    void GetNextGrid(int& outX, int& outY, int& outDir);
-    void MoveToGrid(int nextX, int nextY, int dir);
-    void StepInPlace(int dir);
-    bool Engage(EnemyStats enemyStats);
-    void StopMove() {m_IsMoving = false; m_CurrentFrame = 0;};
+    void SetPosition(int x, int y);//設置位置
+    PlayerStats GetPlayerStats() {return m_Stats;}//回傳stats
+    PlayerInventory GetInventory() {return m_Inventory;}//回傳inv
+    int GetCurrentGridX() const { return m_CurrentGridX; }//回傳x
+    int GetCurrentGridY() const { return m_CurrentGridY; }//回傳y
+    void GetNextGrid(int& outX, int& outY, int& outDir);//回傳下一步
+    void MoveToGrid(int nextX, int nextY, int dir);//移動
+    void StepInPlace(int dir);//原地踏步
+    // bool Engage(EnemyStats enemyStats);//攻擊
+    void StopMove() {m_IsMoving = false; m_CurrentFrame = 0;};//停止移動
+
+    void SetStats(PlayerLabel::Stat type, int value);
+    void SetKey(PlayerLabel::Key type, int value);
+    void SetItem(PlayerLabel::Item type, bool value);
+
+    void AddStats(PlayerLabel::Stat type, int value);
+    void AddKey(PlayerLabel::Key type, int value);
+
 private:
     void UpdateAnimation();
     void SetImageFrame(int index);

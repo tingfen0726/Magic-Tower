@@ -73,6 +73,8 @@ add_executable(${PROJECT_NAME}
         src/UIText/FloorChangePanel.cpp
         include/UIText/EnemyInfoPanel.hpp
         src/UIText/EnemyInfoPanel.cpp
+        include/Manager/ShopManager.hpp
+        include/Manager/BattleManager.hpp
 )
 
 if(MSVC)

@@ -1,7 +1,6 @@
 #include "Player.hpp"
 #include "Util/Time.hpp"
 #include "GameConstants.hpp"
-#include "PlayerConstants.hpp"
 #include "Block/Door.hpp"
 #include "Block/Props.hpp"
 
@@ -110,16 +109,52 @@ void Player::SetPosition(int x, int y) {
     m_Transform.translation.y = Config::MAP_OFFSET_Y - (y * Config::TILE_SIZE);
 }
 
-bool Player::Engage(EnemyStats enemyStats) {
-    int predictedDamage = m_Stats.CalculateDamage(enemyStats);
-    if (predictedDamage >= m_Stats.hp) {
-        m_Stats.hp = 0; // 戰死
-        return false;
+void Player::SetStats(PlayerLabel::Stat type, int value) {
+    switch (type) {
+        case PlayerLabel::Stat::LEVEL: m_Stats.level = value; break;
+        case PlayerLabel::Stat::HP: m_Stats.hp = value; break;
+        case PlayerLabel::Stat::ATK: m_Stats.atk = value; break;
+        case PlayerLabel::Stat::DEF: m_Stats.def = value; break;
+        case PlayerLabel::Stat::GOLD: m_Stats.gold = value; break;
+        case PlayerLabel::Stat::EXP: m_Stats.exp = value; break;
     }
+}
 
-    m_Stats.hp -= predictedDamage;
-    m_Stats.gold += enemyStats.gold;
-    m_Stats.exp += enemyStats.exp;
+void Player::SetKey(PlayerLabel::Key type, int value) {
+    switch (type) {
+        case PlayerLabel::Key::YELLOW: m_Inventory.yellowKey = value; break;
+        case PlayerLabel::Key::BLUE: m_Inventory.blueKey = value; break;
+        case PlayerLabel::Key::RED: m_Inventory.redKey = value; break;
+    }
+}
 
-    return true;
+void Player::SetItem(PlayerLabel::Item type, bool value) {
+    switch (type) {
+        case PlayerLabel::Item::HOLYCROSS: m_Inventory.hasholyCross = value; break;
+        case PlayerLabel::Item::REDVERI: m_Inventory.hasredveri = value; break;
+        case PlayerLabel::Item::BLUEVERI: m_Inventory.hasblueveri = value; break;
+        case PlayerLabel::Item::GREENVERI: m_Inventory.hasgreenveri = value; break;
+        case PlayerLabel::Item::GEMHOE: m_Inventory.hasgemhoe = value; break;
+        case PlayerLabel::Item::GODKNIFESIGN: m_Inventory.hasgodknifesign = value; break;
+        case PlayerLabel::Item::WINDCOMPASS: m_Inventory.haswindCompass = value; break;
+    }
+}
+
+void Player::AddStats(PlayerLabel::Stat type, int value) {
+    switch (type) {
+        case PlayerLabel::Stat::LEVEL: m_Stats.level += value; break;
+        case PlayerLabel::Stat::HP: m_Stats.hp += value; break;
+        case PlayerLabel::Stat::ATK: m_Stats.atk += value; break;
+        case PlayerLabel::Stat::DEF: m_Stats.def += value; break;
+        case PlayerLabel::Stat::GOLD: m_Stats.gold += value; break;
+        case PlayerLabel::Stat::EXP: m_Stats.exp += value; break;
+    }
+}
+
+void Player::AddKey(PlayerLabel::Key type, int value) {
+    switch (type) {
+        case PlayerLabel::Key::YELLOW: m_Inventory.yellowKey += value; break;
+        case PlayerLabel::Key::BLUE: m_Inventory.blueKey += value; break;
+        case PlayerLabel::Key::RED: m_Inventory.redKey += value; break;
+    }
 }

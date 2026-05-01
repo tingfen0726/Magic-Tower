@@ -1,5 +1,6 @@
 #ifndef REPLACE_WITH_YOUR_PROJECT_NAME_ENEMY_HPP
 #define REPLACE_WITH_YOUR_PROJECT_NAME_ENEMY_HPP
+
 struct EnemyStats {
     int hp = 0;     // 生命
     int atk = 0;    // 攻擊
@@ -19,6 +20,7 @@ public:
     bool GetIsdie() {return m_Isdie;}
     void SetIsdie(bool isdie) {m_Isdie = isdie;}
     std::vector<std::string> GetImagePath() {return {m_imagePath[0], m_imagePath[1]};}
+
 private:
     EnemyStats m_Stats;
     bool m_Isdie = false;

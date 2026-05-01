@@ -13,4 +13,16 @@ namespace PlayerUI {
     inline constexpr int RED    = 8;
 }
 
+namespace PlayerLabel {
+    enum class Stat {
+        LEVEL, HP, ATK, DEF, GOLD, EXP
+    };
+    enum class Key {
+        YELLOW, BLUE, RED
+    };
+    enum class Item {
+        HOLYCROSS, REDVERI, BLUEVERI, GREENVERI, GEMHOE, GODKNIFESIGN, WINDCOMPASS
+    };
+}
+
 #endif //REPLACE_WITH_YOUR_PROJECT_NAME_PLAYERCONSTANTS_HPP

@@ -14,12 +14,14 @@ void App::Update() {
     m_Player->Update();
     m_Map->Update();
     m_Toast->Update();
-    m_BattlePanel->Update();
+    // m_BattlePanel->Update();
     // m_ShopPanel->Update();
+    if (m_BattleManager->GetIsActive()) {
+        m_BattleManager->Update();
+    }
     m_NPCDialog->Update();
     m_FloorChangePanel->Update();
     m_EnemyInfoPanel->Update();
-    ProcessBattleResult();
     if (!IsPlayerLockedByUI()) {
         ProcessPlayerMovement();
     }
@@ -29,44 +31,44 @@ void App::Update() {
     ProcessShopLogic();
     ProcessNPCLogic();
     ProcessFloorChange();
-    auto& playerstate = m_Player->GetPlayerStats();
-    auto& playerkey = m_Player->GetInventory();
+    // auto& playerstate = m_Player->GetPlayerStats();
+    // auto& playerkey = m_Player->GetInventory();
     if (Util::Input::IsKeyDown(Util::Keycode::F)) {
         if (!m_FloorChangePanel->GetVisible()) {
-            m_FloorChangePanel->ShowFloorChangePanel(playerkey.haswindCompass);
+            m_FloorChangePanel->ShowFloorChangePanel(m_Player->GetInventory().haswindCompass);
         }
         else {
             m_FloorChangePanel->CloseFloorChangePanel();
         }
     }
     if (Util::Input::IsKeyDown(Util::Keycode::E)) {
-        if (!m_EnemyInfoPanel->GetVisible() && playerkey.hasgodknifesign) {
-            m_EnemyInfoPanel->ShowEnemyInfoPanel(playerstate, GetEnmey());
+        if (!m_EnemyInfoPanel->GetVisible() && m_Player->GetInventory().hasgodknifesign) {
+            m_EnemyInfoPanel->ShowEnemyInfoPanel(m_Player->GetPlayerStats(), GetEnmey());
         }
         else {
             m_EnemyInfoPanel->CloseEnemyInfoPanel();
         }
     }
 
-    m_PlayerUI[PlayerUI::LEVEL]->UpdateValue(playerstate.level);
-    m_PlayerUI[PlayerUI::HP]->UpdateValue(playerstate.hp);
-    m_PlayerUI[PlayerUI::ATK]->UpdateValue(playerstate.atk);
-    m_PlayerUI[PlayerUI::DEF]->UpdateValue(playerstate.def);
-    m_PlayerUI[PlayerUI::GOLD]->UpdateValue(playerstate.gold);
-    m_PlayerUI[PlayerUI::EXP]->UpdateValue(playerstate.exp);
+    m_PlayerUI[PlayerUI::LEVEL]->UpdateValue(m_Player->GetPlayerStats().level);
+    m_PlayerUI[PlayerUI::HP]->UpdateValue(m_Player->GetPlayerStats().hp);
+    m_PlayerUI[PlayerUI::ATK]->UpdateValue(m_Player->GetPlayerStats().atk);
+    m_PlayerUI[PlayerUI::DEF]->UpdateValue(m_Player->GetPlayerStats().def);
+    m_PlayerUI[PlayerUI::GOLD]->UpdateValue(m_Player->GetPlayerStats().gold);
+    m_PlayerUI[PlayerUI::EXP]->UpdateValue(m_Player->GetPlayerStats().exp);
 
-    m_PlayerUI[PlayerUI::YELLOW]->UpdateValue(playerkey.yellowKey);
-    m_PlayerUI[PlayerUI::BLUE]->UpdateValue(playerkey.blueKey);
-    m_PlayerUI[PlayerUI::RED]->UpdateValue(playerkey.redKey);
+    m_PlayerUI[PlayerUI::YELLOW]->UpdateValue(m_Player->GetInventory().yellowKey);
+    m_PlayerUI[PlayerUI::BLUE]->UpdateValue(m_Player->GetInventory().blueKey);
+    m_PlayerUI[PlayerUI::RED]->UpdateValue(m_Player->GetInventory().redKey);
 
     //測試資料，需刪
-    m_TryTextUI[0]->UpdateText(std::string("HC: ") + (playerkey.hasholyCross ? "true" : "false"));
-    m_TryTextUI[1]->UpdateText(std::string("RV: ") +(playerkey.hasredveri ? "true" : "false"));
-    m_TryTextUI[2]->UpdateText(std::string("BV: ") +(playerkey.hasblueveri ? "true" : "false"));
-    m_TryTextUI[3]->UpdateText(std::string("GV: ") +(playerkey.hasgreenveri ? "true" : "false"));
-    m_TryTextUI[4]->UpdateText(std::string("GH: ") +(playerkey.hasgemhoe ? "true" : "false"));
-    m_TryTextUI[5]->UpdateText(std::string("GKS: ") +(playerkey.hasgodknifesign ? "true" : "false"));
-    m_TryTextUI[6]->UpdateText(std::string("WC: ") +(playerkey.haswindCompass ? "true" : "false"));
+    m_TryTextUI[0]->UpdateText(std::string("HC: ") + (m_Player->GetInventory().hasholyCross ? "true" : "false"));
+    m_TryTextUI[1]->UpdateText(std::string("RV: ") +(m_Player->GetInventory().hasredveri ? "true" : "false"));
+    m_TryTextUI[2]->UpdateText(std::string("BV: ") +(m_Player->GetInventory().hasblueveri ? "true" : "false"));
+    m_TryTextUI[3]->UpdateText(std::string("GV: ") +(m_Player->GetInventory().hasgreenveri ? "true" : "false"));
+    m_TryTextUI[4]->UpdateText(std::string("GH: ") +(m_Player->GetInventory().hasgemhoe ? "true" : "false"));
+    m_TryTextUI[5]->UpdateText(std::string("GKS: ") +(m_Player->GetInventory().hasgodknifesign ? "true" : "false"));
+    m_TryTextUI[6]->UpdateText(std::string("WC: ") +(m_Player->GetInventory().haswindCompass ? "true" : "false"));
 
     m_Renderer.Update();
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) ||
@@ -96,7 +98,7 @@ std::vector<std::shared_ptr<Enemy>> App::GetEnmey() {
 bool App::IsPlayerLockedByUI() {
     return m_ShopPanel->GetVisible() ||
             m_NPCDialog->GetIsDialogue() ||
-            m_BattlePanel->GetIsActive() ||
+            m_BattleManager->GetIsActive() ||
             m_FloorChangePanel->GetVisible() ||
             m_EnemyInfoPanel->GetVisible();
 }
@@ -104,8 +106,8 @@ bool App::IsPlayerLockedByUI() {
 void App::ProcessPlayerMovement() {
     int nextX, nextY, nextDir;
     m_Player->GetNextGrid(nextX, nextY, nextDir);
-    auto& player_stats = m_Player->GetPlayerStats();
-    auto& player_inventory = m_Player->GetInventory();
+    // auto& player_stats = m_Player->GetPlayerStats();
+    // auto& player_inventory = m_Player->GetInventory();
 
     if (nextX != m_Player->GetCurrentGridX() || nextY != m_Player->GetCurrentGridY()) {
 
@@ -124,11 +126,11 @@ void App::ProcessPlayerMovement() {
                         if (doorPtr) {
                             if (doorPtr->IsFullyOpen()) { }
                             else if (!doorPtr->IsOpen()) {
-                                if (doorPtr->CanOpen({player_inventory.yellowKey, player_inventory.blueKey, player_inventory.redKey})) {
+                                if (doorPtr->CanOpen({m_Player->GetInventory().yellowKey, m_Player->GetInventory().blueKey, m_Player->GetInventory().redKey})) {
                                     switch (doorPtr->GetID()) {
-                                        case Config::ID::DOOR_YELLOW: player_inventory.yellowKey--; break;
-                                        case Config::ID::DOOR_BLUE:   player_inventory.blueKey--; break;
-                                        case Config::ID::DOOR_RED:    player_inventory.redKey--; break;
+                                        case Config::ID::DOOR_YELLOW: m_Player->AddKey(PlayerLabel::Key::YELLOW, -1); break;
+                                        case Config::ID::DOOR_BLUE: m_Player->AddKey(PlayerLabel::Key::BLUE, -1);   break;
+                                        case Config::ID::DOOR_RED: m_Player->AddKey(PlayerLabel::Key::RED, -1); break;
                                     }
                                     m_Player->StepInPlace(nextDir);
                                     return;
@@ -175,6 +177,7 @@ void App::ProcessPlayerMovement() {
                         if (enemyPtr) {
                             if (m_CurrentEnemy == nullptr) {
                                 m_CurrentEnemy = enemyPtr;
+                                m_BattleManager->StartBattle(enemyPtr->GetEnemyStats());
                                 m_BattlePanel->ShowBattlePanel(m_Player->GetPlayerStats(), enemyPtr->GetEnemyStats(), enemyPtr->GetImagePath()[0]);
                             }
                             m_Player->StepInPlace(nextDir);
@@ -188,7 +191,7 @@ void App::ProcessPlayerMovement() {
                     if (nextX == block->GetPosition()[0] && nextY == block->GetPosition()[1]) {
                         auto shopPtr = std::dynamic_pointer_cast<Shop>(block);
                         if (shopPtr) {
-                            m_ShopPanel->ShowShopPanel(&player_stats, &player_inventory, targetID);
+                            m_ShopPanel->ShowShopPanel(targetID);
                             m_Player->StepInPlace(nextDir);
                             return;
                         }
@@ -201,22 +204,22 @@ void App::ProcessPlayerMovement() {
                         auto NPCPtr = std::dynamic_pointer_cast<NPC>(block);
                         if (NPCPtr) {
                             if (NPCPtr->GetID() == Config::ID::FAIRY_0) {
-                                if ((NPCPtr->GetCurrentStage() == 2) && player_inventory.hasholyCross) {
+                                if ((NPCPtr->GetCurrentStage() == 2) && m_Player->GetInventory().hasholyCross) {
                                     NPCPtr->SetCurrentStage(3);
                                 }
-                                if ((NPCPtr->GetCurrentStage() == 1) && player_inventory.hasblueveri) {
+                                if ((NPCPtr->GetCurrentStage() == 1) && m_Player->GetInventory().hasblueveri) {
                                     NPCPtr->SetCurrentStage(2);
                                 }
                             }
                             if (NPCPtr->GetID() == Config::ID::THIEF_4) {
-                                if ((NPCPtr->GetCurrentStage() == 1) && player_inventory.hasgemhoe) {
+                                if ((NPCPtr->GetCurrentStage() == 1) && m_Player->GetInventory().hasgemhoe) {
                                     NPCPtr->SetCurrentStage(2);
                                     }
                             }
-                            if (NPCPtr->GetID() == Config::ID::SHOPKEEPER_15 && player_stats.exp >= 500) {
+                            if (NPCPtr->GetID() == Config::ID::SHOPKEEPER_15 && m_Player->GetPlayerStats().exp >= 500) {
                                 NPCPtr->SetCurrentStage(1);
                             }
-                            if (NPCPtr->GetID() == Config::ID::ELDER_15 && player_stats.gold >= 500) {
+                            if (NPCPtr->GetID() == Config::ID::ELDER_15 && m_Player->GetPlayerStats().gold >= 500) {
                                 NPCPtr->SetCurrentStage(1);
                             }
 
@@ -236,40 +239,42 @@ void App::ProcessPlayerMovement() {
     }
 }
 
-void App::ProcessBattleResult() {
-    if (m_BattlePanel->GetIsFinished() && m_CurrentEnemy != nullptr) {
-        bool isWin = m_Player->Engage(m_CurrentEnemy->GetEnemyStats());
+void App::ProcessBattleResult(bool isWin) {
+    if (isWin) {
+        if (m_CurrentEnemy != nullptr) {
+            int dropGold = m_CurrentEnemy->GetEnemyStats().gold;
+            int dropExp = m_CurrentEnemy->GetEnemyStats().exp;
+            m_Player->AddStats(PlayerLabel::Stat::GOLD, dropGold);
+            m_Player->AddStats(PlayerLabel::Stat::EXP, dropExp);
+            m_CurrentEnemy->SetIsdie(true); // 怪物死亡
 
-        if (isWin) m_CurrentEnemy->SetIsdie(true);
-        else {
-            LOG_INFO("You're a bit dead."); // 你有點死了
-            m_CurrentState = State::END;
+            if (m_CurrentEnemy->GetID() == Config::ID::VAMPIRE_1 && m_CurrentFloor == 19) {
+                std::vector<DialogueStage> DialogueStages = {
+                    {{
+                        {Speaker::VAMPIRE, "　看不出來你還有兩下子，\n有本事的話來21樓。"},
+                        {Speaker::VAMPIRE, "　在那裡，你就可以見識\n到我真正的實力了!"}
+                    }, false}
+                };
+                m_NPCDialog->StareDialog(DialogueStages[0].dialogues);
+            }
+            else if (m_CurrentEnemy->GetID() == Config::ID::VAMPIRE_2 && m_CurrentFloor == 21) {
+                std::vector<DialogueStage> DialogueStages = {
+                    {{
+                        {Speaker::VAMPIRE, "　啊......\n怎麼可能，我怎麼可能"},
+                        {Speaker::VAMPIRE, "會被你打被呢!\n　不，不要這樣............"}
+                    }, false}
+                };
+                m_NPCDialog->StareDialog(DialogueStages[0].dialogues);
+                ChangeRemoteBlock(21, 5, 1, Config::ID::STAIRS_UP);
+                LOG_INFO("Where's my staircase?");
+            }
         }
-        if (m_CurrentEnemy->GetID() == Config::ID::VAMPIRE_1 && m_CurrentFloor == 19) {
-            std::vector<DialogueStage> DialogueStages = {};
-            DialogueStages = {
-                {{
-                    {Speaker::VAMPIRE, "　看不出來你還有兩下子，\n有本事的話來21樓。"},
-                    {Speaker::VAMPIRE, "　在那裡，你就可以見識\n到我真正的實力了!"}
-                }, false}
-            };
-            m_NPCDialog->StareDialog(DialogueStages[0].dialogues);
-        }
-        else if (m_CurrentEnemy->GetID() == Config::ID::VAMPIRE_2 && m_CurrentFloor == 21) {
-            std::vector<DialogueStage> DialogueStages = {};
-            DialogueStages = {
-                {{
-                    {Speaker::VAMPIRE, "　啊......\n怎麼可能，我怎麼可能"},
-                    {Speaker::VAMPIRE, "會被你打被呢!\n　不，不要這樣............"}
-                }, false}
-            };
-            m_NPCDialog->StareDialog(DialogueStages[0].dialogues);
-            ChangeRemoteBlock(21, 5, 1, Config::ID::STAIRS_UP);
-            LOG_INFO("Where's my staircase?");
-        }
-        m_BattlePanel->ResetFinished();
-        m_CurrentEnemy = nullptr;
     }
+    else {
+        LOG_INFO("You're a bit dead.");
+        m_CurrentState = State::END;
+    }
+    m_CurrentEnemy = nullptr;
 }
 
 void App::ProcessFloorChange() {
@@ -283,8 +288,8 @@ void App::ProcessFloorChange() {
 }
 
 void App::ProcessNPCLogic() {
-    auto& player_stats = m_Player->GetPlayerStats();
-    auto& player_inventory = m_Player->GetInventory();
+    // auto& player_stats = m_Player->GetPlayerStats();
+    // auto& player_inventory = m_Player->GetInventory();
 
     m_NPCDialog->NextDialogue();
 
@@ -298,15 +303,15 @@ void App::ProcessNPCLogic() {
                 m_Map->MoveNPC(m_CurrentNPC, currentX - 1, currentY);
                 ChangeRemoteBlock(0, currentX, currentY, Config::ID::EMPTY);
 
-                player_inventory.yellowKey++;
-                player_inventory.blueKey++;
-                player_inventory.redKey++;
+                m_Player->AddKey(PlayerLabel::Key::YELLOW, 1);
+                m_Player->AddKey(PlayerLabel::Key::BLUE, 1);
+                m_Player->AddKey(PlayerLabel::Key::RED, 1);
                 m_CurrentNPC->AddCurrentStage();
             }
             else if (stage == 3) {
-                player_stats.atk *= 4.0f / 3.0f;
-                player_stats.def *= 4.0f / 3.0f;
-                player_stats.hp  *= 4.0f / 3.0f;
+                m_Player->AddStats(PlayerLabel::Stat::ATK, m_Player->GetPlayerStats().atk * 1.0f / 3.0f);
+                m_Player->AddStats(PlayerLabel::Stat::DEF, m_Player->GetPlayerStats().def * 1.0f / 3.0f);
+                m_Player->AddStats(PlayerLabel::Stat::HP, m_Player->GetPlayerStats().hp * 1.0f / 3.0f);
                 ChangeRemoteBlock(20, 5, 7, Config::ID::STAIRS_UP);
             }
             m_CurrentNPC->IsCompleted();
@@ -320,7 +325,7 @@ void App::ProcessNPCLogic() {
             else if (stage == 1) {
             }
             else if (stage == 2) {
-                player_inventory.hasgemhoe = false;
+                m_Player->SetItem(PlayerLabel::Item::GEMHOE, false);
                 ChangeRemoteBlock(18, 5, 8, Config::ID::EMPTY);
                 ChangeRemoteBlock(18, 5, 9, Config::ID::EMPTY);
                 m_CurrentNPC->IsCompleted();
@@ -328,36 +333,36 @@ void App::ProcessNPCLogic() {
         }
         else if (m_CurrentNPC->GetID() == Config::ID::ELDER_2) {
             if (stage == 0) {
-                player_stats.atk += 70;
+                m_Player->AddStats(PlayerLabel::Stat::ATK, 70);
                 m_Toast->ShowToast("獲得 鋼劍 攻擊力 +70");
                 m_CurrentNPC->IsCompleted();
             }
         }
         else if (m_CurrentNPC->GetID() == Config::ID::SHOPKEEPER_2) {
             if (stage == 0) {
-                player_stats.def += 70;
+                m_Player->AddStats(PlayerLabel::Stat::DEF, 70);
                 m_Toast->ShowToast("獲得 鋼盾 防護力 +70");
                 m_CurrentNPC->IsCompleted();
             }
         }
         else if (m_CurrentNPC->GetID() == Config::ID::ELDER_15) {
             if (stage == 1) {
-                player_stats.gold -= 500;
-                player_stats.atk += 120;
+                m_Player->AddStats(PlayerLabel::Stat::GOLD, -500);
+                m_Player->AddStats(PlayerLabel::Stat::ATK, 120);
                 m_Toast->ShowToast("獲得 聖光劍 攻擊力 +120");
                 m_CurrentNPC->IsCompleted();
             }
         }
         else if (m_CurrentNPC->GetID() == Config::ID::SHOPKEEPER_15) {
             if (stage == 1) {
-                player_stats.exp -= 500;
-                player_stats.def += 120;
+                m_Player->AddStats(PlayerLabel::Stat::EXP, -500);
+                m_Player->AddStats(PlayerLabel::Stat::DEF, 120);
                 m_Toast->ShowToast("獲得 星光盾 防護力 +120");
                 m_CurrentNPC->IsCompleted();
             }
         }
         else if (m_CurrentNPC->GetID() == Config::ID::ELDER_16) {
-            player_inventory.hasblueveri = true;
+            m_Player->SetItem(PlayerLabel::Item::BLUEVERI, true);
             m_Toast->ShowToast("獲得 神秘寶物!");
             m_CurrentNPC->IsCompleted();
         }
@@ -376,21 +381,22 @@ void App::ProcessNPCLogic() {
         else if (m_CurrentNPC->GetID() == Config::ID::SYSTEM_NPC) {
             m_CurrentNPC->IsCompleted();
             if (stage == 1) {
-                player_stats.atk = 5000;
-                player_stats.def = 5000;
-                player_stats.gold = 5000;
-                player_stats.exp = 5000;
+                m_Player->SetStats(PlayerLabel::Stat::ATK, 5000);
+                m_Player->SetStats(PlayerLabel::Stat::DEF, 5000);
+                m_Player->SetStats(PlayerLabel::Stat::GOLD, 5000);
+                m_Player->SetStats(PlayerLabel::Stat::EXP, 5000);
 
-                player_inventory.yellowKey = 100;
-                player_inventory.blueKey = 100;
-                player_inventory.redKey = 100;
-                player_inventory.hasgemhoe = true;
-                player_inventory.hasblueveri = true;
-                player_inventory.hasgodknifesign = true;
-                player_inventory.hasgreenveri = true;
-                player_inventory.hasholyCross = true;
-                player_inventory.hasredveri = true;
-                player_inventory.haswindCompass = true;
+                m_Player->SetKey(PlayerLabel::Key::YELLOW, 100);
+                m_Player->SetKey(PlayerLabel::Key::BLUE, 100);
+                m_Player->SetKey(PlayerLabel::Key::RED, 100);
+
+                m_Player->SetItem(PlayerLabel::Item::BLUEVERI, true);
+                m_Player->SetItem(PlayerLabel::Item::GEMHOE, true);
+                m_Player->SetItem(PlayerLabel::Item::GODKNIFESIGN, true);
+                m_Player->SetItem(PlayerLabel::Item::GREENVERI, true);
+                m_Player->SetItem(PlayerLabel::Item::REDVERI, true);
+                m_Player->SetItem(PlayerLabel::Item::WINDCOMPASS, true);
+                m_Player->SetItem(PlayerLabel::Item::HOLYCROSS, true);
                 for (int i = 0; i < m_FloorData.size(); i++) {
                     m_FloorData[i].isVisited = true;
                 }
@@ -406,109 +412,109 @@ void App::ProcessNPCLogic() {
     }
 }
 void App::ProcessItemPickup(std::shared_ptr<Props> propsPtr) {
-    auto& player_stats = m_Player->GetPlayerStats();
-    auto& player_inventory = m_Player->GetInventory();
+    // auto& player_stats = m_Player->GetPlayerStats();
+    // auto& player_inventory = m_Player->GetInventory();
     if (propsPtr->GetPickUp()) {
         return;
     }
     propsPtr->PickUp();
     switch (propsPtr->GetID()) {
         case Config::ID::YELLOW_KEY:
-            player_inventory.yellowKey++;
+            m_Player->AddKey(PlayerLabel::Key::YELLOW, 1);
             m_Toast->ShowToast("獲得 黃鑰匙 x1");
             break;
         case Config::ID::BLUE_KEY:
-            player_inventory.blueKey++;
+            m_Player->AddKey(PlayerLabel::Key::BLUE, 1);
             m_Toast->ShowToast("獲得 藍鑰匙 x1");
             break;
         case Config::ID::RED_KEY:
-            player_inventory.redKey++;
+            m_Player->AddKey(PlayerLabel::Key::RED, 1);
             m_Toast->ShowToast("獲得 紅鑰匙 x1");
             break;
         case Config::ID::MAGIC_KEY:
-            player_inventory.yellowKey++;
-            player_inventory.blueKey++;
-            player_inventory.redKey++;
+            m_Player->AddKey(PlayerLabel::Key::YELLOW, 1);
+            m_Player->AddKey(PlayerLabel::Key::BLUE, 1);
+            m_Player->AddKey(PlayerLabel::Key::RED, 1);
             m_Toast->ShowToast("獲得 鑰匙盒 各種鑰匙數 x1");
             break;
         case Config::ID::RED_POTION:
-            player_stats.hp += 200;
+            m_Player->AddStats(PlayerLabel::Stat::HP, 200);
             m_Toast->ShowToast("獲得 小血瓶 體力 +200");
             break;
         case Config::ID::BLUE_POTION:
-            player_stats.hp += 500;
+            m_Player->AddStats(PlayerLabel::Stat::HP, 500);
             m_Toast->ShowToast("獲得 大血瓶 體力 +500");
             break;
         case Config::ID::HOLY_WATER:
-            player_stats.hp *= 2;
+            m_Player->SetStats(PlayerLabel::Stat::HP, m_Player->GetPlayerStats().hp * 2);
             m_Toast->ShowToast("獲得 聖水 當前體力翻倍");
             break;
         case Config::ID::RUBY:
-            player_stats.atk += 3;
+            m_Player->AddStats(PlayerLabel::Stat::ATK, 3);
             m_Toast->ShowToast("獲得 紅色寶石 攻擊力 +3");
             break;
         case Config::ID::SAPPHIRE:
-            player_stats.def += 3;
+            m_Player->AddStats(PlayerLabel::Stat::DEF, 3);
             m_Toast->ShowToast("獲得 藍色寶石 防禦力 +3");
             break;
         case Config::ID::SWORD_B:
-            player_stats.atk += 150;
+            m_Player->AddStats(PlayerLabel::Stat::ATK, 150);
             m_Toast->ShowToast("獲得 星光神劍 攻擊力 +150");
             break;
         case Config::ID::SWORD_C:
-            player_stats.atk += 70;
+            m_Player->AddStats(PlayerLabel::Stat::ATK, 70);
             m_Toast->ShowToast("獲得 青峰劍 攻擊力 +70");
             break;
         case Config::ID::SWORD_D:
-            player_stats.atk += 10;
+            m_Player->AddStats(PlayerLabel::Stat::ATK, 10);
             m_Toast->ShowToast("獲得 鐵劍 攻擊力 +10");
             break;
         case Config::ID::SHIELD_A:
-            player_stats.def += 190;
+            m_Player->AddStats(PlayerLabel::Stat::DEF, 190);
             m_Toast->ShowToast("獲得 光芒神盾 防禦力 +190");
             break;
         case Config::ID::SHIELD_C:
-            player_stats.def += 10;
+            m_Player->AddStats(PlayerLabel::Stat::DEF, 10);
             m_Toast->ShowToast("獲得 鐵盾 防禦力 +10");
             break;
         case Config::ID::SHIELD_D:
-            player_stats.def += 85;
+            m_Player->AddStats(PlayerLabel::Stat::DEF, 85);
             m_Toast->ShowToast("獲得 黃金盾 防禦力 +85");
             break;
         case Config::ID::COIN:
-            player_stats.gold += 300;
+            m_Player->AddStats(PlayerLabel::Stat::GOLD, 300);
             m_Toast->ShowToast("獲得 金塊 金幣 +300");
             break;
         case Config::ID::JUMP_WING_SMALL:
-            player_stats.level += 1;
+            m_Player->AddStats(PlayerLabel::Stat::LEVEL, 1);
             m_Toast->ShowToast("獲得 小飛羽 等級 +1");
             break;
         case Config::ID::JUMP_WING_BIG:
-            player_stats.level += 3;
+            m_Player->AddStats(PlayerLabel::Stat::LEVEL, 3);
             m_Toast->ShowToast("獲得 大飛羽 等級 +3");
             break;
         case Config::ID::HOLY_CROSS:
-            player_inventory.hasholyCross = true;
+            m_Player->SetItem(PlayerLabel::Item::HOLYCROSS, true);
             m_Toast->ShowToast("獲得 神聖十字架 提升體功防屬性");
             break;
         case Config::ID::RED_VERI:
-            player_inventory.hasredveri = true;
+            m_Player->SetItem(PlayerLabel::Item::REDVERI, true);
             m_Toast->ShowToast("獲得 炎之靈杖");
             break;
         case Config::ID::GREEN_VERI:
-            player_inventory.hasgreenveri = true;
+            m_Player->SetItem(PlayerLabel::Item::GREENVERI, true);
             m_Toast->ShowToast("獲得 心之靈杖");
             break;
         case Config::ID::GEM_HOE:
-            player_inventory.hasgemhoe = true;
+            m_Player->SetItem(PlayerLabel::Item::GEMHOE, true);
             m_Toast->ShowToast("獲得 紅寶石榔頭");
             break;
         case Config::ID::GOD_KNIFE_SIGN:
-            player_inventory.hasgodknifesign = true;
+            m_Player->SetItem(PlayerLabel::Item::GODKNIFESIGN, true);
             m_Toast->ShowToast("獲得 聖光徽");
             break;
         case Config::ID::WIND_COMPASS:
-            player_inventory.haswindCompass = true;
+            m_Player->SetItem(PlayerLabel::Item::WINDCOMPASS, true);
             m_Toast->ShowToast("獲得 風之羅盤");
             break;
         default:

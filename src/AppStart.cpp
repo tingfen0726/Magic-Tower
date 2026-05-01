@@ -74,14 +74,36 @@ void App::Start() {
     }
     m_Toast = std::make_shared<Toast>("找我嗎?");
     m_Renderer.AddChild(m_Toast);
+
     m_BattlePanel = std::make_shared<BattlePanel>();
     m_Renderer.AddChild(m_BattlePanel);
+    m_BattleManager = std::make_shared<BattleManager>(m_Player.get());
+    m_BattleManager->OnPlayerHpChanged = [this](int newHp) {
+        m_BattlePanel->UpdatePlayerHpText(newHp);
+    };
+
+    m_BattleManager->OnEnemyHpChanged = [this](int newHp) {
+        m_BattlePanel->UpdateEnemyHpText(newHp);
+    };
+
+    m_BattleManager->OnBattleEnded = [this](bool playerWon) {
+        m_BattlePanel->ClosePanel();
+        ProcessBattleResult(playerWon);
+    };
+
     m_ShopPanel = std::make_shared<ShopPanel>();
     m_Renderer.AddChild(m_ShopPanel);
+    m_ShopManager = std::make_shared<ShopManager>(m_Player.get());
+    m_ShopPanel->OnConfirmPurchase = [this](int shopID, int optionIndex) {
+        return m_ShopManager->ProcessPurchase(shopID, optionIndex);
+    };// 依賴注入
+
     m_NPCDialog = std::make_shared<NPCDialog>();
     m_Renderer.AddChild(m_NPCDialog);
+
     m_FloorChangePanel = std::make_shared<FloorChangePanel>();
     m_Renderer.AddChild(m_FloorChangePanel);
+
     m_EnemyInfoPanel = std::make_shared<EnemyInfoPanel>();
     m_Renderer.AddChild(m_EnemyInfoPanel);
 

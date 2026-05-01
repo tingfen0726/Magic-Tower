@@ -14,6 +14,8 @@
 #include "UIText/NPCDialog.hpp"
 #include "UIText/FloorChangePanel.hpp"
 #include "UIText/EnemyInfoPanel.hpp"
+#include "Manager/ShopManager.hpp"
+#include "Manager/BattleManager.hpp"
 #include "Block/Props.hpp"
 #include "Block/Door.hpp"
 #include "Block/Enemy.hpp"
@@ -44,7 +46,7 @@ private:
     std::vector<std::shared_ptr<Enemy>> GetEnmey();
     bool IsPlayerLockedByUI();                  //移動鎖定
     void ProcessPlayerMovement();
-    void ProcessBattleResult();
+    void ProcessBattleResult(bool isWin);
     void ProcessShopLogic();
     void ProcessItemPickup(std::shared_ptr<Props> propsPtr);
     void ProcessNPCLogic();
@@ -63,6 +65,7 @@ private:
     std::vector<std::shared_ptr<UIText>> m_TryTextUI; //測試資料，需刪
     std::shared_ptr<Toast> m_Toast;
     std::shared_ptr<BattlePanel> m_BattlePanel;
+    std::shared_ptr<BattleManager> m_BattleManager;
     std::shared_ptr<ShopPanel> m_ShopPanel;
     std::shared_ptr<NPCDialog> m_NPCDialog;
     std::shared_ptr<FloorChangePanel> m_FloorChangePanel;
@@ -71,6 +74,8 @@ private:
     std::shared_ptr<Enemy> m_CurrentEnemy = nullptr;
     std::shared_ptr<NPC> m_CurrentNPC = nullptr;
     // std::vector<std::shared_ptr<NPC>> m_NPCs;
+
+    std::shared_ptr<ShopManager> m_ShopManager;
 
     std::shared_ptr<Map> m_Map;
 };

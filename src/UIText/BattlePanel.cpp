@@ -53,10 +53,6 @@ BattlePanel::BattlePanel() {
 }
 
 void BattlePanel::ShowBattlePanel(PlayerStats playerStats, EnemyStats enemyStats, std::string imagePath) {
-
-    if (enemyStats.loss > 0 && enemyStats.loss < 1) { playerStats.hp -= enemyStats.loss * playerStats.hp;}
-    else if (enemyStats.loss >= 1) {playerStats.hp -= enemyStats.loss;}
-
     m_EnemyIcon->SetDrawable(std::make_shared<Util::Image>(imagePath));
     m_text[0]->UpdateText("體力值:\n" + std::to_string(enemyStats.hp));
     m_text[1]->UpdateText("攻擊力:\n" + std::to_string(enemyStats.atk));
@@ -65,12 +61,6 @@ void BattlePanel::ShowBattlePanel(PlayerStats playerStats, EnemyStats enemyStats
     m_text[4]->UpdateText("攻擊力:\n" + std::to_string(playerStats.atk));
     m_text[5]->UpdateText("防禦力:\n" + std::to_string(playerStats.def));
 
-    m_Pstate = playerStats;
-    m_Estate = enemyStats;
-
-    m_ActionCooldown = 20;
-    m_timer = 9999;
-    m_IsActive = true;
     SetVisible(true);
     for (int i = 0;i < 6; i++) { m_text[i]->SetVisible(true);}
     for (int i = 0;i < 3; i++) { m_text2[i]->SetVisible(true);}
@@ -78,37 +68,18 @@ void BattlePanel::ShowBattlePanel(PlayerStats playerStats, EnemyStats enemyStats
     m_EnemyIcon->SetVisible(true);
 }
 
-void BattlePanel::Update() {
-    if (!m_IsActive){ return;}
-    if (m_Pstate.hp > 0 && m_Estate.hp > 0) {
-        m_ActionCooldown--;
-        if (m_ActionCooldown <= 0) {
-            float critRate = std::min(1.0f, m_Pstate.level * 0.005f);
-            int Dnorm = std::max(0,m_Pstate.atk - m_Estate.def);
-            m_Estate.hp -= static_cast<int>(Dnorm * (1.0f + critRate));
-            if (m_Estate.hp < 0) m_Estate.hp = 0;
-            m_text[0]->UpdateText("體力值:\n" + std::to_string(m_Estate.hp));
+void BattlePanel::UpdatePlayerHpText(int hp) {
+    m_text[3]->UpdateText("體力值:\n" + std::to_string(hp));
+}
 
-            if (m_Estate.hp > 0) {
-                int Dm = std::max(0, m_Estate.atk - m_Pstate.def);
-                m_Pstate.hp -= Dm;
-                if (m_Pstate.hp < 0) m_Pstate.hp = 0;
-                m_text[3]->UpdateText("體力值:\n" + std::to_string(m_Pstate.hp));
-            }
-            m_ActionCooldown = 20;
-        }
-    }
-    else {
-        if (m_timer > 15) m_timer = 15;
-        else if (m_timer > 0) m_timer--;
-        else {
-            m_IsFinished = true;
-            m_IsActive = false;
-            SetVisible(false);
-            for (int i = 0;i < 6; i++) { m_text[i]->SetVisible(false);}
-            for (int i = 0;i < 3; i++) { m_text2[i]->SetVisible(false);}
-            m_PlayerIcon->SetVisible(false);
-            m_EnemyIcon->SetVisible(false);
-        }
-    }
+void BattlePanel::UpdateEnemyHpText(int hp) {
+    m_text[0]->UpdateText("體力值:\n" + std::to_string(hp));
+}
+
+void BattlePanel::ClosePanel() {
+    SetVisible(false);
+    for (int i = 0; i < 6; i++) { m_text[i]->SetVisible(false); }
+    for (int i = 0; i < 3; i++) { m_text2[i]->SetVisible(false); }
+    m_PlayerIcon->SetVisible(false);
+    m_EnemyIcon->SetVisible(false);
 }

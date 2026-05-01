@@ -6,21 +6,17 @@
 #include "Player.hpp"
 #include "GameConstants.hpp"
 
-struct ShopOption {
-    int* costType;
-    int costValue;
-    int* rewardType;
-    int rewardValue;
-};
 class ShopPanel : public Util::GameObject {
 public:
     ShopPanel();
     void ChangeOptions();
     void Update();
-    void ShowShopPanel(PlayerStats* playerStats, PlayerInventory* playerInventory, int shopID);
+    void ShowShopPanel(int shopID);
     bool GetVisible() {return m_Visible;};
     bool GetTradeFail() {return m_tradeFail;};
     void ResetTradeFail() {m_tradeFail = false;};
+
+    std::function<bool(int shopID, int optionIndex)> OnConfirmPurchase;
 private:
     void CloseShopPanel();
     void ExecuteOption();
@@ -31,12 +27,11 @@ private:
 
     std::shared_ptr<Util::GameObject> m_ShopIcon;
     std::shared_ptr<Util::GameObject> m_arrow;
-    std::vector<ShopOption> m_ShopItems;
-    PlayerStats* p_stats = nullptr;
-    PlayerInventory* p_inventory = nullptr;
+
     int m_ptr = 0;
     int m_MoveCooldown = 0;
     bool m_Visible;
+    int m_currentShopID = 0; // 哪間店
 
     const float startX = 150.0f;
     const float startY = -20.0f;
