@@ -75,6 +75,19 @@ add_executable(${PROJECT_NAME}
         src/UIText/EnemyInfoPanel.cpp
         include/Manager/ShopManager.hpp
         include/Manager/BattleManager.hpp
+        include/Manager/MovementManager.hpp
+        include/Manager/LevelManager.hpp
+        src/Manager/LevelManager.cpp
+        include/Manager/ItemManager.hpp
+        src/Manager/ItemManager.cpp
+        src/Manager/BattleManager.cpp
+        include/Manager/NPCManager.hpp
+        src/Manager/NPCManager.cpp
+        src/Manager/MovementManager.cpp
+        include/Manager/UIManager.hpp
+        src/Manager/UIManager.cpp
+        include/Manager/GameFlowManager.hpp
+        src/Manager/GameFlowManager.cpp
 )
 
 if(MSVC)

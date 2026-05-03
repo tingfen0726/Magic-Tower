@@ -9,8 +9,7 @@
 class NPCDialog : public Util::GameObject {
 public:
     NPCDialog();
-    void StareDialog(std::vector<DialogueLine> Dialogues);
-    // void ShowNPCDialog(int speaker, std::vector<DialogueLine> Dialogues);
+    void StartDialog(std::vector<DialogueLine> Dialogues);
     bool GetIsDialogue() {return m_IsDialogue;};
     void NextDialogue();
     void Update();
@@ -25,7 +24,7 @@ private:
     std::vector<DialogueLine> m_dialogues;
     int m_MoveCooldown = 0;
     int m_progress;
-    bool m_IsDialogue;
+    bool m_IsDialogue = false;
 
     unsigned int m_LastBlinkTime = 0;
     bool m_IsHighOpacity = true;

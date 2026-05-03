@@ -13,12 +13,21 @@
 #include <string>
 #include "Map.hpp"
 
+struct StairData {
+    int x;            // 出發點 X
+    int y;            // 出發點 Y
+    int targetFloor;  // 目標樓層
+    int targetX;      // 目標 X
+    int targetY;      // 目標 Y
+};
+
 struct FloorData {
     int floorLevel;
+    int flyX;
+    int flyY;
+    std::vector<StairData> stairs;
     std::vector<std::vector<int>> grid;
     std::vector<std::shared_ptr<NPC>> savedNPCs;
-    int upStairsX, upStairsY;
-    int downStairsX, downStairsY;
     bool isVisited = false;
 };
 FloorData LoadFloorFromFile(const std::string& filepath);

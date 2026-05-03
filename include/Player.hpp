@@ -42,7 +42,6 @@ public:
     void GetNextGrid(int& outX, int& outY, int& outDir);//回傳下一步
     void MoveToGrid(int nextX, int nextY, int dir);//移動
     void StepInPlace(int dir);//原地踏步
-    // bool Engage(EnemyStats enemyStats);//攻擊
     void StopMove() {m_IsMoving = false; m_CurrentFrame = 0;};//停止移動
 
     void SetStats(PlayerLabel::Stat type, int value);

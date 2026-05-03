@@ -50,7 +50,7 @@ void NPCDialog::NextDialogue() {
     }
 }
 
-void NPCDialog::StareDialog(std::vector<DialogueLine> Dialogues) {
+void NPCDialog::StartDialog(std::vector<DialogueLine> Dialogues) {
     SetVisible(true);
     m_SpeakerIcon->SetVisible(true);
     m_SpeakerName->SetVisible(true);

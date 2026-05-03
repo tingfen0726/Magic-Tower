@@ -16,7 +16,7 @@ static_content = """5 7
 0 0 0 0 0 0 0 0 0 0 0"""
 
 # 迴圈從 11 跑到 20 (包含 20)
-for i in range(11, 21):
+for i in range(22, 27):
     # 設定檔名，例如 level11.txt
     filename = f"level{i}.txt"
     

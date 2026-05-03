@@ -18,11 +18,18 @@ FloorData LoadFloorFromFile(const std::string& filepath) {
     }
 
     file >> data.floorLevel;
-    file >> data.upStairsX >> data.upStairsY;
-    file >> data.downStairsX >> data.downStairsY;
+    file >> data.flyX >> data.flyY;
+
+    int stairCount;
+    file >> stairCount;
+
+    for (int i = 0; i < stairCount; ++i) {
+        StairData stair;
+        file >> stair.x >> stair.y >> stair.targetFloor >> stair.targetX >> stair.targetY;
+        data.stairs.push_back(stair);
+    }
 
     data.grid.assign(11, std::vector<int>(11, 0));
-
     for (int y = 0; y < 11; ++y) {
         for (int x = 0; x < 11; ++x) {
             file >> data.grid[y][x];
