@@ -10,6 +10,7 @@ BattleManager::BattleManager(Player* player, std::shared_ptr<Toast> toast)
 void BattleManager::StartBattle(EnemyStats enemyStats) {
     m_CurrentEnemy = enemyStats;
     m_IsActive = true;
+    m_IsEnding = false;
     m_ActionCooldown = 10;
 
     if (OnPlayerHpChanged) OnPlayerHpChanged(m_Player->GetPlayerStats().hp);
@@ -50,9 +51,27 @@ void BattleManager::Update() {
         }
     }
     else {
-        m_IsActive = false;
-        bool playerWon = (m_Player->GetPlayerStats().hp > 0);
-        if (OnBattleEnded) OnBattleEnded(playerWon);
-        m_Toast->ShowToast("獲得 金幣數 " + std::to_string(m_CurrentEnemy.gold) + " 經驗值 " + std::to_string(m_CurrentEnemy.exp) + "!");
+        // 如果還沒進入結算狀態，就初始化它
+        if (!m_IsEnding) {
+            m_IsEnding = true;
+            m_EndCooldown = 15;
+            bool playerWon = (playerHp > 0);
+            if (playerWon) {
+                if (OnShowVictoryHint) OnShowVictoryHint();
+            }
+        }
+        else {
+            m_EndCooldown--;
+            if (m_EndCooldown <= 0) {
+                m_IsActive = false;
+                m_IsEnding = false;
+
+                bool playerWon = (playerHp > 0);
+                if (OnBattleEnded) {
+                    OnBattleEnded(playerWon);
+                    m_Toast->ShowToast("獲得 金幣數 " + std::to_string(m_CurrentEnemy.gold) + " 經驗值 " + std::to_string(m_CurrentEnemy.exp) + "!");
+                }
+            }
+        }
     }
 }

@@ -12,10 +12,12 @@ public:
     void ShowBattlePanel(PlayerStats playerStats, EnemyStats enemyStats, std::string imagePath);
     void UpdatePlayerHpText(int hp);
     void UpdateEnemyHpText(int hp);
+    void ShowVictoryHint() {m_VictoryHint->SetVisible(true);};
     void ClosePanel();
 private:
     std::vector<std::shared_ptr<UIText>> m_text;
     std::vector<std::shared_ptr<UIText>> m_text2;
+    std::shared_ptr<UIText> m_VictoryHint;
     std::shared_ptr<Util::GameObject> m_PlayerIcon;
     std::shared_ptr<Util::GameObject> m_EnemyIcon;
 

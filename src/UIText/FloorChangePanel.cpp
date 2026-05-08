@@ -1,4 +1,5 @@
 #include "UIText/FloorChangePanel.hpp"
+#include <string>
 
 FloorChangePanel::FloorChangePanel() {
     SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Special/Black.bmp"));
@@ -13,8 +14,9 @@ FloorChangePanel::FloorChangePanel() {
     m_Title->SetVisible(false);
     AddChild(m_Title);
 
-    for (int i = 0; i < 20; i++) {
-        auto floor = std::make_shared<UIText>(20, "第 " + std::to_string(i + 1) + " 層", Util::Color{255,255,255,255}, 0, 0);
+    for (int i = 0; i < 24; i++) {
+        std::string floorText = (i == 23)? "地 下 層" : "第 " + std::to_string(i + 1) + " 層";
+        auto floor = std::make_shared<UIText>(20, floorText, Util::Color{255,255,255,255}, 0, 0);
         floor->SetZIndex(89);
         floor->SetPosition(startX + (i / 7 * intervalX), startY - (i % 7) * intervalY);
         floor->SetVisible(false);
@@ -37,34 +39,51 @@ FloorChangePanel::FloorChangePanel() {
     AddChild(m_arrow);
 }
 
-void FloorChangePanel::ShowFloorChangePanel(bool Bool) {
+void FloorChangePanel::ShowFloorChangePanel(bool Bool, bool Cheating_Mode) {
     if (!Bool) return;
+    this->Cheating_Mode = Cheating_Mode;
+    int numFloors = this->Cheating_Mode ? 24 : 20;
+    int rowsPerCol = this->Cheating_Mode ? 6 : 7;
+    float currentIntervalX = this->Cheating_Mode ? (intervalX * 0.8f) : intervalX;
+    float currentStartX = this->Cheating_Mode ? (startX - 30.0f) : startX;
+
+    for (int i = 0; i < m_Floors.size(); i++) {
+        if (i < numFloors) {
+            m_Floors[i]->SetPosition(currentStartX + (i / rowsPerCol * currentIntervalX), startY - (i % rowsPerCol) * intervalY);
+            m_Floors[i]->SetVisible(true);
+        } else {
+            m_Floors[i]->SetVisible(false);
+        }
+    }
+
     ResetShopPanel();
     SetVisible(true);
     m_Visible = true;
     m_Title->SetVisible(true);
-    for (auto floor : m_Floors) {
-        floor->SetVisible(true);
-    }
     m_SpaceText->SetVisible(true);
-    m_arrow->SetVisible(true);
+    m_arrow->SetVisible(!this->Cheating_Mode);
     m_MoveCooldown = 8;
 }
 
 int FloorChangePanel::ChangeOptions() {
+    int maxIndex = this->Cheating_Mode ? 23 : 19;
+    int rowsPerCol = this->Cheating_Mode ? 6 : 7;
+    float currentIntervalX = this->Cheating_Mode ? (intervalX * 0.8f) : intervalX;
+
     if (!m_Visible) return -1;
     if (m_MoveCooldown > 0) {
         m_MoveCooldown--;
         return -1;
     }
+
     bool isMoved = false;
     if (Util::Input::IsKeyPressed(Util::Keycode::W)) {
-        if (m_ptr <= 0) { m_ptr = 19;}
+        if (m_ptr <= 0) { m_ptr = maxIndex;}
         else { m_ptr--;}
         isMoved = true;
     }
     else if (Util::Input::IsKeyPressed(Util::Keycode::S)) {
-        if (m_ptr >= 19) { m_ptr = 0;}
+        if (m_ptr >= maxIndex) { m_ptr = 0;}
         else { m_ptr++;}
         isMoved = true;
     }
@@ -72,8 +91,10 @@ int FloorChangePanel::ChangeOptions() {
         CloseFloorChangePanel();
         return m_ptr + 1;
     }
+
     if (isMoved) {
-        m_arrow->m_Transform.translation = {-40 + (m_ptr / 7 * intervalX), 90 - (m_ptr % 7) * intervalY};
+        m_arrow->m_Transform.translation = {-40.0f + (m_ptr / rowsPerCol * currentIntervalX), 90.0f - (m_ptr % rowsPerCol) * intervalY};
+
         m_Floors[m_ptr]->SetColor(Util::Color{255, 215, 0, 255});
         for (int i = 0; i < m_Floors.size(); i++) {
             if (i != m_ptr) m_Floors[i]->SetColor(Util::Color{255, 255, 255, 255});
@@ -96,7 +117,7 @@ void FloorChangePanel::CloseFloorChangePanel() {
 
 void FloorChangePanel::ResetShopPanel() {
     m_ptr = 0;
-    m_arrow->m_Transform.translation = {-40, 90};
+    m_arrow->m_Transform.translation = {-40.0f, 90};
     for (int i = 0; i < m_Floors.size(); i++) {
         m_Floors[i]->SetColor(Util::Color{255, 255, 255, 255});
     }

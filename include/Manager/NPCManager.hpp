@@ -12,6 +12,7 @@ class NPCManager {
 public:
     NPCManager(std::shared_ptr<Player> player,
                std::shared_ptr<LevelManager> levelManager,
+
                std::shared_ptr<NPCDialog> npcDialog,
                std::shared_ptr<Toast> toast);
     void InteractWith(std::shared_ptr<NPC> npc) { m_CurrentNPC = npc;}
@@ -19,7 +20,6 @@ public:
 
     std::shared_ptr<NPC> GetCurrentNPC() const { return m_CurrentNPC; }
     void ClearCurrentNPC() { m_CurrentNPC = nullptr; }
-
 
 private:
     std::shared_ptr<Player> m_Player;

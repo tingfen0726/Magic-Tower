@@ -24,14 +24,21 @@ void NPCManager::ProcessNPCLogic() {
                 m_Player->AddKey(PlayerLabel::Key::BLUE, 1);
                 m_Player->AddKey(PlayerLabel::Key::RED, 1);
                 m_CurrentNPC->AddCurrentStage();
+                m_CurrentNPC->IsCompleted();
             }
-            else if (stage == 3) {
+            else if (stage == 2) {
+                m_CurrentNPC->IsCompleted();
+
+                if (m_Player->GetInventory().hasholyCross) { m_CurrentNPC->SetCurrentStage(4); }
+                else { m_CurrentNPC->SetCurrentStage(3); }
+            }
+            else if (stage == 4) {
                 m_Player->AddStats(PlayerLabel::Stat::ATK, m_Player->GetPlayerStats().atk * 1.0f / 3.0f);
                 m_Player->AddStats(PlayerLabel::Stat::DEF, m_Player->GetPlayerStats().def * 1.0f / 3.0f);
                 m_Player->AddStats(PlayerLabel::Stat::HP, m_Player->GetPlayerStats().hp * 1.0f / 3.0f);
                 m_LevelManager->ChangeRemoteBlock(20, 5, 7, Config::ID::STAIRS_UP);
+                m_CurrentNPC->IsCompleted();
             }
-            m_CurrentNPC->IsCompleted();
         }
         else if (m_CurrentNPC->GetID() == Config::ID::THIEF_4) {
             m_CurrentNPC->IsCompleted();
@@ -63,16 +70,28 @@ void NPCManager::ProcessNPCLogic() {
             }
         }
         else if (m_CurrentNPC->GetID() == Config::ID::ELDER_15) {
+            if (stage == 0) {
+                if (m_Player->GetPlayerStats().exp >= 500) m_CurrentNPC->SetCurrentStage(2);
+                else m_CurrentNPC->SetCurrentStage(1);
+            }
             if (stage == 1) {
-                m_Player->AddStats(PlayerLabel::Stat::GOLD, -500);
+            }
+            if (stage == 2) {
+                m_Player->AddStats(PlayerLabel::Stat::EXP, -500);
                 m_Player->AddStats(PlayerLabel::Stat::ATK, 120);
                 m_Toast->ShowToast("獲得 聖光劍 攻擊力 +120");
                 m_CurrentNPC->IsCompleted();
             }
         }
         else if (m_CurrentNPC->GetID() == Config::ID::SHOPKEEPER_15) {
+            if (stage == 0) {
+                if (m_Player->GetPlayerStats().gold >= 500) m_CurrentNPC->SetCurrentStage(2);
+                else m_CurrentNPC->SetCurrentStage(1);
+            }
             if (stage == 1) {
-                m_Player->AddStats(PlayerLabel::Stat::EXP, -500);
+            }
+            if (stage == 2) {
+                m_Player->AddStats(PlayerLabel::Stat::GOLD, -500);
                 m_Player->AddStats(PlayerLabel::Stat::DEF, 120);
                 m_Toast->ShowToast("獲得 星光盾 防護力 +120");
                 m_CurrentNPC->IsCompleted();
@@ -95,9 +114,37 @@ void NPCManager::ProcessNPCLogic() {
                 m_CurrentNPC->IsCompleted();
             }
         }
+        else if (m_CurrentNPC->GetID() == Config::ID::FAIRY_22) {
+            if (stage == 0) {
+                m_CurrentNPC->IsCompleted();
+                m_CurrentNPC->AddCurrentStage();
+
+                m_LevelManager->ChangeRemoteBlock(23, 5, 6, Config::ID::STAIRS_GREEN);
+            }
+            else if (stage == 2) {
+                m_Player->SetItem(PlayerLabel::Item::BLUEVERI, false);
+                m_Player->SetItem(PlayerLabel::Item::GREENVERI, false);
+                m_Player->SetItem(PlayerLabel::Item::REDVERI, false);
+
+                m_LevelManager->ChangeRemoteBlock(24, 5, 3, Config::ID::OCTOPUS);
+                m_LevelManager->ChangeRemoteBlock(24, 4, 1, Config::ID::OCTOPUS_BODY_1);
+                m_LevelManager->ChangeRemoteBlock(24, 5, 1, Config::ID::OCTOPUS_BODY_2);
+                m_LevelManager->ChangeRemoteBlock(24, 6, 1, Config::ID::OCTOPUS_BODY_3);
+                m_LevelManager->ChangeRemoteBlock(24, 4, 2, Config::ID::OCTOPUS_BODY_4);
+                m_LevelManager->ChangeRemoteBlock(24, 5, 2, Config::ID::OCTOPUS_BODY_5);
+                m_LevelManager->ChangeRemoteBlock(24, 6, 2, Config::ID::OCTOPUS_BODY_6);
+                m_LevelManager->ChangeRemoteBlock(24, 4, 3, Config::ID::OCTOPUS_BODY_7);
+                m_LevelManager->ChangeRemoteBlock(24, 6, 3, Config::ID::OCTOPUS_BODY_9);
+                m_CurrentNPC->IsCompleted();
+            }
+        }
         else if (m_CurrentNPC->GetID() == Config::ID::SYSTEM_NPC) {
             m_CurrentNPC->IsCompleted();
             if (stage == 1) {
+                m_Player->SetItem(PlayerLabel::Item::WINDCOMPASS, true);
+                m_Player->SetItem(PlayerLabel::Item::GODKNIFESIGN, true);
+            }
+            else if (stage == 2) {
                 m_Player->SetStats(PlayerLabel::Stat::ATK, 5000);
                 m_Player->SetStats(PlayerLabel::Stat::DEF, 5000);
                 m_Player->SetStats(PlayerLabel::Stat::GOLD, 5000);
@@ -109,14 +156,13 @@ void NPCManager::ProcessNPCLogic() {
 
                 m_Player->SetItem(PlayerLabel::Item::BLUEVERI, true);
                 m_Player->SetItem(PlayerLabel::Item::GEMHOE, true);
-                m_Player->SetItem(PlayerLabel::Item::GODKNIFESIGN, true);
                 m_Player->SetItem(PlayerLabel::Item::GREENVERI, true);
                 m_Player->SetItem(PlayerLabel::Item::REDVERI, true);
-                m_Player->SetItem(PlayerLabel::Item::WINDCOMPASS, true);
                 m_Player->SetItem(PlayerLabel::Item::HOLYCROSS, true);
                 for (int i = 0; i < m_LevelManager->GetFloorData().size(); i++) {
                     m_LevelManager->GetFloorData()[i].isVisited = true;
                 }
+                m_Player->SetChCheatingMode(true);
             }
             m_CurrentNPC->AddCurrentStage();
         }

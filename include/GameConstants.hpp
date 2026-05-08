@@ -33,8 +33,9 @@ namespace Config {
 
         inline constexpr int STAIRS_UP   = 30;
         inline constexpr int STAIRS_DOWN = 31;
+        inline constexpr int STAIRS_GREEN = 32;
 
-        inline constexpr int STAIRS_END   = 31;
+        inline constexpr int STAIRS_END   = 32;
 
         // 怪物範圍：
         inline constexpr int ENEMY_BEGIN = 100;
@@ -116,6 +117,31 @@ namespace Config {
         inline constexpr int WIND_COMPASS = 228;
         inline constexpr int ITEM_END    = 299;
 
+        // 9格Boss
+        inline constexpr int GIANT_BODY_BEGIN = 300;
+
+        inline constexpr int OCTOPUS_BODY_1 = 311;
+        inline constexpr int OCTOPUS_BODY_2 = 312;
+        inline constexpr int OCTOPUS_BODY_3 = 313;
+        inline constexpr int OCTOPUS_BODY_4 = 314;
+        inline constexpr int OCTOPUS_BODY_5 = 315;
+        inline constexpr int OCTOPUS_BODY_6 = 316;
+        inline constexpr int OCTOPUS_BODY_7 = 317;
+        // inline constexpr int OCTOPUS_BODY_8 = 318;
+        inline constexpr int OCTOPUS_BODY_9 = 319;
+
+        inline constexpr int DRAGON_BODY_1 = 321;
+        inline constexpr int DRAGON_BODY_2 = 322;
+        inline constexpr int DRAGON_BODY_3 = 323;
+        inline constexpr int DRAGON_BODY_4 = 324;
+        inline constexpr int DRAGON_BODY_5 = 325;
+        inline constexpr int DRAGON_BODY_6 = 326;
+        inline constexpr int DRAGON_BODY_7 = 327;
+        // inline constexpr int DRAGON_BODY_8 = 328;
+        inline constexpr int DRAGON_BODY_9 = 329;
+
+        inline constexpr int GIANT_BODY_END   = 399;
+
         // NPC範圍：
         inline constexpr int NPC_BEGIN   = 400;
         inline constexpr int FAIRY_0 = 400;
@@ -127,6 +153,7 @@ namespace Config {
         inline constexpr int ELDER_15 = 406;
         inline constexpr int ELDER_16 = 407;
         inline constexpr int VAMPIRE_19 = 408;
+        inline constexpr int FAIRY_22 = 409;
         inline constexpr int SYSTEM_NPC = 499;
         inline constexpr int NPC_END     = 499;
 

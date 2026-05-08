@@ -53,7 +53,16 @@ void GameFlowManager::ProcessBattleResult(bool isWin) {
                 m_NPCDialog->StartDialog(DialogueStages[0].dialogues);
                 m_LevelManager->EnemyReinforcements(2);
                 m_LevelManager->ChangeRemoteBlock(21, 5, 1, Config::ID::STAIRS_UP);
-                LOG_INFO("Where's my staircase?");
+            }
+            else if (m_CurrentEnemy->GetID() == Config::ID::OCTOPUS && m_LevelManager->GetCurrentFloor() == 24) {
+                m_LevelManager->ChangeRemoteBlock(24, 4, 1, Config::ID::EMPTY);
+                m_LevelManager->ChangeRemoteBlock(24, 5, 1, Config::ID::EMPTY);
+                m_LevelManager->ChangeRemoteBlock(24, 6, 1, Config::ID::EMPTY);
+                m_LevelManager->ChangeRemoteBlock(24, 4, 2, Config::ID::EMPTY);
+                m_LevelManager->ChangeRemoteBlock(24, 5, 2, Config::ID::EMPTY);
+                m_LevelManager->ChangeRemoteBlock(24, 6, 2, Config::ID::EMPTY);
+                m_LevelManager->ChangeRemoteBlock(24, 4, 3, Config::ID::EMPTY);
+                m_LevelManager->ChangeRemoteBlock(24, 6, 3, Config::ID::EMPTY);
             }
         }
     }

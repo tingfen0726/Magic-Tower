@@ -25,7 +25,7 @@ struct PlayerInventory {
     bool hasblueveri = false;       //冰之靈杖
     bool hasgreenveri = false;      //心之靈杖
     bool hasgemhoe = false;         //紅寶石榔頭
-    bool hasgodknifesign = true;   // 聖光徽
+    bool hasgodknifesign = false;   // 聖光徽
     bool haswindCompass = false;    // 風之羅盤
 };
 
@@ -51,6 +51,9 @@ public:
     void AddStats(PlayerLabel::Stat type, int value);
     void AddKey(PlayerLabel::Key type, int value);
 
+    void SetChCheatingMode(bool Cheating_Mode) { this->Cheating_Mode = Cheating_Mode;}
+    bool GetCheatingMode() {return this->Cheating_Mode;}
+
 private:
     void UpdateAnimation();
     void SetImageFrame(int index);
@@ -64,6 +67,8 @@ private:
     int m_Direction = 0; //1正面 2背面 3左 4右
     PlayerStats m_Stats;
     PlayerInventory m_Inventory;
+
+    bool Cheating_Mode = false;
 };
 
 #endif //REPLACE_WITH_YOUR_PROJECT_NAME_PLAYER_HPP

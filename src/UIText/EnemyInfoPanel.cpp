@@ -83,13 +83,20 @@ void EnemyInfoPanel::SetInfo(PlayerStats playerStats, std::vector<std::shared_pt
     for (int i = 0; i < enemies.size(); i++) {
         EnemyStats enemy_stats = enemies[i]->GetEnemyStats();
         int predictedDamage =  playerStats.CalculateDamage(enemy_stats);
-        std::string Loss =  (predictedDamage == 999999)? "???" : std::to_string(predictedDamage);
+        std::string Loss = std::to_string(predictedDamage);
+        Util::Color lossColor = Util::Color{255, 255, 255, 255};
+        if (predictedDamage == 999999) { Loss = "???"; }
+        if (enemies[i]->GetID() == Config::ID::DRAGON) {
+            Loss = "不可擊殺";
+            lossColor = Util::Color{180, 0, 0, 255};
+        }
         m_enemies[i].m_stats[0]->UpdateText(GetName(enemies[i]->GetID()));
         m_enemies[i].m_stats[1]->UpdateText(std::to_string(enemy_stats.hp));
         m_enemies[i].m_stats[2]->UpdateText(std::to_string(enemy_stats.atk));
         m_enemies[i].m_stats[3]->UpdateText(std::to_string(enemy_stats.def));
         m_enemies[i].m_stats[4]->UpdateText(std::to_string(enemy_stats.gold) + "・" + std::to_string(enemy_stats.exp));
         m_enemies[i].m_stats[5]->UpdateText(Loss);
+        m_enemies[i].m_stats[5]->SetColor(lossColor);
 
         m_enemies[i].m_enemyIcon->SetDrawable(std::make_shared<Util::Image>(enemies[i]->GetImagePath()[0]));
         m_enemies[i].m_enemyImages = enemies[i]->GetImagePath();
@@ -170,6 +177,10 @@ std::string EnemyInfoPanel::GetName(int enemyID) {
         case Config::ID::VAMPIRE_2:
         case Config::ID::VAMPIRE_3:
             return "冥靈魔王";
+        case Config::ID::OCTOPUS:
+            return "血影";
+        case Config::ID::DRAGON:
+            return "魔龍";
     }
     return "名字";
 }

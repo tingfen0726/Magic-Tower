@@ -33,7 +33,7 @@ std::shared_ptr<Enemy> MovementManager::ProcessPlayerMovement() {
                         if (doorPtr) {
                             if (doorPtr->IsFullyOpen()) { }
                             else if (!doorPtr->IsOpen()) {
-                                if (doorPtr->CanOpen({m_Player->GetInventory().yellowKey, m_Player->GetInventory().blueKey, m_Player->GetInventory().redKey})) {
+                                if (doorPtr->CanOpen({m_Player->GetInventory().yellowKey, m_Player->GetInventory().blueKey, m_Player->GetInventory().redKey}, m_LevelManager->GetCurrentFloor())) {
                                     switch (doorPtr->GetID()) {
                                         case Config::ID::DOOR_YELLOW: m_Player->AddKey(PlayerLabel::Key::YELLOW, -1); break;
                                         case Config::ID::DOOR_BLUE: m_Player->AddKey(PlayerLabel::Key::BLUE, -1);   break;
@@ -61,7 +61,6 @@ std::shared_ptr<Enemy> MovementManager::ProcessPlayerMovement() {
                     if (nextX == block->GetPosition()[0] && nextY == block->GetPosition()[1]) {
                         auto stairPtr = std::dynamic_pointer_cast<Stair>(block);
                         if (stairPtr) {
-                            // m_Player->MoveToGrid(nextX, nextY, nextDir);
                             m_LevelManager->ProcessStair(nextX, nextY);
                             return nullptr;
                         }
@@ -110,8 +109,8 @@ std::shared_ptr<Enemy> MovementManager::ProcessPlayerMovement() {
                         auto NPCPtr = std::dynamic_pointer_cast<NPC>(block);
                         if (NPCPtr) {
                             if (NPCPtr->GetID() == Config::ID::FAIRY_0) {
-                                if ((NPCPtr->GetCurrentStage() == 2) && m_Player->GetInventory().hasholyCross) {
-                                    NPCPtr->SetCurrentStage(3);
+                                if (((NPCPtr->GetCurrentStage() == 3)) && m_Player->GetInventory().hasholyCross) {
+                                    NPCPtr->SetCurrentStage(4);
                                 }
                                 if ((NPCPtr->GetCurrentStage() == 1) && m_Player->GetInventory().hasblueveri) {
                                     NPCPtr->SetCurrentStage(2);
@@ -122,11 +121,21 @@ std::shared_ptr<Enemy> MovementManager::ProcessPlayerMovement() {
                                     NPCPtr->SetCurrentStage(2);
                                     }
                             }
-                            if (NPCPtr->GetID() == Config::ID::SHOPKEEPER_15 && m_Player->GetPlayerStats().exp >= 500) {
-                                NPCPtr->SetCurrentStage(1);
+                            if (NPCPtr->GetID() == Config::ID::SHOPKEEPER_15) {
+                                if ((NPCPtr->GetCurrentStage() == 1) && m_Player->GetPlayerStats().gold >= 500) {
+                                    NPCPtr->SetCurrentStage(2);
+                                }
                             }
-                            if (NPCPtr->GetID() == Config::ID::ELDER_15 && m_Player->GetPlayerStats().gold >= 500) {
-                                NPCPtr->SetCurrentStage(1);
+                            if (NPCPtr->GetID() == Config::ID::ELDER_15) {
+                                if ((NPCPtr->GetCurrentStage() == 1) && m_Player->GetPlayerStats().exp >= 500) {
+                                    NPCPtr->SetCurrentStage(2);
+                                }
+                            }
+                            if (NPCPtr->GetID() == Config::ID::FAIRY_22) {
+                                if ((NPCPtr->GetCurrentStage() == 1) && m_Player->GetInventory().hasblueveri
+                                    && m_Player->GetInventory().hasgreenveri && m_Player->GetInventory().hasredveri) {
+                                    NPCPtr->SetCurrentStage(2);
+                                }
                             }
 
                             std::vector<DialogueStage> dialogueStage = NPCPtr->GetDialogues();
@@ -139,6 +148,10 @@ std::shared_ptr<Enemy> MovementManager::ProcessPlayerMovement() {
                         }
                     }
                 }
+            }
+            if (targetID >= Config::ID::GIANT_BODY_BEGIN && targetID <= Config::ID::GIANT_BODY_END) {
+                m_Player->StepInPlace(nextDir);
+                return nullptr;
             }
             m_Player->MoveToGrid(nextX, nextY, nextDir);
         }

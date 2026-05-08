@@ -3,13 +3,13 @@
 BattlePanel::BattlePanel() {
     SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Enemy/Fighting.bmp"));
     m_Transform.translation = {0, 100.0f};
-    SetZIndex(98);
+    SetZIndex(97);
 
     m_PlayerIcon = std::make_shared<Util::GameObject>();
     m_PlayerIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Enemy/player.BMP"));
     m_PlayerIcon->m_Transform.translation = {iconX, iconY};
     m_PlayerIcon->m_Transform.scale = {0.95, 0.95};
-    m_PlayerIcon->SetZIndex(99);
+    m_PlayerIcon->SetZIndex(98);
     m_PlayerIcon->SetVisible(false);
     AddChild(m_PlayerIcon);
 
@@ -17,7 +17,7 @@ BattlePanel::BattlePanel() {
     m_EnemyIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Enemy/player.BMP"));
     m_EnemyIcon->m_Transform.translation = {-iconX, iconY};
     m_EnemyIcon->m_Transform.scale = {0.95, 0.95};
-    m_EnemyIcon->SetZIndex(99);
+    m_EnemyIcon->SetZIndex(98);
     m_EnemyIcon->SetVisible(false);
     AddChild(m_EnemyIcon);
     std::vector<std::string> title = {"體力值:\n", "攻擊力:\n", "防禦力:\n"};
@@ -27,28 +27,33 @@ BattlePanel::BattlePanel() {
         float x = (i < 3) ? -xOffset : xOffset;
         float y = startY - (i % 3) * 100.0f;
         text->SetPosition(x, y);
-        text->SetZIndex(99);
+        text->SetZIndex(98);
         m_text.push_back(text);
         text->SetVisible(false);
         AddChild(text);
     }
     auto enemy_text = std::make_shared<UIText>(46, "怪 物", Util::Color{255,255,255,255}, -347.0f, 50.0f);
-    enemy_text->SetZIndex(99);
+    enemy_text->SetZIndex(98);
     m_text2.push_back(enemy_text);
     enemy_text->SetVisible(false);
     AddChild(enemy_text);
 
     auto player_text = std::make_shared<UIText>(46, "勇 士", Util::Color{255,255,255,255}, 347.0f, 50.0f);
-    player_text->SetZIndex(99);
+    player_text->SetZIndex(98);
     m_text2.push_back(player_text);
     player_text->SetVisible(false);
     AddChild(player_text);
 
     auto VS_text = std::make_shared<UIText>(72, "VS", Util::Color{255,255,255,255}, 0, 100.0f);
-    VS_text->SetZIndex(99);
+    VS_text->SetZIndex(98);
     m_text2.push_back(VS_text);
     VS_text->SetVisible(false);
     AddChild(VS_text);
+
+    m_VictoryHint = std::make_shared<UIText>(96, "戰 鬥 勝 利", Util::Color{180, 0, 0, 255}, 0, 100.0f);
+    m_VictoryHint->SetZIndex(99);
+    m_VictoryHint->SetVisible(false);
+    AddChild(m_VictoryHint);
 
 }
 
@@ -82,4 +87,5 @@ void BattlePanel::ClosePanel() {
     for (int i = 0; i < 3; i++) { m_text2[i]->SetVisible(false); }
     m_PlayerIcon->SetVisible(false);
     m_EnemyIcon->SetVisible(false);
+    m_VictoryHint->SetVisible(false);
 }

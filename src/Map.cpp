@@ -137,6 +137,14 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                          x, y, Config::ID::STAIRS_DOWN
                      ));
                     break;
+                case Config::ID::STAIRS_GREEN:
+                    m_Blocks.push_back(std::make_shared<Stair>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Door/green_door.bmp"
+                         },
+                         x, y, Config::ID::STAIRS_UP
+                     ));
+                    break;
                 case Config::ID::YELLOW_KEY:
                     m_Blocks.push_back(std::make_shared<Props>(
                          std::vector<std::string>{
@@ -807,6 +815,170 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                          x, y, Config::ID::VAMPIRE_3
                      ));
                     break;
+                case Config::ID::OCTOPUS:
+                    m_Blocks.push_back(std::make_shared<Enemy>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_8.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_82.bmp",
+                             RESOURCE_DIR "/Image/Enemy/road.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS
+                     ));
+                    break;
+                case Config::ID::OCTOPUS_BODY_1:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_1.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_12.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS_BODY_1
+                     ));
+                    break;
+                case Config::ID::OCTOPUS_BODY_2:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_2.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_22.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS_BODY_2
+                     ));
+                    break;
+                case Config::ID::OCTOPUS_BODY_3:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_3.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_32.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS_BODY_3
+                     ));
+                    break;
+                case Config::ID::OCTOPUS_BODY_4:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_4.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_42.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS_BODY_4
+                     ));
+                    break;
+                case Config::ID::OCTOPUS_BODY_5:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_5.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_52.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS_BODY_5
+                     ));
+                    break;
+                case Config::ID::OCTOPUS_BODY_6:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_6.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_62.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS_BODY_6
+                     ));
+                    break;
+                case Config::ID::OCTOPUS_BODY_7:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_7.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_72.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS_BODY_7
+                     ));
+                    break;
+                case Config::ID::OCTOPUS_BODY_9:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/octopus_9.bmp",
+                             RESOURCE_DIR "/Image/Enemy/octopus_92.bmp"
+                         },
+                         x, y, Config::ID::OCTOPUS_BODY_9
+                     ));
+                    break;
+                case Config::ID::DRAGON:
+                    m_Blocks.push_back(std::make_shared<Enemy>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_8.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_82.bmp",
+                             RESOURCE_DIR "/Image/Enemy/road.bmp"
+                         },
+                         x, y, Config::ID::DRAGON
+                     ));
+                    break;
+                case Config::ID::DRAGON_BODY_1:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_1.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_12.bmp"
+                         },
+                         x, y, Config::ID::DRAGON_BODY_1
+                     ));
+                    break;
+                case Config::ID::DRAGON_BODY_2:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_2.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_22.bmp"
+                         },
+                         x, y, Config::ID::DRAGON_BODY_2
+                     ));
+                    break;
+                case Config::ID::DRAGON_BODY_3:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_3.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_32.bmp"
+                         },
+                         x, y, Config::ID::DRAGON_BODY_3
+                     ));
+                    break;
+                case Config::ID::DRAGON_BODY_4:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_4.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_42.bmp"
+                         },
+                         x, y, Config::ID::DRAGON_BODY_4
+                     ));
+                    break;
+                case Config::ID::DRAGON_BODY_5:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_5.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_52.bmp"
+                         },
+                         x, y, Config::ID::DRAGON_BODY_5
+                     ));
+                    break;
+                case Config::ID::DRAGON_BODY_6:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_6.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_62.bmp"
+                         },
+                         x, y, Config::ID::DRAGON_BODY_6
+                     ));
+                    break;
+                case Config::ID::DRAGON_BODY_7:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_7.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_72.bmp"
+                         },
+                         x, y, Config::ID::DRAGON_BODY_7
+                     ));
+                    break;
+                case Config::ID::DRAGON_BODY_9:
+                    m_Blocks.push_back(std::make_shared<Wall>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/Enemy/dragon_9.bmp",
+                             RESOURCE_DIR "/Image/Enemy/dragon_92.bmp"
+                         },
+                         x, y, Config::ID::DRAGON_BODY_9
+                     ));
+                    break;
                 case Config::ID::SHOP_EVEMY_10:
                     m_Blocks.push_back(std::make_shared<Shop>(
                          std::vector<std::string>{
@@ -984,6 +1156,17 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
                          x, y, Config::ID::VAMPIRE_19
                      ));
                     break;
+                case Config::ID::FAIRY_22:
+                    m_Blocks.push_back(std::make_shared<FairyNPC>(
+                         std::vector<std::string>{
+                             RESOURCE_DIR "/Image/NPC/fairy.bmp",
+                             RESOURCE_DIR "/Image/NPC/fairy2.bmp",
+                             RESOURCE_DIR "/Image/NPC/road.bmp"
+                         },
+                         x, y, Config::ID::FAIRY_22
+                     ));
+                    break;
+
 
                 case Config::ID::SYSTEM_NPC:
                     m_Blocks.push_back(std::make_shared<systemNPC>(

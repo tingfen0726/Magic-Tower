@@ -10,7 +10,7 @@ class Door : public Block {
 public:
     Door(const std::vector<std::string>& imagePath, int x, int y, int id);
     void Open();
-    bool CanOpen(std::vector<int> keys);
+    bool CanOpen(std::vector<int> keys, int currentFloor);
     void UpdateAnimation() override;
     bool IsOpen() {return m_IsOpen;}
     bool IsFullyOpen() {return m_IsOpen && (m_CurrentFrame >= m_imagePath.size() - 1);}

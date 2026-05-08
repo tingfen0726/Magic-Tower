@@ -71,7 +71,7 @@ void App::HandleSystemInput() {
             m_FloorChangePanel->CloseFloorChangePanel();
         }
         else if (!m_GameFlowManager->IsPlayerLockedByUI()) {
-            m_FloorChangePanel->ShowFloorChangePanel(m_Player->GetInventory().haswindCompass);
+            m_FloorChangePanel->ShowFloorChangePanel(m_Player->GetInventory().haswindCompass, m_Player->GetCheatingMode());
         }
     }
     if (Util::Input::IsKeyDown(Util::Keycode::E)) {

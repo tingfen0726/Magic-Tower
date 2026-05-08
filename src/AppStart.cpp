@@ -74,6 +74,7 @@ void App::Start() {
         m_BattlePanel->ClosePanel();
         m_GameFlowManager->ProcessBattleResult(playerWon);
     };
+    m_BattleManager->OnShowVictoryHint = [this]() { m_BattlePanel->ShowVictoryHint(); };
 
     // 商店事件
     m_ShopPanel->OnConfirmPurchase = [this](int shopID, int optionIndex) {

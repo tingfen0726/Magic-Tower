@@ -56,6 +56,9 @@ void UIManager::UpdateHUD() {
     else if (currentFloor == 25 || currentFloor == 26){
         m_floorUI->UpdateText("第 23 層");
     }
+    else if (currentFloor == 24) {
+        m_floorUI->UpdateText("地 下 層");
+    }
     else {
         m_floorUI->UpdateText("第 " + std::to_string(currentFloor) + " 層");
     }

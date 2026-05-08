@@ -44,8 +44,9 @@ namespace EnemyDatabase {
         {Config::ID::SLIME_MEN,             {3100, 1150, 1050, 92, 80, 0}},
         {Config::ID::VAMPIRE_1,             {30000, 1700, 1500, 250, 220, 0}},
         {Config::ID::VAMPIRE_2,             {45000, 2550, 2250, 312, 275, 0}},
-        {Config::ID::VAMPIRE_3,             {60000, 3400, 3000, 390, 343, 0}}
-
+        {Config::ID::VAMPIRE_3,             {60000, 3400, 3000, 390, 343, 0}},
+        {Config::ID::OCTOPUS,               {99999, 5000, 4000, 0, 0, 0}},
+        {Config::ID::DRAGON,                {99999, 9999, 5000, 0, 0, 0}}
     };
 }
 

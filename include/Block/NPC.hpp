@@ -31,6 +31,8 @@ public:
     void SetIsPersistent(bool Bool) {m_isPersistent = Bool;};
     bool GetIsPersistent() {return m_isPersistent;};
     int GetCurrentStage() {return m_currentStage;};
+    bool GetStageCompleted(int stageIndex);
+
     void AddCurrentStage();
     void SetCurrentStage(int currentStage) { m_currentStage = currentStage; };
     void IsCompleted() {m_DialogueStages[m_currentStage].isCompleted = true;};

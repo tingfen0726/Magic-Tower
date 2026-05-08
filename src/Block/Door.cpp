@@ -1,6 +1,7 @@
 #include "Block/Door.hpp"
 #include "config.hpp"
 #include "GameConstants.hpp"
+#include <string>
 
 
 Door::Door(const std::vector<std::string> &imagePath, int x, int y, int id): Block(imagePath, x, y, id) {
@@ -29,7 +30,7 @@ void Door::UpdateAnimation() {
     }
 }
 
-bool Door::CanOpen(std::vector<int> keys) {
+bool Door::CanOpen(std::vector<int> keys, int currentFloor) {
     if (m_IsOpen) { return true; }
     switch (m_ID) {
         case Config::ID::DOOR_YELLOW:

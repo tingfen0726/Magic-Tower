@@ -20,3 +20,10 @@ void NPC::AddCurrentStage() {
     }
     m_currentStage += 1;
 }
+
+bool NPC::GetStageCompleted(int stageIndex) {
+    if (stageIndex >= 0 && stageIndex < m_DialogueStages.size()) {
+        return m_DialogueStages[stageIndex].isCompleted;
+    }
+    return false;
+};

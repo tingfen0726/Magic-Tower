@@ -8,9 +8,10 @@
 class FloorChangePanel : public Util::GameObject {
 public:
     FloorChangePanel();
-    void ShowFloorChangePanel(bool Bool);
+    void ShowFloorChangePanel(bool Bool, bool Cheating_Mode);
     void CloseFloorChangePanel();
     bool GetVisible() {return m_Visible;};
+    // void SetCheatingMode(bool Cheating_Mode) { this->Cheating_Mode = Cheating_Mode;}
     int ChangeOptions();
     void Update();
 private:
@@ -31,6 +32,8 @@ private:
     const float startY = 90.0f;
     const float intervalY = 45.0f;
     const float intervalX = 130.0f;
+
+    bool Cheating_Mode = false;
 };
 
 #endif //REPLACE_WITH_YOUR_PROJECT_NAME_FLOORCHANGEPANEL_HPP

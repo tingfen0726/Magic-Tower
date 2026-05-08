@@ -13,6 +13,7 @@ public:
     std::function<void(int)> OnPlayerHpChanged;
     std::function<void(int)> OnEnemyHpChanged;
     std::function<void(bool)> OnBattleEnded;
+    std::function<void()> OnShowVictoryHint;
 
     bool GetIsActive() const { return m_IsActive; }
 
@@ -26,5 +27,8 @@ private:
     EnemyStats m_CurrentEnemy;
     int m_ActionCooldown = 0;
     bool m_IsActive = false;
+
+    bool m_IsEnding = false;
+    int m_EndCooldown = 0;
 };
 #endif //REPLACE_WITH_YOUR_PROJECT_NAME_BATTLEMANAGER_HPP
