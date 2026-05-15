@@ -88,6 +88,11 @@ add_executable(${PROJECT_NAME}
         src/Manager/UIManager.cpp
         include/Manager/GameFlowManager.hpp
         src/Manager/GameFlowManager.cpp
+        include/UIText/GameClearPanel.hpp
+        src/UIText/GameClearPanel.cpp
+        include/GameSaveData.hpp
+        include/Manager/SaveManager.hpp
+        src/Manager/SaveManager.cpp
 )
 
 if(MSVC)

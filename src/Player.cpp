@@ -10,6 +10,7 @@ Player::Player() : Character(RESOURCE_DIR "/Image/Player/player_11.BMP", 50.0f) 
     m_CurrentGridY = 10;
     m_Transform.translation = {Config::MAP_OFFSET_X + (m_CurrentGridX * Config::TILE_SIZE), Config::MAP_OFFSET_Y - (m_CurrentGridY * Config::TILE_SIZE)};
     m_Transform.scale = {0.74f, 0.74f};
+    SetZIndex(20);
 }
 
 int PlayerStats::CalculateDamage(EnemyStats enemyStats) const {
@@ -75,12 +76,18 @@ void Player::MoveToGrid(int nextX, int nextY, int dir) {
 
 
 void Player::UpdateAnimation() {
+    unsigned int currentTime = SDL_GetTicks();
+    if (m_Stats.hp <= 0) {
+        if (currentTime - m_DeathBlinkTime > 150) {
+            SetVisible(!m_Visible);
+            m_DeathBlinkTime = currentTime;
+        }
+    }
+
     if (!m_IsMoving) {
         SetImageFrame(0);
         return;
     }
-
-    unsigned int currentTime = SDL_GetTicks();
 
     if (currentTime - m_LastFrameTime > 150) {
         m_CurrentFrame = (m_CurrentFrame + 1) % 4;

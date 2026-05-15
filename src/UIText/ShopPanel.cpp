@@ -4,7 +4,7 @@ ShopPanel::ShopPanel() {
     SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Shop/ShopDialog.bmp"));
     m_Transform.translation = {142.0f, 0};
     m_Transform.scale = {0.75, 0.75};
-    SetZIndex(88);
+    SetZIndex(40);
     SetVisible(false);
     m_Visible = false;
     
@@ -12,13 +12,13 @@ ShopPanel::ShopPanel() {
     m_ShopIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Shop/shop_1_2.BMP"));
     m_ShopIcon->m_Transform.translation = {27, 145};
     m_ShopIcon->m_Transform.scale = {0.7125, 0.7125};
-    m_ShopIcon->SetZIndex(89);
+    m_ShopIcon->SetZIndex(42);
     m_ShopIcon->SetVisible(false);
     AddChild(m_ShopIcon);
 
     std::string text = "想要增加你的能力嗎?\n如果你有25個金幣,你\n可以任意選擇一項";
     m_content = std::make_shared<UIText>(20, text, Util::Color{255,255,255,255}, 200, 125);
-    m_content->SetZIndex(89);
+    m_content->SetZIndex(42);
     m_content->SetVisible(false);
     AddChild(m_content);
 
@@ -26,7 +26,7 @@ ShopPanel::ShopPanel() {
     for (int i = 0; i < options.size(); i++) {
         auto option = std::make_shared<UIText>(20, options[i], Util::Color{255,255,255,255}, 0, 0);
             option->SetPosition(startX, startY - i * interval);
-            option->SetZIndex(89);
+            option->SetZIndex(42);
             m_optionText.push_back(option);
             option->SetVisible(false);
             AddChild(option);
@@ -36,7 +36,7 @@ ShopPanel::ShopPanel() {
     m_arrow->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Special/right_arrow_gray.png"));
     m_arrow->m_Transform.translation = {10.0f, -20};
     m_arrow->m_Transform.scale = {0.75, 0.75};
-    m_arrow->SetZIndex(89);
+    m_arrow->SetZIndex(42);
     m_arrow->SetVisible(false);
     AddChild(m_arrow);
 

@@ -5,29 +5,29 @@ NPCDialog::NPCDialog() {
     SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/NPC/NPCDialog.bmp"));
     m_Transform.translation = {142.0f, 0};
     m_Transform.scale = {0.5, 0.5};
-    SetZIndex(88);
+    SetZIndex(40);
     SetVisible(false);
 
     m_SpeakerIcon = std::make_shared<Util::GameObject>();
     m_SpeakerIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/NPC/player.bmp"));
     m_SpeakerIcon->m_Transform.translation = {27.0f, 38.0f};
     m_SpeakerIcon->m_Transform.scale = {0.475, 0.475};
-    m_SpeakerIcon->SetZIndex(89);
+    m_SpeakerIcon->SetZIndex(42);
     m_SpeakerIcon->SetVisible(false);
     AddChild(m_SpeakerIcon);
 
     m_SpeakerName = std::make_shared<UIText>(20, "勇者", Util::Color{255,255,255,255}, 87, 38);
-    m_SpeakerName->SetZIndex(89);
+    m_SpeakerName->SetZIndex(42);
     m_SpeakerName->SetVisible(false);
     AddChild(m_SpeakerName);
 
     m_SpeakerDialog = std::make_shared<UIText>(20, "　你好我是勇者，我要來攻\n打這座塔，救出公主", Util::Color{255,255,255,255}, 149, -18);
-    m_SpeakerDialog->SetZIndex(89);
+    m_SpeakerDialog->SetZIndex(42);
     m_SpeakerDialog->SetVisible(false);
     AddChild(m_SpeakerDialog);
 
     m_SpaceText = std::make_shared<UIText>(16, "~~space~~", Util::Color{255,255,255,255}, 240, -60);
-    m_SpaceText->SetZIndex(89);
+    m_SpaceText->SetZIndex(42);
     m_SpaceText->SetVisible(false);
     AddChild(m_SpaceText);
 }

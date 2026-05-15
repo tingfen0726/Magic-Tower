@@ -19,7 +19,7 @@ public:
         posX = x;
         posY = y;
         m_ID = id;
-        SetZIndex(20);
+        SetZIndex(0);
     }
     virtual ~Block() = default;
     void SetImageFrame(int index);
@@ -33,6 +33,7 @@ public:
         };
     }
     int GetID() { return m_ID; }
+
 protected:
     int m_ID;
     std::vector<std::string> m_imagePath;
@@ -45,6 +46,7 @@ class Map {
 public:
     Map();
     void LoadLevel(const std::vector<std::vector<int>>& levelData);
+    void LoadNPCs(const std::vector<std::shared_ptr<NPC>>& savedNPCs) {};
     void RestoreNPCs(const std::vector<std::shared_ptr<NPC>>& savedNPCs);
 
     void SetVisible(bool visible);

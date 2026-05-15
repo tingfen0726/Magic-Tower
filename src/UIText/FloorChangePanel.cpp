@@ -5,19 +5,19 @@ FloorChangePanel::FloorChangePanel() {
     SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Special/Black.bmp"));
     m_Transform.translation = {142.0f, 0};
     m_Transform.scale = {0.5, 0.5};
-    SetZIndex(88);
+    SetZIndex(40);
     SetVisible(false);
     m_Visible = false;
 
     m_Title = std::make_shared<UIText>(36, "樓層跳躍", Util::Color{255,255,255,255}, 150, 150);
-    m_Title->SetZIndex(89);
+    m_Title->SetZIndex(42);
     m_Title->SetVisible(false);
     AddChild(m_Title);
 
     for (int i = 0; i < 24; i++) {
         std::string floorText = (i == 23)? "地 下 層" : "第 " + std::to_string(i + 1) + " 層";
         auto floor = std::make_shared<UIText>(20, floorText, Util::Color{255,255,255,255}, 0, 0);
-        floor->SetZIndex(89);
+        floor->SetZIndex(42);
         floor->SetPosition(startX + (i / 7 * intervalX), startY - (i % 7) * intervalY);
         floor->SetVisible(false);
         AddChild(floor);
@@ -25,7 +25,7 @@ FloorChangePanel::FloorChangePanel() {
     }
 
     m_SpaceText = std::make_shared<UIText>(16, "~~space~~", Util::Color{255,255,255,255}, 300, -190);
-    m_SpaceText->SetZIndex(89);
+    m_SpaceText->SetZIndex(42);
     m_SpaceText->SetVisible(false);
     AddChild(m_SpaceText);
 
@@ -34,7 +34,7 @@ FloorChangePanel::FloorChangePanel() {
     m_arrow->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Special/right_arrow_gray.png"));
     m_arrow->m_Transform.translation = {-40, 90};
     m_arrow->m_Transform.scale = {0.65, 0.65};
-    m_arrow->SetZIndex(89);
+    m_arrow->SetZIndex(42);
     m_arrow->SetVisible(false);
     AddChild(m_arrow);
 }

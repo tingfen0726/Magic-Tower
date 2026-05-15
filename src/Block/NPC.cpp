@@ -1,7 +1,7 @@
 #include "Block/NPC.hpp"
 
 NPC::NPC(const std::vector<std::string> &imagePath, int x, int y, int id) : Block(imagePath, x, y, id){
-    SetZIndex(25);
+    SetZIndex(10);
 }
 
 void NPC::UpdateAnimation() {

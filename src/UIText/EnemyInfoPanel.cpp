@@ -7,7 +7,7 @@ EnemyInfoPanel::EnemyInfoPanel() {
     SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Special/Black.bmp"));
     m_Transform.translation = {142.0f, 0};
     m_Transform.scale = {0.74, 0.74};
-    SetZIndex(88);
+    SetZIndex(40);
     SetVisible(false);
     m_Visible = false;
     for (int i = 0; i < 8; i++) {
@@ -15,7 +15,7 @@ EnemyInfoPanel::EnemyInfoPanel() {
         frame->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Special/EnemyFrame.bmp"));
         frame->m_Transform.translation = {IconstartX, IconstartY - i * IconintervalY};
         frame->m_Transform.scale = {0.7, 0.7};
-        frame->SetZIndex(89);
+        frame->SetZIndex(42);
         frame->SetVisible(false);
         AddChild(frame);
         m_frames.push_back(frame);
@@ -28,14 +28,14 @@ EnemyInfoPanel::EnemyInfoPanel() {
         enemystate.m_enemyIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Road/lava.bmp"));
         enemystate.m_enemyIcon->m_Transform.translation = {IconstartX, IconstartY - i * IconintervalY};
         enemystate.m_enemyIcon->m_Transform.scale = {0.69, 0.69};
-        enemystate.m_enemyIcon->SetZIndex(90);
+        enemystate.m_enemyIcon->SetZIndex(44);
         enemystate.m_enemyIcon->SetVisible(false);
         AddChild(enemystate.m_enemyIcon);
 
         std::vector<std::string> title= {"名稱", "體力", "攻擊", "防禦", "金・經", "損失"};
         for (int j = 0; j < 6; j++) {
             auto text = std::make_shared<UIText>(20, title[j], Util::Color{255,255,255,255}, 0, 0);
-            text->SetZIndex(89);
+            text->SetZIndex(42);
             float currentBaseY = TextstartY - (i * IconintervalY);
             float offsetX = (j / 2) * TextintervalX;
             float offsetY = (j % 2) * TextintervalY;
@@ -47,7 +47,7 @@ EnemyInfoPanel::EnemyInfoPanel() {
         for (int j = 0; j < 6; j++) {
             std::string defaultText = (j == 0) ? "名字" : "1000";
             auto text = std::make_shared<UIText>(20, defaultText, Util::Color{255,255,255,255}, 0, 0);
-            text->SetZIndex(89);
+            text->SetZIndex(42);
             float currentBaseY = TextstartY - (i * IconintervalY);
             float offsetX = (j / 2) * TextintervalX;
             float offsetY = (j % 2) * TextintervalY;

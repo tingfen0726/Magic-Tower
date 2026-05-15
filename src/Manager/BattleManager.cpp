@@ -7,6 +7,17 @@ BattleManager::BattleManager(Player* player, std::shared_ptr<Toast> toast)
 
 }
 
+bool BattleManager::TryStartBattle(PlayerStats playerStats, EnemyStats enemyStats) {
+    if (playerStats.CalculateDamage(enemyStats) >= playerStats.hp) {
+        m_Toast->SetColor(Util::Color{180, 0, 0, 255});
+        m_Toast->ShowToast("你打不過此怪物！");
+        return false;
+    }
+
+    StartBattle(enemyStats);
+    return true;
+}
+
 void BattleManager::StartBattle(EnemyStats enemyStats) {
     m_CurrentEnemy = enemyStats;
     m_IsActive = true;
@@ -69,7 +80,9 @@ void BattleManager::Update() {
                 bool playerWon = (playerHp > 0);
                 if (OnBattleEnded) {
                     OnBattleEnded(playerWon);
-                    m_Toast->ShowToast("獲得 金幣數 " + std::to_string(m_CurrentEnemy.gold) + " 經驗值 " + std::to_string(m_CurrentEnemy.exp) + "!");
+                    if (playerWon) {
+                        m_Toast->ShowToast("獲得 金幣數 " + std::to_string(m_CurrentEnemy.gold) + " 經驗值 " + std::to_string(m_CurrentEnemy.exp) + "!");
+                    }
                 }
             }
         }

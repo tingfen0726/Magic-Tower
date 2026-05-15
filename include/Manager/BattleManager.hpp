@@ -17,6 +17,7 @@ public:
 
     bool GetIsActive() const { return m_IsActive; }
 
+    bool TryStartBattle(PlayerStats playerStats, EnemyStats enemyStats);
     void StartBattle(EnemyStats enemyStats);
 
     void Update();

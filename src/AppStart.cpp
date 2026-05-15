@@ -41,10 +41,12 @@ void App::Start() {
     m_EnemyInfoPanel = std::make_shared<EnemyInfoPanel>();
     m_Renderer.AddChild(m_EnemyInfoPanel);
 
+    m_GameClearPanel = std::make_shared<GameClearPanel>();
+    m_Renderer.AddChild(m_GameClearPanel);
+
     // 樓層與商店管理
     m_LevelManager = std::make_shared<LevelManager>(m_Map, m_Player, m_Renderer);
     m_LevelManager->InitFloorData();
-    m_Map->SetVisible(false);
 
     m_ShopManager = std::make_shared<ShopManager>(m_Player.get());
 
@@ -55,8 +57,8 @@ void App::Start() {
     m_UIManager = std::make_shared<UIManager>(m_Player, m_LevelManager, m_Renderer);
 
     m_GameFlowManager = std::make_shared<GameFlowManager>(
-        m_Player, m_LevelManager, m_BattleManager, m_ShopPanel,
-        m_NPCDialog, m_FloorChangePanel, m_EnemyInfoPanel, m_Toast
+        m_Player, m_LevelManager, m_BattleManager, m_SaveManager, m_ShopPanel, m_NPCDialog,
+         m_FloorChangePanel, m_EnemyInfoPanel, m_Toast, m_GameClearPanel
     );
 
     // 其他邏輯管理
@@ -66,6 +68,7 @@ void App::Start() {
         m_Player, m_Map, m_LevelManager, m_ItemManager,
         m_BattleManager, m_NPCManager, m_BattlePanel, m_ShopPanel, m_NPCDialog
     );
+    m_SaveManager = std::make_shared<SaveManager>(m_LevelManager, m_Player);
 
     // 戰鬥事件
     m_BattleManager->OnPlayerHpChanged = [this](int newHp) { m_BattlePanel->UpdatePlayerHpText(newHp); };
@@ -81,5 +84,7 @@ void App::Start() {
         return m_ShopManager->ProcessPurchase(shopID, optionIndex);
     };
 
+    m_GameFlowManager->ResetGame();
+    m_Map->SetVisible(false);
     m_CurrentState = State::UPDATE;
 }

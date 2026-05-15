@@ -60,6 +60,7 @@ private:
 
     int m_CurrentFrame = 0; // 圖片動畫
     unsigned int m_LastFrameTime = 0; // 上次更新時間
+    unsigned int m_DeathBlinkTime = 0; // 死亡閃爍時間
     bool m_IsMoving = false; // 是否正在移動
     int m_CurrentGridX = 0; //陣列座標x
     int m_CurrentGridY = 0; //陣列座標y

@@ -1183,6 +1183,7 @@ void Map::LoadLevel(const std::vector<std::vector<int>>& levelData) {
     }
 }
 
+
 void Map::RestoreNPCs(const std::vector<std::shared_ptr<NPC>>& savedNPCs) {
     for (size_t i = 0; i < m_Blocks.size(); i++) {
         if (auto freshNpc = std::dynamic_pointer_cast<NPC>(m_Blocks[i])) {

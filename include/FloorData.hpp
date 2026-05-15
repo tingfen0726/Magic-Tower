@@ -13,6 +13,13 @@
 #include <string>
 #include "Map.hpp"
 
+struct NPCSaveRecord {
+    int id;
+    int currentStage;
+    int totalStage;
+    std::vector<bool> stageCompleted;
+};
+
 struct StairData {
     int x;            // 出發點 X
     int y;            // 出發點 Y
@@ -28,6 +35,7 @@ struct FloorData {
     std::vector<StairData> stairs;
     std::vector<std::vector<int>> grid;
     std::vector<std::shared_ptr<NPC>> savedNPCs;
+    std::vector<NPCSaveRecord> npcRecords;
     bool isVisited = false;
 };
 FloorData LoadFloorFromFile(const std::string& filepath);

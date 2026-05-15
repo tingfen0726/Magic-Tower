@@ -4,12 +4,14 @@
 
 GameFlowManager::GameFlowManager(
     std::shared_ptr<Player> player, std::shared_ptr<LevelManager> levelManager,
-    std::shared_ptr<BattleManager> battleManager, std::shared_ptr<ShopPanel> shopPanel,
+    std::shared_ptr<BattleManager> battleManager, std::shared_ptr<SaveManager> saveManager
+    , std::shared_ptr<ShopPanel> shopPanel,
     std::shared_ptr<NPCDialog> npcDialog, std::shared_ptr<FloorChangePanel> floorChangePanel,
-    std::shared_ptr<EnemyInfoPanel> enemyInfoPanel, std::shared_ptr<Toast> toast)
+    std::shared_ptr<EnemyInfoPanel> enemyInfoPanel, std::shared_ptr<Toast> toast, std::shared_ptr<GameClearPanel> gameClearPanel)
     : m_Player(player), m_LevelManager(levelManager), m_BattleManager(battleManager),
+      m_SaveManager(saveManager),
       m_ShopPanel(shopPanel), m_NPCDialog(npcDialog), m_FloorChangePanel(floorChangePanel),
-      m_EnemyInfoPanel(enemyInfoPanel), m_Toast(toast) {
+      m_EnemyInfoPanel(enemyInfoPanel), m_Toast(toast), m_GameClearPanel(gameClearPanel) {
 
 }
 
@@ -18,7 +20,8 @@ bool GameFlowManager::IsPlayerLockedByUI() {
            m_NPCDialog->GetIsDialogue() ||
            m_BattleManager->GetIsActive() ||
            m_FloorChangePanel->GetVisible() ||
-           m_EnemyInfoPanel->GetVisible();
+           m_EnemyInfoPanel->GetVisible() ||
+           m_GameClearPanel->GetVisible();
 }
 
 void GameFlowManager::ProcessBattleResult(bool isWin) {
@@ -63,6 +66,8 @@ void GameFlowManager::ProcessBattleResult(bool isWin) {
                 m_LevelManager->ChangeRemoteBlock(24, 6, 2, Config::ID::EMPTY);
                 m_LevelManager->ChangeRemoteBlock(24, 4, 3, Config::ID::EMPTY);
                 m_LevelManager->ChangeRemoteBlock(24, 6, 3, Config::ID::EMPTY);
+                m_GameClearPanel->ShowGameClearPanel();
+
             }
         }
     }
@@ -91,5 +96,70 @@ void GameFlowManager::ProcessShopLogic() {
         m_Toast->SetColor(Util::Color{180, 0, 0, 255});
         m_Toast->ShowToast("資源不足，交易失敗！");
         m_ShopPanel->ResetTradeFail();
+    }
+}
+
+void GameFlowManager::RestoreGameState(const GameSaveData &data) {
+    m_Player->SetStats(PlayerLabel::Stat::LEVEL, data.player_stats.level);
+    m_Player->SetStats(PlayerLabel::Stat::HP, data.player_stats.hp);
+    m_Player->SetStats(PlayerLabel::Stat::ATK, data.player_stats.atk);
+    m_Player->SetStats(PlayerLabel::Stat::DEF, data.player_stats.def);
+    m_Player->SetStats(PlayerLabel::Stat::GOLD, data.player_stats.gold);
+    m_Player->SetStats(PlayerLabel::Stat::EXP, data.player_stats.exp);
+
+    m_Player->SetKey(PlayerLabel::Key::YELLOW, data.player_inventory.yellowKey);
+    m_Player->SetKey(PlayerLabel::Key::BLUE, data.player_inventory.blueKey);
+    m_Player->SetKey(PlayerLabel::Key::RED, data.player_inventory.redKey);
+
+    m_Player->SetItem(PlayerLabel::Item::HOLYCROSS, data.player_inventory.hasholyCross);
+    m_Player->SetItem(PlayerLabel::Item::REDVERI, data.player_inventory.hasredveri);
+    m_Player->SetItem(PlayerLabel::Item::BLUEVERI, data.player_inventory.hasblueveri);
+    m_Player->SetItem(PlayerLabel::Item::GREENVERI, data.player_inventory.hasgreenveri);
+    m_Player->SetItem(PlayerLabel::Item::GEMHOE, data.player_inventory.hasgemhoe);
+    m_Player->SetItem(PlayerLabel::Item::GODKNIFESIGN, data.player_inventory.hasgodknifesign);
+    m_Player->SetItem(PlayerLabel::Item::WINDCOMPASS, data.player_inventory.haswindCompass);
+
+    m_Player->SetChCheatingMode(data.Cheating_Mode);
+
+    m_LevelManager->RestoreLevelState(data.m_FloorData, data.m_CurrentFloor);
+    m_Player->SetPosition(data.playerGridX, data.playerGridY);
+
+}
+
+void GameFlowManager::ResetGame() {
+    m_LevelManager->InitFloorData();
+    GameSaveData initialData;
+
+    initialData.player_stats = {1, 1000, 10, 10, 0, 0};
+    initialData.player_inventory = PlayerInventory();
+    initialData.m_FloorData = m_LevelManager->GetFloorData();
+    initialData.m_CurrentFloor = 0;
+    initialData.playerGridX = 5;
+    initialData.playerGridY = 10;
+    initialData.Cheating_Mode = false;
+
+    RestoreGameState(initialData);
+}
+
+void GameFlowManager::LoadGame(const std::string &filename) {
+    // GameSaveData initialData;
+    //
+    // if (m_SaveManager->LoadGame(filename, initialData)) {
+    //
+    //
+    //      RestoreGameState(initialData);
+    // }
+
+}
+
+void GameFlowManager::Update() {
+    m_Player->Update();
+    m_Toast->Update();
+    m_NPCDialog->Update();
+    m_FloorChangePanel->Update();
+    m_EnemyInfoPanel->Update();
+    m_GameClearPanel->Update();
+    if (m_BattleManager->GetIsActive()) {
+        m_BattleManager->Update();
     }
 }

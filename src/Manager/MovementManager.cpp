@@ -83,8 +83,9 @@ std::shared_ptr<Enemy> MovementManager::ProcessPlayerMovement() {
                     if (nextX == block->GetPosition()[0] && nextY == block->GetPosition()[1]) {
                         auto enemyPtr = std::dynamic_pointer_cast<Enemy>(block);
                         if (enemyPtr) {
-                            m_BattleManager->StartBattle(enemyPtr->GetEnemyStats());
-                            m_BattlePanel->ShowBattlePanel(m_Player->GetPlayerStats(), enemyPtr->GetEnemyStats(), enemyPtr->GetImagePath()[0]);
+                            if (m_BattleManager->TryStartBattle(m_Player->GetPlayerStats(), enemyPtr->GetEnemyStats())) {
+                                m_BattlePanel->ShowBattlePanel(m_Player->GetPlayerStats(), enemyPtr->GetEnemyStats(), enemyPtr->GetImagePath()[0]);
+                            }
                             m_Player->StepInPlace(nextDir);
                             return enemyPtr;
                         }

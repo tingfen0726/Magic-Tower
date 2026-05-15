@@ -41,6 +41,7 @@ UIManager::UIManager(std::shared_ptr<Player> player, std::shared_ptr<LevelManage
             20, "0", Util::Color{0,0,0,255},
             (i - 2) * Config::TILE_SIZE * 2, -335.0f
         );
+        textUI->SetVisible(false);
         m_TryTextUI.push_back(textUI);
         renderer.AddChild(textUI);
     }
@@ -85,5 +86,6 @@ void UIManager::UpdateHUD() {
 
 void UIManager::SetHUDVisible(bool visible) {
     for (auto ui : m_PlayerUI) ui->SetVisible(visible);
+    for (auto ui : m_TryTextUI) ui->SetVisible(visible);//測試資料，需刪
     if (m_floorUI) m_floorUI->SetVisible(visible);
 }

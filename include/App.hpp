@@ -13,6 +13,7 @@
 #include "UIText/NPCDialog.hpp"
 #include "UIText/FloorChangePanel.hpp"
 #include "UIText/EnemyInfoPanel.hpp"
+#include "UIText/GameClearPanel.hpp"
 
 #include "Manager/ShopManager.hpp"
 #include "Manager/BattleManager.hpp"
@@ -22,6 +23,7 @@
 #include "Manager/MovementManager.hpp"
 #include "Manager/UIManager.hpp"
 #include "Manager/GameFlowManager.hpp"
+#include "Manager/SaveManager.hpp"
 
 #include "Block/Enemy.hpp"
 #include <vector>
@@ -33,6 +35,10 @@ public:
         UPDATE,
         END,
     };
+    enum class GameState {
+        TITLE_SCREEN, // 標題畫面
+        PLAYING,      // 遊玩中
+    };
 
     State GetCurrentState() const { return m_CurrentState; }
 
@@ -41,11 +47,13 @@ public:
     void Update();
 
     void End(); // NOLINT(readability-convert-member-functions-to-static)
-private:
+
     std::vector<std::shared_ptr<Enemy>> GetEnemy();
     void HandleSystemInput();
 
     State m_CurrentState = State::START;
+    GameState m_GameState = GameState::TITLE_SCREEN;
+
     Util::Renderer m_Renderer;
     std::shared_ptr<BackgroundImage> m_Background;
     std::shared_ptr<Player> m_Player;
@@ -59,6 +67,7 @@ private:
     std::shared_ptr<NPCDialog> m_NPCDialog;
     std::shared_ptr<FloorChangePanel> m_FloorChangePanel;
     std::shared_ptr<EnemyInfoPanel> m_EnemyInfoPanel;
+    std::shared_ptr<GameClearPanel> m_GameClearPanel;
 
     // 經理部門
     std::shared_ptr<BattleManager> m_BattleManager;
@@ -69,6 +78,7 @@ private:
     std::shared_ptr<UIManager> m_UIManager;
     std::shared_ptr<ShopManager> m_ShopManager;
     std::shared_ptr<GameFlowManager> m_GameFlowManager;
+    std::shared_ptr<SaveManager> m_SaveManager;
 };
 
 #endif

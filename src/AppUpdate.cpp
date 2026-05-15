@@ -6,44 +6,42 @@ void App::Update() {
     if (Util::Input::IsKeyUp(Util::Keycode::ESCAPE) || Util::Input::IfExit()) {
         m_CurrentState = State::END;
     }
-    // 遊戲初始化觸發
-    if (Util::Input::IsKeyUp(Util::Keycode::SPACE) && m_CurrentState == State::UPDATE) {
-        m_Background->StartGame();
-        m_Player->SetVisible(true);
-        m_Map->SetVisible(true);
-        m_PlayerIcon->SetVisible(true);
-        m_UIManager->SetHUDVisible(true);
-    }
-    // 更新基礎物件狀態
-    m_Player->Update();
-    m_Map->Update();
-    m_Toast->Update();
-    m_NPCDialog->Update();
-    m_FloorChangePanel->Update();
-    m_EnemyInfoPanel->Update();
-    if (m_BattleManager->GetIsActive()) {
-        m_BattleManager->Update();
-    }
+    switch (m_GameState) {
+        case GameState::TITLE_SCREEN:                   // 遊戲初始化觸發
+            if (Util::Input::IsKeyUp(Util::Keycode::SPACE) && m_CurrentState == State::UPDATE) {
+                m_Background->StartGame();
+                m_Player->SetVisible(true);
+                m_Map->SetVisible(true);
+                m_PlayerIcon->SetVisible(true);
+                m_UIManager->SetHUDVisible(true);
+                m_GameState = GameState::PLAYING;
+            }
+            break;
+        case GameState::PLAYING:                        // 更新基礎物件狀態
+            m_Map->Update();
+            m_GameFlowManager->Update();
 
-    HandleSystemInput();
+            HandleSystemInput();
 
-    //處理核心遊戲流程
-    if (!m_GameFlowManager->IsPlayerLockedByUI()) {
-        auto encounteredEnemy = m_MovementManager->ProcessPlayerMovement();
-        if (encounteredEnemy != nullptr) {
-            m_GameFlowManager->SetCurrentEnemy(encounteredEnemy);
-        }
+            //處理核心遊戲流程
+            if (!m_GameFlowManager->IsPlayerLockedByUI()) {
+                auto encounteredEnemy = m_MovementManager->ProcessPlayerMovement();
+                if (encounteredEnemy != nullptr) {
+                    m_GameFlowManager->SetCurrentEnemy(encounteredEnemy);
+                }
+            }
+            else {
+                m_Player->StopMove();
+            }
+
+            // 邏輯結算
+            m_GameFlowManager->ProcessShopLogic();
+            m_NPCManager->ProcessNPCLogic();
+            m_GameFlowManager->ProcessFloorChange();
+
+            m_UIManager->UpdateHUD();
+            break;
     }
-    else {
-        m_Player->StopMove();
-    }
-
-    // 邏輯結算
-    m_GameFlowManager->ProcessShopLogic();
-    m_NPCManager->ProcessNPCLogic();
-    m_GameFlowManager->ProcessFloorChange();
-
-    m_UIManager->UpdateHUD();
     m_Renderer.Update();
 }
 
@@ -80,6 +78,23 @@ void App::HandleSystemInput() {
         }
         else if (!m_GameFlowManager->IsPlayerLockedByUI() && m_Player->GetInventory().hasgodknifesign) {
             m_EnemyInfoPanel->ShowEnemyInfoPanel(m_Player->GetPlayerStats(), GetEnemy());
+        }
+    }
+    if (Util::Input::IsKeyDown(Util::Keycode::R)) {
+        if (!m_GameFlowManager->IsPlayerLockedByUI()) {
+            m_GameFlowManager->ResetGame();
+        }
+    }
+    if (Util::Input::IsKeyDown(Util::Keycode::S) && Util::Input::IsKeyPressed(Util::Keycode::LCTRL)) {
+        if (!m_GameFlowManager->IsPlayerLockedByUI()) {
+            if (m_SaveManager->SaveGame()) {
+                m_Toast->SetColor(Util::Color{180, 150, 0, 255});
+                m_Toast->ShowToast("儲存成功!");
+            }
+            else {
+                m_Toast->SetColor(Util::Color{180, 0, 0, 255});
+                m_Toast->ShowToast("儲存失敗!??");
+            }
         }
     }
 }

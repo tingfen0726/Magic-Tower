@@ -12,15 +12,16 @@ LevelManager::LevelManager(std::shared_ptr<Map> map, std::shared_ptr<Player> pla
 }
 
 void LevelManager::InitFloorData() {
+    m_FloorData.clear();
     for (int i = 0; i < 27; i++) {
         std::string mapPath = std::string(RESOURCE_DIR) + "/Map/level" + std::to_string(i) + ".txt";
         m_FloorData.push_back(LoadFloorFromFile(mapPath));
     }
 
-    m_Map->LoadLevel(m_FloorData[m_CurrentFloor].grid);
-    for (auto block : m_Map->GetBlocks()) {
-        m_Renderer->AddChild(block);
-    }
+    // m_Map->LoadLevel(m_FloorData[m_CurrentFloor].grid);
+    // for (auto block : m_Map->GetBlocks()) {
+    //     m_Renderer->AddChild(block);
+    // }
 }
 
 bool LevelManager::JumpToFloor(int targetFloor, bool checkVisited) {
@@ -46,6 +47,9 @@ bool LevelManager::JumpToFloor(int targetFloor, bool checkVisited) {
     for (auto block : m_Map->GetBlocks()) {
         m_Renderer->AddChild(block);
     }
+    if (targetFloor == 24 && !m_Player->GetCheatingMode()) {
+        m_Player->SetItem(PlayerLabel::Item::WINDCOMPASS, false);
+    }
     return true;
 }
 
@@ -70,7 +74,7 @@ void LevelManager::ChangeRemoteBlock(int targetFloor, int x, int y, int newID) {
             case Config::ID::EMPTY: {
                 floorImg = {RESOURCE_DIR "/Image/Road/road.bmp"};
                 auto newFloor = std::make_shared<Wall>(floorImg, x, y, newID);
-                newFloor->SetZIndex(25);
+                newFloor->SetZIndex(5);
                 m_Map->AddBlock(newFloor);
                 m_Renderer->AddChild(newFloor);
                 break;
@@ -78,7 +82,7 @@ void LevelManager::ChangeRemoteBlock(int targetFloor, int x, int y, int newID) {
             case Config::ID::STAIRS_UP: {
                 floorImg = {RESOURCE_DIR "/Image/Stair/upstair.bmp"};
                 auto newFloor = std::make_shared<Stair>(floorImg, x, y, newID);
-                newFloor->SetZIndex(25);
+                newFloor->SetZIndex(5);
                 m_Map->AddBlock(newFloor);
                 m_Renderer->AddChild(newFloor);
                 break;
@@ -122,6 +126,40 @@ void LevelManager::EnemyReinforcements(int stage) {
                     }
                 }
             }
+        }
+    }
+}
+
+void LevelManager::RestoreLevelState(const std::vector<FloorData> &savedFloors, int targetFloor) {
+    for (auto block : m_Map->GetBlocks()) {
+        m_Renderer->RemoveChild(block);
+    }
+    m_FloorData = savedFloors;
+    m_CurrentFloor = targetFloor;
+    m_FloorData[m_CurrentFloor].isVisited = true;
+
+    m_Map->LoadLevel(m_FloorData[m_CurrentFloor].grid);
+
+    if (!m_FloorData[m_CurrentFloor].savedNPCs.empty()) {
+        m_Map->RestoreNPCs(m_FloorData[m_CurrentFloor].savedNPCs);
+    }
+    for (auto block : m_Map->GetBlocks()) {
+        m_Renderer->AddChild(block);
+    }
+}
+
+void LevelManager::SyncCurrentFloorState() {
+    if (m_CurrentFloor < 0 || m_CurrentFloor >= m_FloorData.size()) {
+        return;
+    }
+
+    m_FloorData[m_CurrentFloor].grid = m_Map->GetLevelData();
+
+    m_FloorData[m_CurrentFloor].savedNPCs.clear();
+
+    for (auto block : m_Map->GetBlocks()) {
+        if (auto npc = std::dynamic_pointer_cast<NPC>(block)) {
+            m_FloorData[m_CurrentFloor].savedNPCs.push_back(npc);
         }
     }
 }

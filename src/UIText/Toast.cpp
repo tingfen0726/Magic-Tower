@@ -3,10 +3,12 @@
 Toast::Toast(const std::string &text){
     SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Item/itemDialog.bmp"));
     m_Transform.translation = {0, 0};
-    SetZIndex(98);
+    SetZIndex(60);
     m_text = std::make_shared<UIText>(36, text, Util::Color{255,255,255,255}, 0, 0);
-    m_text->SetZIndex(99);
+    m_text->SetZIndex(62);
     AddChild(m_text);
+    SetVisible(false);
+    m_text->SetVisible(false);
 }
 
 void Toast::ShowToast(const std::string &prefix) {

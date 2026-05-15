@@ -15,7 +15,7 @@ public:
     UIText(int fontSize, const std::string& text, const Util::Color& color, int x, int y) {
         m_TextComponent = std::make_shared<Util::Text>(RESOURCE_DIR "/Font/Cubic_11_1.010_R.ttf", fontSize, text, color);
         m_Drawable = m_TextComponent;
-        SetZIndex(80);
+        SetZIndex(30);
         m_Transform.translation = {x, y};
     }
     virtual void UpdateValue(int value) {
