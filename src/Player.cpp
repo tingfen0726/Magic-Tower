@@ -77,12 +77,6 @@ void Player::MoveToGrid(int nextX, int nextY, int dir) {
 
 void Player::UpdateAnimation() {
     unsigned int currentTime = SDL_GetTicks();
-    if (m_Stats.hp <= 0) {
-        if (currentTime - m_DeathBlinkTime > 150) {
-            SetVisible(!m_Visible);
-            m_DeathBlinkTime = currentTime;
-        }
-    }
 
     if (!m_IsMoving) {
         SetImageFrame(0);

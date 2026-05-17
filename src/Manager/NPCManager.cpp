@@ -64,8 +64,8 @@ void NPCManager::ProcessNPCLogic() {
         }
         else if (m_CurrentNPC->GetID() == Config::ID::SHOPKEEPER_2) {
             if (stage == 0) {
-                m_Player->AddStats(PlayerLabel::Stat::DEF, 70);
-                m_Toast->ShowToast("獲得 鋼盾 防護力 +70");
+                m_Player->AddStats(PlayerLabel::Stat::DEF, 30);
+                m_Toast->ShowToast("獲得 鋼盾 防護力 +30");
                 m_CurrentNPC->IsCompleted();
             }
         }

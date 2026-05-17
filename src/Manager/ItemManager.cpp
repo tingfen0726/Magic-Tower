@@ -79,10 +79,16 @@ void ItemManager::ProcessItemPickup(std::shared_ptr<Props> propsPtr) {
             break;
         case Config::ID::JUMP_WING_SMALL:
             m_Player->AddStats(PlayerLabel::Stat::LEVEL, 1);
+            m_Player->AddStats(PlayerLabel::Stat::HP, 1000);
+            m_Player->AddStats(PlayerLabel::Stat::ATK, 10);
+            m_Player->AddStats(PlayerLabel::Stat::DEF, 10);
             m_Toast->ShowToast("獲得 小飛羽 等級 +1");
             break;
         case Config::ID::JUMP_WING_BIG:
             m_Player->AddStats(PlayerLabel::Stat::LEVEL, 3);
+            m_Player->AddStats(PlayerLabel::Stat::HP, 3000);
+            m_Player->AddStats(PlayerLabel::Stat::ATK, 30);
+            m_Player->AddStats(PlayerLabel::Stat::DEF, 30);
             m_Toast->ShowToast("獲得 大飛羽 等級 +3");
             break;
         case Config::ID::HOLY_CROSS:

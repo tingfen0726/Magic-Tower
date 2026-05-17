@@ -46,7 +46,7 @@ class Map {
 public:
     Map();
     void LoadLevel(const std::vector<std::vector<int>>& levelData);
-    void LoadNPCs(const std::vector<std::shared_ptr<NPC>>& savedNPCs) {};
+    std::shared_ptr<NPC> LoadNPCs(int blockID, int x, int y);
     void RestoreNPCs(const std::vector<std::shared_ptr<NPC>>& savedNPCs);
 
     void SetVisible(bool visible);

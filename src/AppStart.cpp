@@ -44,6 +44,9 @@ void App::Start() {
     m_GameClearPanel = std::make_shared<GameClearPanel>();
     m_Renderer.AddChild(m_GameClearPanel);
 
+    m_Selectpanel = std::make_shared<Selectpanel>();
+    m_Renderer.AddChild(m_Selectpanel);
+
     // 樓層與商店管理
     m_LevelManager = std::make_shared<LevelManager>(m_Map, m_Player, m_Renderer);
     m_LevelManager->InitFloorData();
@@ -58,7 +61,7 @@ void App::Start() {
 
     m_GameFlowManager = std::make_shared<GameFlowManager>(
         m_Player, m_LevelManager, m_BattleManager, m_SaveManager, m_ShopPanel, m_NPCDialog,
-         m_FloorChangePanel, m_EnemyInfoPanel, m_Toast, m_GameClearPanel
+         m_FloorChangePanel, m_EnemyInfoPanel, m_Selectpanel, m_Toast, m_GameClearPanel
     );
 
     // 其他邏輯管理

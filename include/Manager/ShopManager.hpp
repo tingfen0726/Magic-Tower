@@ -22,6 +22,9 @@ public:
                 if (m_Player->GetPlayerStats().exp < 100) return false;
                 m_Player->AddStats(PlayerLabel::Stat::EXP, -100);
                 m_Player->AddStats(PlayerLabel::Stat::LEVEL, 1);
+                m_Player->AddStats(PlayerLabel::Stat::HP, 1000);
+                m_Player->AddStats(PlayerLabel::Stat::ATK, 7);
+                m_Player->AddStats(PlayerLabel::Stat::DEF, 7);
                 return true;
             }
             if (optionIndex == 1) {
@@ -90,6 +93,9 @@ public:
                 if (m_Player->GetPlayerStats().exp < 270) return false;
                 m_Player->AddStats(PlayerLabel::Stat::EXP, -270);
                 m_Player->AddStats(PlayerLabel::Stat::LEVEL, 3);
+                m_Player->AddStats(PlayerLabel::Stat::HP, 3000);
+                m_Player->AddStats(PlayerLabel::Stat::ATK, 20);
+                m_Player->AddStats(PlayerLabel::Stat::DEF, 20);
                 return true;
             }
             if (optionIndex == 1) {

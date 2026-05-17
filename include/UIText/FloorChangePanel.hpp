@@ -11,12 +11,10 @@ public:
     void ShowFloorChangePanel(bool Bool, bool Cheating_Mode);
     void CloseFloorChangePanel();
     bool GetVisible() {return m_Visible;};
-    // void SetCheatingMode(bool Cheating_Mode) { this->Cheating_Mode = Cheating_Mode;}
     int ChangeOptions();
     void Update();
 private:
-    void ExecuteOption();
-    void ResetShopPanel();
+    void ResetSelectPanel();
     bool m_Visible;
     std::shared_ptr<UIText> m_Title;
     std::vector<std::shared_ptr<UIText>> m_Floors;

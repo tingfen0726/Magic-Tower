@@ -56,7 +56,7 @@ void FloorChangePanel::ShowFloorChangePanel(bool Bool, bool Cheating_Mode) {
         }
     }
 
-    ResetShopPanel();
+    ResetSelectPanel();
     SetVisible(true);
     m_Visible = true;
     m_Title->SetVisible(true);
@@ -115,7 +115,7 @@ void FloorChangePanel::CloseFloorChangePanel() {
     m_arrow->SetVisible(false);
 }
 
-void FloorChangePanel::ResetShopPanel() {
+void FloorChangePanel::ResetSelectPanel() {
     m_ptr = 0;
     m_arrow->m_Transform.translation = {-40.0f, 90};
     for (int i = 0; i < m_Floors.size(); i++) {

@@ -38,6 +38,7 @@ void App::Update() {
             m_GameFlowManager->ProcessShopLogic();
             m_NPCManager->ProcessNPCLogic();
             m_GameFlowManager->ProcessFloorChange();
+            m_GameFlowManager->ProcessLoadData();
 
             m_UIManager->UpdateHUD();
             break;
@@ -85,7 +86,7 @@ void App::HandleSystemInput() {
             m_GameFlowManager->ResetGame();
         }
     }
-    if (Util::Input::IsKeyDown(Util::Keycode::S) && Util::Input::IsKeyPressed(Util::Keycode::LCTRL)) {
+    if (Util::Input::IsKeyDown(Util::Keycode::P)) {
         if (!m_GameFlowManager->IsPlayerLockedByUI()) {
             if (m_SaveManager->SaveGame()) {
                 m_Toast->SetColor(Util::Color{180, 150, 0, 255});
@@ -97,4 +98,13 @@ void App::HandleSystemInput() {
             }
         }
     }
+    if (Util::Input::IsKeyDown(Util::Keycode::O)) {
+        if (m_Selectpanel->GetVisible()) {
+            m_Selectpanel->CloseSelectpanel();
+        }
+        else if (!m_GameFlowManager->IsPlayerLockedByUI()) {
+            m_Selectpanel->ShowSelectpanel(m_SaveManager->GetLatestSaveFiles());
+        }
+    }
+
 }

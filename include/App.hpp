@@ -14,6 +14,7 @@
 #include "UIText/FloorChangePanel.hpp"
 #include "UIText/EnemyInfoPanel.hpp"
 #include "UIText/GameClearPanel.hpp"
+#include "UIText/Selectpanel.hpp"
 
 #include "Manager/ShopManager.hpp"
 #include "Manager/BattleManager.hpp"
@@ -68,6 +69,7 @@ public:
     std::shared_ptr<FloorChangePanel> m_FloorChangePanel;
     std::shared_ptr<EnemyInfoPanel> m_EnemyInfoPanel;
     std::shared_ptr<GameClearPanel> m_GameClearPanel;
+    std::shared_ptr<Selectpanel> m_Selectpanel;
 
     // 經理部門
     std::shared_ptr<BattleManager> m_BattleManager;

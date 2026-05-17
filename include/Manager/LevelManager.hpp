@@ -23,6 +23,7 @@ public:
     void MoveNPC(std::shared_ptr<NPC> npcPtr, int nextX, int nextY) { m_Map->MoveNPC(npcPtr, nextX, nextY); }
     void RestoreLevelState(const std::vector<FloorData>& savedFloors, int targetFloor);
     void SyncCurrentFloorState();
+    void CreateNPCs(FloorData &floorData);
 
     int GetCurrentFloor() const { return m_CurrentFloor; }
     std::vector<FloorData>& GetFloorData() { return m_FloorData; }

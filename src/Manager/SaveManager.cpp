@@ -7,6 +7,8 @@
 #include <string>
 #include <iostream>
 
+#include <filesystem>
+
 #include "Block/NPC.hpp"
 
 SaveManager::SaveManager(std::shared_ptr<LevelManager> levelManager, std::shared_ptr<Player> player)
@@ -108,7 +110,7 @@ bool SaveManager::LoadGame(const std::string& filename, GameSaveData& data) {
 
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error: 無法開啟存檔 " << filename << std::endl;
+        std::cerr << "Error: can't open file " << filename << std::endl;
         return false;
     }
 
@@ -180,5 +182,32 @@ bool SaveManager::LoadGame(const std::string& filename, GameSaveData& data) {
 
     file.close();
     return true;
+}
+
+std::vector<std::string> SaveManager::GetLatestSaveFiles() {
+    std::vector<std::string> saveFiles;
+    std::string saveDirectory = std::string(RESOURCE_DIR) + "/SaveData";
+
+    if (!std::filesystem::exists(saveDirectory)) {
+        return saveFiles;
+    }
+
+    for (const auto& entry : std::filesystem::directory_iterator(saveDirectory)) {
+        if (entry.is_regular_file()) {
+            std::string filename = entry.path().filename().string();
+
+            if (filename.find("Save_") == 0 && filename.find(".txt") != std::string::npos) {
+                saveFiles.push_back(entry.path().string());
+            }
+        }
+    }
+
+    std::sort(saveFiles.begin(), saveFiles.end(), std::greater<std::string>());
+
+    if (saveFiles.size() > 3) {
+        saveFiles.resize(3);
+    }
+
+    return saveFiles;
 }
 

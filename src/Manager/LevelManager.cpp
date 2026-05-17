@@ -163,3 +163,25 @@ void LevelManager::SyncCurrentFloorState() {
         }
     }
 }
+
+void LevelManager::CreateNPCs(FloorData &floorData) {
+    std::vector<std::shared_ptr<NPC>> npcPtrs;
+    for (int y = 0; y < 11; y++) {
+        for (int x = 0; x < 11; x++) {
+            int npcID = floorData.grid[y][x];
+            if (npcID >= Config::ID::NPC_BEGIN && npcID <= Config::ID::NPC_END) {
+                auto npc = m_Map->LoadNPCs(npcID, x, y);
+                for (int i = 0; i < floorData.npcRecords.size(); i++) {
+                    if (floorData.npcRecords[i].id == npcID) {
+                        npc->SetCurrentStage(floorData.npcRecords[i].currentStage);
+                        for (int j = 0; j < floorData.npcRecords[i].totalStage; j++) {
+                            npc->SetStageCompleted(j, floorData.npcRecords[i].stageCompleted[j]);
+                        }
+                    }
+                }
+                npcPtrs.push_back(npc);
+            }
+        }
+    }
+    floorData.savedNPCs = npcPtrs;
+}

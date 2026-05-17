@@ -93,6 +93,8 @@ add_executable(${PROJECT_NAME}
         include/GameSaveData.hpp
         include/Manager/SaveManager.hpp
         src/Manager/SaveManager.cpp
+        include/UIText/Selectpanel.hpp
+        src/UIText/Selectpanel.cpp
 )
 
 if(MSVC)

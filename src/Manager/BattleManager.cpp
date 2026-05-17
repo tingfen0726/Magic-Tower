@@ -24,6 +24,22 @@ void BattleManager::StartBattle(EnemyStats enemyStats) {
     m_IsEnding = false;
     m_ActionCooldown = 10;
 
+    int currentHp = m_Player->GetPlayerStats().hp;
+    int initialLoss = 0;
+
+    if (m_CurrentEnemy.loss > 0 && m_CurrentEnemy.loss < 1) {
+        initialLoss = static_cast<int>(m_CurrentEnemy.loss * currentHp);
+    }
+    else if (m_CurrentEnemy.loss >= 1) {
+        initialLoss = static_cast<int>(m_CurrentEnemy.loss);
+    }
+
+    if (initialLoss > 0) {
+        m_Player->AddStats(PlayerLabel::Stat::HP, -initialLoss);
+        if (m_Player->GetPlayerStats().hp < 0) {
+            m_Player->SetStats(PlayerLabel::Stat::HP, 0);
+        }
+    }
     if (OnPlayerHpChanged) OnPlayerHpChanged(m_Player->GetPlayerStats().hp);
     if (OnEnemyHpChanged) OnEnemyHpChanged(m_CurrentEnemy.hp);
 }
@@ -41,8 +57,10 @@ void BattleManager::Update() {
 
             int critChance = std::min(100, static_cast<int>(p_level * 0.5f));
             bool isCrit = (rand() % 100) < critChance;
-            int finalAtk = isCrit ? (p_atk * 2) : p_atk;
-            int Dnorm = std::max(0, finalAtk - m_CurrentEnemy.def);
+
+            int baseDamage = std::max(0, p_atk - m_CurrentEnemy.def);
+            int Dnorm = isCrit ? (baseDamage * 2) : baseDamage;
+            if (isCrit) m_Toast->ShowToast(std::to_string(Dnorm));
 
             m_CurrentEnemy.hp -= Dnorm;
             if (m_CurrentEnemy.hp < 0) m_CurrentEnemy.hp = 0;

@@ -12,6 +12,7 @@ public:
 
     bool SaveGame();
     bool LoadGame(const std::string& filename, GameSaveData& outData);
+    std::vector<std::string> GetLatestSaveFiles();
 
 private:
     std::shared_ptr<LevelManager> m_levelManager;

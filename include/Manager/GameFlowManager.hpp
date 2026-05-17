@@ -12,6 +12,7 @@
 #include "UIText/FloorChangePanel.hpp"
 #include "UIText/EnemyInfoPanel.hpp"
 #include "UIText/GameClearPanel.hpp"
+#include "UIText/Selectpanel.hpp"
 #include "GameSaveData.hpp"
 #include "UIText/Toast.hpp"
 #include "Block/Enemy.hpp"
@@ -26,6 +27,7 @@ public:
                     std::shared_ptr<NPCDialog> npcDialog,
                     std::shared_ptr<FloorChangePanel> floorChangePanel,
                     std::shared_ptr<EnemyInfoPanel> enemyInfoPanel,
+                    std::shared_ptr<Selectpanel> selectpanel,
                     std::shared_ptr<Toast> toast,
                     std::shared_ptr<GameClearPanel> gameClearPanel);
 
@@ -33,6 +35,7 @@ public:
     void ProcessBattleResult(bool isWin);
     void ProcessShopLogic();
     void ProcessFloorChange();
+    void ProcessLoadData();
 
     void SetCurrentEnemy(std::shared_ptr<Enemy> enemy) { m_CurrentEnemy = enemy; }
     std::shared_ptr<Enemy> GetCurrentEnemy() { return m_CurrentEnemy; }
@@ -53,6 +56,7 @@ private:
     std::shared_ptr<FloorChangePanel> m_FloorChangePanel;
     std::shared_ptr<EnemyInfoPanel> m_EnemyInfoPanel;
     std::shared_ptr<GameClearPanel> m_GameClearPanel;
+    std::shared_ptr<Selectpanel> m_Selectpanel;
     std::shared_ptr<Toast> m_Toast;
 
     std::shared_ptr<Enemy> m_CurrentEnemy = nullptr;

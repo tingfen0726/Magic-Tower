@@ -6,11 +6,13 @@ GameFlowManager::GameFlowManager(
     std::shared_ptr<Player> player, std::shared_ptr<LevelManager> levelManager,
     std::shared_ptr<BattleManager> battleManager, std::shared_ptr<SaveManager> saveManager
     , std::shared_ptr<ShopPanel> shopPanel,
-    std::shared_ptr<NPCDialog> npcDialog, std::shared_ptr<FloorChangePanel> floorChangePanel,
-    std::shared_ptr<EnemyInfoPanel> enemyInfoPanel, std::shared_ptr<Toast> toast, std::shared_ptr<GameClearPanel> gameClearPanel)
+    std::shared_ptr<NPCDialog> npcDialog, std::shared_ptr<FloorChangePanel> floorChangePanel,std::shared_ptr<EnemyInfoPanel> enemyInfoPanel,
+    std::shared_ptr<Selectpanel> selectpanel
+    ,std::shared_ptr<Toast> toast, std::shared_ptr<GameClearPanel> gameClearPanel)
     : m_Player(player), m_LevelManager(levelManager), m_BattleManager(battleManager),
       m_SaveManager(saveManager),
       m_ShopPanel(shopPanel), m_NPCDialog(npcDialog), m_FloorChangePanel(floorChangePanel),
+      m_Selectpanel(selectpanel),
       m_EnemyInfoPanel(enemyInfoPanel), m_Toast(toast), m_GameClearPanel(gameClearPanel) {
 
 }
@@ -21,7 +23,8 @@ bool GameFlowManager::IsPlayerLockedByUI() {
            m_BattleManager->GetIsActive() ||
            m_FloorChangePanel->GetVisible() ||
            m_EnemyInfoPanel->GetVisible() ||
-           m_GameClearPanel->GetVisible();
+           m_GameClearPanel->GetVisible() ||
+           m_Selectpanel->GetVisible();
 }
 
 void GameFlowManager::ProcessBattleResult(bool isWin) {
@@ -99,6 +102,13 @@ void GameFlowManager::ProcessShopLogic() {
     }
 }
 
+void GameFlowManager::ProcessLoadData() {
+    std::string filename =  m_Selectpanel->ChangeOptions();
+    if (filename != "") {
+        LoadGame(filename);
+    }
+}
+
 void GameFlowManager::RestoreGameState(const GameSaveData &data) {
     m_Player->SetStats(PlayerLabel::Stat::LEVEL, data.player_stats.level);
     m_Player->SetStats(PlayerLabel::Stat::HP, data.player_stats.hp);
@@ -142,14 +152,17 @@ void GameFlowManager::ResetGame() {
 }
 
 void GameFlowManager::LoadGame(const std::string &filename) {
-    // GameSaveData initialData;
-    //
-    // if (m_SaveManager->LoadGame(filename, initialData)) {
-    //
-    //
-    //      RestoreGameState(initialData);
-    // }
-
+    GameSaveData initialData;
+    if (m_SaveManager->LoadGame(filename, initialData)) {
+        for (auto& floordate : initialData.m_FloorData) {
+            m_LevelManager->CreateNPCs(floordate);
+        }
+        RestoreGameState(initialData);
+    }
+    else {
+        m_Toast->SetColor(Util::Color{180, 0, 0, 255});
+        m_Toast->ShowToast("載入失敗!??");
+    }
 }
 
 void GameFlowManager::Update() {
@@ -162,4 +175,5 @@ void GameFlowManager::Update() {
     if (m_BattleManager->GetIsActive()) {
         m_BattleManager->Update();
     }
+    m_Selectpanel->Update();
 }

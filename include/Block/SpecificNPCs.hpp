@@ -154,9 +154,9 @@ public:
                         {Speaker::THIEF, "　如果你找到那個鐵榔頭的\n話，還是來這裡找我!"}
                     }, false},
                     {{
-                        {Speaker::PLAYER, "　給你!我找到了"},
-                        {Speaker::THIEF, "　唉呀!你找到了!"},
-                        {Speaker::THIEF, "　我幫你敲掉了18層的牆，\n去看看吧!"}
+                        {Speaker::PLAYER, "　哈，快看我找到了甚麼!"},
+                        {Speaker::THIEF, "　太好了，這個東西果然是\n在這裡。"},
+                        {Speaker::THIEF, "　好吧，我這就去幫你修好\n第十八層的路面。"}
                     }, false}
                 };
                 break;
