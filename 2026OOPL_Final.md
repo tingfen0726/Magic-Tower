@@ -76,9 +76,7 @@
   - 二十二樓 - 開啟二十三樓花門，要求玩家找尋剩下兩支靈杖，靈杖於左右樓梯找尋，花門位於下方樓梯
   <br><img src="FinalProjectImg/story/story6.bmp" width="200"><img src="FinalProjectImg/story/story7.bmp" width="200"><img src="FinalProjectImg/story/story8.bmp" width="200"><img src="FinalProjectImg/story/story9.bmp" width="200"><br>
   - 二十二樓 - 收集到三支魔杖後將其交出，封印不可擊殺的魔龍成為可擊殺的血影
-  <br><img src="FinalProjectImg/story/story10.bmp" width="200">
-  <img src="FinalProjectImg/story/story11.bmp" width="200">
-  <img src="FinalProjectImg/story/story12.bmp" width="200"><br>
+  <br><img src="FinalProjectImg/story/story10.bmp" width="200"><img src="FinalProjectImg/story/story11.bmp" width="200"><img src="FinalProjectImg/story/story12.bmp" width="200"><br>
 - 小偷
   - 四樓 - 開啟二樓花門，請求玩家找到紅寶石榔頭(十二樓)
   <br><img src="FinalProjectImg/story/story13.bmp" width="200">
