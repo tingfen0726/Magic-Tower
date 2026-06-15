@@ -79,9 +79,7 @@
   <br><img src="FinalProjectImg/story/story10.bmp" width="200"><img src="FinalProjectImg/story/story11.bmp" width="200"><img src="FinalProjectImg/story/story12.bmp" width="200"><br>
 - 小偷
   - 四樓 - 開啟二樓花門，請求玩家找到紅寶石榔頭(十二樓)
-  <br><img src="FinalProjectImg/story/story13.bmp" width="200">
-  <img src="FinalProjectImg/story/story14.bmp" width="200">
-  <img src="FinalProjectImg/story/story15.bmp" width="200"><br>
+  <br><img src="FinalProjectImg/story/story13.bmp" width="200"><img src="FinalProjectImg/story/story14.bmp" width="200"><img src="FinalProjectImg/story/story15.bmp" width="200"><br>
   - 四樓 - 找到紅寶石榔頭後，將其交出，小偷敲掉十八層牆面
   <br><img src="FinalProjectImg/story/story16.bmp" width="200">
   <img src="FinalProjectImg/story/story17.bmp" width="200"><br>
