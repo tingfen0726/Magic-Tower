@@ -2,19 +2,117 @@
 #include "GameConstants.hpp"
 #include "Util/Logger.hpp"
 
-GameFlowManager::GameFlowManager(
-    std::shared_ptr<Player> player, std::shared_ptr<LevelManager> levelManager,
-    std::shared_ptr<BattleManager> battleManager, std::shared_ptr<SaveManager> saveManager
-    , std::shared_ptr<ShopPanel> shopPanel,
-    std::shared_ptr<NPCDialog> npcDialog, std::shared_ptr<FloorChangePanel> floorChangePanel,std::shared_ptr<EnemyInfoPanel> enemyInfoPanel,
-    std::shared_ptr<Selectpanel> selectpanel
-    ,std::shared_ptr<Toast> toast, std::shared_ptr<GameClearPanel> gameClearPanel)
-    : m_Player(player), m_LevelManager(levelManager), m_BattleManager(battleManager),
-      m_SaveManager(saveManager),
-      m_ShopPanel(shopPanel), m_NPCDialog(npcDialog), m_FloorChangePanel(floorChangePanel),
-      m_Selectpanel(selectpanel),
-      m_EnemyInfoPanel(enemyInfoPanel), m_Toast(toast), m_GameClearPanel(gameClearPanel) {
+#include "BackgroundImage.hpp"
 
+// 實體物件
+#include "Player.hpp"
+#include "Map.hpp"
+#include "Block/Enemy.hpp"
+
+// UI 介面
+#include "UIText/Toast.hpp"
+#include "UIText/BattlePanel.hpp"
+#include "UIText/ShopPanel.hpp"
+#include "UIText/NPCDialog.hpp"
+#include "UIText/FloorChangePanel.hpp"
+#include "UIText/EnemyInfoPanel.hpp"
+#include "UIText/GameClearPanel.hpp"
+#include "UIText/Selectpanel.hpp"
+
+#include "Manager/ShopManager.hpp"
+#include "Manager/BattleManager.hpp"
+#include "Manager/LevelManager.hpp"
+#include "Manager/ItemManager.hpp"
+#include "Manager/NPCManager.hpp"
+#include "Manager/MovementManager.hpp"
+#include "Manager/UIManager.hpp"
+#include "Manager/SaveManager.hpp"
+
+GameFlowManager::GameFlowManager() {
+
+}
+
+void GameFlowManager::Initialize() {
+    m_Background = std::make_shared<BackgroundImage>();
+    m_Renderer.AddChild(m_Background);
+
+    m_Player = std::make_shared<Player>();
+    m_Player->SetVisible(false);
+    m_Renderer.AddChild(m_Player);
+
+    m_Map = std::make_shared<Map>();
+
+    // 玩家頭像
+    m_PlayerIcon = std::make_shared<Util::GameObject>();
+    m_PlayerIcon->SetDrawable(std::make_shared<Util::Image>(RESOURCE_DIR "/Image/Player/player_11.bmp"));
+    m_PlayerIcon->m_Transform.translation = {-345.0f, 270.0f};
+    m_PlayerIcon->SetVisible(false);
+    m_Renderer.AddChild(m_PlayerIcon);
+
+    // UI 面板初始化
+    m_Toast = std::make_shared<Toast>("找我嗎?");
+    m_Renderer.AddChild(m_Toast);
+
+    m_BattlePanel = std::make_shared<BattlePanel>();
+    m_Renderer.AddChild(m_BattlePanel);
+
+    m_ShopPanel = std::make_shared<ShopPanel>();
+    m_Renderer.AddChild(m_ShopPanel);
+
+    m_NPCDialog = std::make_shared<NPCDialog>();
+    m_Renderer.AddChild(m_NPCDialog);
+
+    m_FloorChangePanel = std::make_shared<FloorChangePanel>();
+    m_Renderer.AddChild(m_FloorChangePanel);
+
+    m_EnemyInfoPanel = std::make_shared<EnemyInfoPanel>();
+    m_Renderer.AddChild(m_EnemyInfoPanel);
+
+    m_GameClearPanel = std::make_shared<GameClearPanel>();
+    m_Renderer.AddChild(m_GameClearPanel);
+
+    m_Selectpanel = std::make_shared<Selectpanel>();
+    m_Renderer.AddChild(m_Selectpanel);
+
+    // 樓層與商店管理
+    m_LevelManager = std::make_shared<LevelManager>(m_Map, m_Player, m_Renderer);
+    m_LevelManager->InitFloorData();
+
+    m_ShopManager = std::make_shared<ShopManager>(m_Player.get());
+
+    // 戰鬥管理
+    m_BattleManager = std::make_shared<BattleManager>(m_Player.get(), m_Toast);
+
+    // 介面與總管
+    m_UIManager = std::make_shared<UIManager>(m_Player, m_LevelManager, m_Renderer);
+
+
+
+    // 其他邏輯管理
+    m_ItemManager = std::make_shared<ItemManager>(m_Player, m_Toast);
+    m_NPCManager = std::make_shared<NPCManager>(m_Player, m_LevelManager, m_NPCDialog, m_Toast);
+    m_MovementManager = std::make_shared<MovementManager>(
+        m_Player, m_Map, m_LevelManager, m_ItemManager,
+        m_BattleManager, m_NPCManager, m_BattlePanel, m_ShopPanel, m_NPCDialog
+    );
+    m_SaveManager = std::make_shared<SaveManager>(m_LevelManager, m_Player);
+
+    // 戰鬥事件
+    m_BattleManager->OnPlayerHpChanged = [this](int newHp) { m_BattlePanel->UpdatePlayerHpText(newHp); };
+    m_BattleManager->OnEnemyHpChanged = [this](int newHp) { m_BattlePanel->UpdateEnemyHpText(newHp); };
+    m_BattleManager->OnBattleEnded = [this](bool playerWon) {
+        m_BattlePanel->ClosePanel();
+        ProcessBattleResult(playerWon);
+    };
+    m_BattleManager->OnShowVictoryHint = [this]() { m_BattlePanel->ShowVictoryHint(); };
+
+    // 商店事件
+    m_ShopPanel->OnConfirmPurchase = [this](int shopID, int optionIndex) {
+        return m_ShopManager->ProcessPurchase(shopID, optionIndex);
+    };
+
+    ResetGame();
+    m_Map->SetVisible(false);
 }
 
 bool GameFlowManager::IsPlayerLockedByUI() {
@@ -165,7 +263,108 @@ void GameFlowManager::LoadGame(const std::string &filename) {
     }
 }
 
+std::vector<std::shared_ptr<Enemy>> GameFlowManager::GetEnemy() {
+    auto blocks = m_Map->GetBlocks();
+    std::vector<std::shared_ptr<Enemy>> enemies;
+    std::vector<int> seenIDs;
+    for (auto block : blocks) {
+        auto enemyPtr = std::dynamic_pointer_cast<Enemy>(block);
+        if (enemyPtr) {
+            if (enemyPtr->GetIsdie()) continue;
+            int currentID = enemyPtr->GetID();
+            if (std::find(seenIDs.begin(), seenIDs.end(), currentID) == seenIDs.end()) {
+                seenIDs.push_back(currentID);
+                enemies.push_back(enemyPtr);
+            }
+        }
+    }
+    return enemies;
+}
+
+void GameFlowManager::HandleSystemInput() {
+    if (Util::Input::IsKeyDown(Util::Keycode::F)) {
+        if (m_FloorChangePanel->GetVisible()) {
+            m_FloorChangePanel->CloseFloorChangePanel();
+        }
+        else if (!IsPlayerLockedByUI()) {
+            m_FloorChangePanel->ShowFloorChangePanel(m_Player->GetInventory().haswindCompass, m_Player->GetCheatingMode());
+        }
+    }
+    if (Util::Input::IsKeyDown(Util::Keycode::E)) {
+        if (m_EnemyInfoPanel->GetVisible()) {
+            m_EnemyInfoPanel->CloseEnemyInfoPanel();
+        }
+        else if (!IsPlayerLockedByUI() && m_Player->GetInventory().hasgodknifesign) {
+            m_EnemyInfoPanel->ShowEnemyInfoPanel(m_Player->GetPlayerStats(), GetEnemy());
+        }
+    }
+    if (Util::Input::IsKeyDown(Util::Keycode::R)) {
+        if (!IsPlayerLockedByUI()) {
+            ResetGame();
+        }
+    }
+    if (Util::Input::IsKeyDown(Util::Keycode::P)) {
+        if (!IsPlayerLockedByUI()) {
+            if (m_SaveManager->SaveGame()) {
+                m_Toast->SetColor(Util::Color{180, 150, 0, 255});
+                m_Toast->ShowToast("儲存成功!");
+            }
+            else {
+                m_Toast->SetColor(Util::Color{180, 0, 0, 255});
+                m_Toast->ShowToast("儲存失敗!??");
+            }
+        }
+    }
+    if (Util::Input::IsKeyDown(Util::Keycode::O)) {
+        if (m_Selectpanel->GetVisible()) {
+            m_Selectpanel->CloseSelectpanel();
+        }
+        else if (!IsPlayerLockedByUI()) {
+            m_Selectpanel->ShowSelectpanel(m_SaveManager->GetLatestSaveFiles());
+        }
+    }
+}
+
+
 void GameFlowManager::Update() {
+    switch (m_GameState) {
+        case GameState::TITLE_SCREEN:                   // 遊戲初始化觸發
+            if (Util::Input::IsKeyUp(Util::Keycode::SPACE)) {
+                m_Background->StartGame();
+                m_Player->SetVisible(true);
+                m_Map->SetVisible(true);
+                m_PlayerIcon->SetVisible(true);
+                m_UIManager->SetHUDVisible(true);
+                m_GameState = GameState::PLAYING;
+            }
+            break;
+        case GameState::PLAYING:                        // 更新基礎物件狀態
+            m_Map->Update();
+
+            HandleSystemInput();
+
+            //處理核心遊戲流程
+            if (!IsPlayerLockedByUI()) {
+                auto encounteredEnemy = m_MovementManager->ProcessPlayerMovement();
+                if (encounteredEnemy != nullptr) {
+                    SetCurrentEnemy(encounteredEnemy);
+                }
+            }
+            else {
+                m_Player->StopMove();
+            }
+
+            // 邏輯結算
+            ProcessShopLogic();
+            m_NPCManager->ProcessNPCLogic();
+            ProcessFloorChange();
+            ProcessLoadData();
+
+            m_UIManager->UpdateHUD();
+            break;
+    }
+
+    m_Renderer.Update();
     m_Player->Update();
     m_Toast->Update();
     m_NPCDialog->Update();

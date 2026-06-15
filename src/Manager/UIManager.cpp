@@ -36,15 +36,15 @@ UIManager::UIManager(std::shared_ptr<Player> player, std::shared_ptr<LevelManage
     m_floorUI->SetVisible(false);
     renderer.AddChild(m_floorUI);
 
-    for (int i = 0; i < 7; i++) {       //測試資料，需刪
-        auto textUI = std::make_shared<UIText>(
-            20, "0", Util::Color{0,0,0,255},
-            (i - 2) * Config::TILE_SIZE * 2, -335.0f
-        );
-        textUI->SetVisible(false);
-        m_TryTextUI.push_back(textUI);
-        renderer.AddChild(textUI);
-    }
+    // for (int i = 0; i < 7; i++) {       //測試資料，需刪
+    //     auto textUI = std::make_shared<UIText>(
+    //         20, "0", Util::Color{0,0,0,255},
+    //         (i - 2) * Config::TILE_SIZE * 2, -335.0f
+    //     );
+    //     textUI->SetVisible(false);
+    //     m_TryTextUI.push_back(textUI);
+    //     renderer.AddChild(textUI);
+    // }
 }
 
 void UIManager::UpdateHUD() {
@@ -75,17 +75,17 @@ void UIManager::UpdateHUD() {
     m_PlayerUI[PlayerUI::BLUE]->UpdateValue(m_Player->GetInventory().blueKey);
     m_PlayerUI[PlayerUI::RED]->UpdateValue(m_Player->GetInventory().redKey);
 
-    m_TryTextUI[0]->UpdateText(std::string("HC: ") + (m_Player->GetInventory().hasholyCross ? "true" : "false"));
-    m_TryTextUI[1]->UpdateText(std::string("RV: ") + (m_Player->GetInventory().hasredveri ? "true" : "false"));
-    m_TryTextUI[2]->UpdateText(std::string("BV: ") + (m_Player->GetInventory().hasblueveri ? "true" : "false"));
-    m_TryTextUI[3]->UpdateText(std::string("GV: ") + (m_Player->GetInventory().hasgreenveri ? "true" : "false"));
-    m_TryTextUI[4]->UpdateText(std::string("GH: ") + (m_Player->GetInventory().hasgemhoe ? "true" : "false"));
-    m_TryTextUI[5]->UpdateText(std::string("GKS: ") + (m_Player->GetInventory().hasgodknifesign ? "true" : "false"));
-    m_TryTextUI[6]->UpdateText(std::string("WC: ") + (m_Player->GetInventory().haswindCompass ? "true" : "false"));
+    // m_TryTextUI[0]->UpdateText(std::string("HC: ") + (m_Player->GetInventory().hasholyCross ? "true" : "false"));
+    // m_TryTextUI[1]->UpdateText(std::string("RV: ") + (m_Player->GetInventory().hasredveri ? "true" : "false"));
+    // m_TryTextUI[2]->UpdateText(std::string("BV: ") + (m_Player->GetInventory().hasblueveri ? "true" : "false"));
+    // m_TryTextUI[3]->UpdateText(std::string("GV: ") + (m_Player->GetInventory().hasgreenveri ? "true" : "false"));
+    // m_TryTextUI[4]->UpdateText(std::string("GH: ") + (m_Player->GetInventory().hasgemhoe ? "true" : "false"));
+    // m_TryTextUI[5]->UpdateText(std::string("GKS: ") + (m_Player->GetInventory().hasgodknifesign ? "true" : "false"));
+    // m_TryTextUI[6]->UpdateText(std::string("WC: ") + (m_Player->GetInventory().haswindCompass ? "true" : "false"));
 }
 
 void UIManager::SetHUDVisible(bool visible) {
     for (auto ui : m_PlayerUI) ui->SetVisible(visible);
-    for (auto ui : m_TryTextUI) ui->SetVisible(visible);//測試資料，需刪
+    // for (auto ui : m_TryTextUI) ui->SetVisible(visible);//測試資料，需刪
     if (m_floorUI) m_floorUI->SetVisible(visible);
 }

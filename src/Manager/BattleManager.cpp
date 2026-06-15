@@ -60,7 +60,7 @@ void BattleManager::Update() {
 
             int baseDamage = std::max(0, p_atk - m_CurrentEnemy.def);
             int Dnorm = isCrit ? (baseDamage * 2) : baseDamage;
-            if (isCrit) m_Toast->ShowToast(std::to_string(Dnorm));
+            // if (isCrit) m_Toast->ShowToast(std::to_string(Dnorm));//測試資料，需刪
 
             m_CurrentEnemy.hp -= Dnorm;
             if (m_CurrentEnemy.hp < 0) m_CurrentEnemy.hp = 0;
@@ -80,7 +80,6 @@ void BattleManager::Update() {
         }
     }
     else {
-        // 如果還沒進入結算狀態，就初始化它
         if (!m_IsEnding) {
             m_IsEnding = true;
             m_EndCooldown = 15;

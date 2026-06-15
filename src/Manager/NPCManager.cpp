@@ -145,6 +145,7 @@ void NPCManager::ProcessNPCLogic() {
                 m_Player->SetItem(PlayerLabel::Item::GODKNIFESIGN, true);
             }
             else if (stage == 2) {
+                m_Player->SetStats(PlayerLabel::Stat::LEVEL, 200);
                 m_Player->SetStats(PlayerLabel::Stat::ATK, 5000);
                 m_Player->SetStats(PlayerLabel::Stat::DEF, 5000);
                 m_Player->SetStats(PlayerLabel::Stat::GOLD, 5000);

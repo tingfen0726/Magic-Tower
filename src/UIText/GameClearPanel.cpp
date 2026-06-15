@@ -18,6 +18,8 @@ GameClearPanel::GameClearPanel() {
                        "盛大的婚禮，並且宣布由勇士來繼承國王的位\n"
                        "置。從此之後，勇士和公主就幸福的生活在一\n"
                        "起了。　　　　　　　　　　　　　　　　　\n";
+
+
     m_text = std::make_shared<UIText>(46, text, Util::Color{255, 255, 255, 255}, 0, -600.0f);
     m_text->SetZIndex(72);
     m_text->SetVisible(false);
