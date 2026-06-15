@@ -67,41 +67,41 @@
 - 仙子
   - 序章 - 介紹遊戲背景，請求玩家找尋十字架(七樓)
   <br><img src="FinalProjectImg/story/story1.bmp" width="200">
-  <img src="FinalProjectImg/story/story2.bmp" width="200">
+  <img src="FinalProjectImg/story/story2.bmp" width="200"><br>
   - 序章 - 從十六樓老人獲得神秘寶物後，與其對話，觸發通關劇情
-  <br><img src="FinalProjectImg/story/story3.bmp" width="200">
+  <br><img src="FinalProjectImg/story/story3.bmp" width="200"><br>
   - 序章 - 獲得十字架後，與其對話，同時開啟二十樓上樓樓梯
-  <br><img src="FinalProjectImg/story/story4.bmp" width="200">
+  <br><img src="FinalProjectImg/story/story4.bmp" width="200"><br>
   <img src="FinalProjectImg/story/story5.bmp" width="200">
   - 二十二樓 - 開啟二十三樓花門，要求玩家找尋剩下兩支靈杖，靈杖於左右樓梯找尋，花門位於下方樓梯
   <br><img src="FinalProjectImg/story/story6.bmp" width="200">
   <img src="FinalProjectImg/story/story7.bmp" width="200">
   <img src="FinalProjectImg/story/story8.bmp" width="200">
-  <img src="FinalProjectImg/story/story9.bmp" width="200">
+  <img src="FinalProjectImg/story/story9.bmp" width="200"><br>
   - 二十二樓 - 收集到三支魔杖後將其交出，封印不可擊殺的魔龍成為可擊殺的血影
   <br><img src="FinalProjectImg/story/story10.bmp" width="200">
   <img src="FinalProjectImg/story/story11.bmp" width="200">
-  <img src="FinalProjectImg/story/story12.bmp" width="200">
+  <img src="FinalProjectImg/story/story12.bmp" width="200"><br>
 - 小偷
   - 四樓 - 開啟二樓花門，請求玩家找到紅寶石榔頭(十二樓)
   <br><img src="FinalProjectImg/story/story13.bmp" width="200">
   <img src="FinalProjectImg/story/story14.bmp" width="200">
-  <img src="FinalProjectImg/story/story15.bmp" width="200">
+  <img src="FinalProjectImg/story/story15.bmp" width="200"><br>
   - 四樓 - 找到紅寶石榔頭後，將其交出，小偷敲掉十八層牆面
   <br><img src="FinalProjectImg/story/story16.bmp" width="200">
-  <img src="FinalProjectImg/story/story17.bmp" width="200">
+  <img src="FinalProjectImg/story/story17.bmp" width="200"><br>
 - 公主 
   - 十八樓 - 對話後開啟第十八樓上樓樓梯，請求勇者殺掉大魔王
   <br><img src="FinalProjectImg/story/story18.bmp" width="200">
-  <img src="FinalProjectImg/story/story19.bmp" width="200">
+  <img src="FinalProjectImg/story/story19.bmp" width="200"><br>
 - 神秘老人
   - 十六樓 - 對話後獲得神秘寶物，須找仙子解答
   <br>註 : 原版有25分鐘限制，復刻取消該限制
-  <br><img src="FinalProjectImg/story/story20.bmp" width="200">
+  <br><img src="FinalProjectImg/story/story20.bmp" width="200"><br>
 - 冥靈魔王
   - 二十一樓 - 打敗後出現二十一樓上樓樓梯
   <br><img src="FinalProjectImg/story/story21.bmp" width="200">
-  <img src="FinalProjectImg/story/story22.bmp" width="200">
+  <img src="FinalProjectImg/story/story22.bmp" width="200"><br>
 
 
   
