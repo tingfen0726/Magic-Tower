@@ -66,6 +66,7 @@
 ### 劇情介紹
 - 仙子
   - 序章 - 介紹遊戲背景，請求玩家找尋十字架(七樓)
+    <br>註 : 因劇情需要，請先給予神秘寶物，再給十字架，否則不會觸發劇情
   <br><img src="FinalProjectImg/story/story1.bmp" width="200">
   <img src="FinalProjectImg/story/story2.bmp" width="200"><br>
   - 序章 - 從十六樓老人獲得神秘寶物後，與其對話，觸發通關劇情
